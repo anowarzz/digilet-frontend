@@ -101,9 +101,11 @@ const Navbar = () => {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
-          <Button variant="outline" className="text-sm">
-            Login
-          </Button>
+          <Link to="/login">
+            <Button variant="outline" className="text-sm">
+              Login
+            </Button>
+          </Link>
         </div>
       </div>
     </header>

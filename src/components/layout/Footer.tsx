@@ -76,7 +76,7 @@ const Footer = () => {
   const copyright = "© 2024 Digilet. All rights reserved.";
 
   return (
-    <section className="p-8">
+    <section className="p-8 border-t border-t-gray-300">
       <div className="container">
         <div className="flex w-full flex-col justify-between gap-10 lg:flex-row lg:items-start lg:text-left">
           <div className="flex w-full flex-col justify-between gap-6 lg:items-start">
