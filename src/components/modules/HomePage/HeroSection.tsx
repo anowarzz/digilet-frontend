@@ -23,7 +23,10 @@ const HeroSection = () => {
               designed for you.
             </p>
             <div className="flex w-full px-4 flex-col justify-center gap-2 sm:flex-row lg:justify-start">
-              <Button asChild className="w-full sm:w-auto bg-fuchsia-900 hover:bg-fuchsia-800">
+              <Button
+                asChild
+                className="w-full sm:w-auto bg-fuchsia-900 hover:bg-fuchsia-800"
+              >
                 <Link to="/register">Get Started</Link>
               </Button>
               <Button asChild variant="outline" className="w-full sm:w-auto">
