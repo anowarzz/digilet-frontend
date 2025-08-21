@@ -17,6 +17,9 @@ import { Link } from "react-router";
 const navigationLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
+  { href: "/features", label: "Features" },
+  { href: "/contact", label: "Contact" },
+  { href: "/faq", label: "FAQ" },
 ];
 
 const Navbar = () => {
@@ -98,8 +101,8 @@ const Navbar = () => {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
-          <Button variant="destructive" className="text-sm">
-            Logout
+          <Button variant="outline" className="text-sm">
+            Login
           </Button>
         </div>
       </div>
