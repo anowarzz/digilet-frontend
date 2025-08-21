@@ -11,6 +11,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
+import { CircleUserRoundIcon } from "lucide-react";
 import { Link } from "react-router";
 
 // Navigation links array to be used in both desktop and mobile menus
@@ -23,6 +25,8 @@ const navigationLinks = [
 ];
 
 const Navbar = () => {
+  const { data: userData } = useCurrentUserInfoQuery(undefined);
+
   return (
     <header className="border-b px-4 md:px-6 py-2">
       <div className="flex px-4 container mx-auto h-16 items-center justify-between gap-4">
@@ -101,11 +105,24 @@ const Navbar = () => {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
-          <Link to="/login">
-            <Button variant="outline" className="text-sm">
-              Login
+          {/* <ModeToggle /> */}
+          {userData?.data?.phone && (
+            <div className="m-2 flex gap-4 items-center justify-center">
+              <CircleUserRoundIcon />
+              <Button
+                // onClick={handleLogOut}
+                variant="destructive"
+                className="text-sm "
+              >
+                Logout
+              </Button>
+            </div>
+          )}
+          {!userData?.data?.phone && (
+            <Button asChild className="text-sm text-white ">
+              <Link to="/login">Login</Link>
             </Button>
-          </Link>
+          )}
         </div>
       </div>
     </header>

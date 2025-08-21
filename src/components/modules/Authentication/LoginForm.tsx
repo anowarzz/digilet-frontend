@@ -10,18 +10,48 @@ import {
 import { Input } from "@/components/ui/input";
 import Password from "@/components/ui/Password";
 import { cn } from "@/lib/utils";
-import { useForm, type FieldValues } from "react-hook-form";
-import { Link } from "react-router";
+import { useLoginMutation } from "@/redux/features/auth/auth.api";
+import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
 
 const LoginForm = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
+  const navigate = useNavigate();
   const form = useForm();
+  const [login, { isLoading }] = useLoginMutation();
 
-  const onSubmit = (data: FieldValues) => {
-    // Handle form submission logic here
-    console.log("Form submitted with data:", data);
+  // Handle Login
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const toastId = "login-toast";
+
+    try {
+      const res = await login(data).unwrap();
+      console.log(res);
+      console.log("Logging in with data:", data);
+
+      if (res.success) {
+        toast.success("Login successful!");
+        navigate("/");
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.error("Login failed:", err);
+      if (err.data?.message === "Incorrect Password Provided") {
+        return toast.error("Incorrect password. Please try again.", {
+          id: toastId,
+        });
+      }
+
+      if (err.data?.message === "User does not exist") {
+        return toast.error("User does not exist with this phone", {
+          id: toastId,
+        });
+      }
+      toast.error("Login failed. Please try again.");
+    }
   };
 
   return (
@@ -68,8 +98,38 @@ const LoginForm = ({
               )}
             />
 
-            <Button type="submit" className="w-full cursor-pointer">
-              Login
+            <Button
+              type="submit"
+              className="w-full cursor-pointer"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8z"
+                    />
+                  </svg>
+                  Logging in...
+                </span>
+              ) : (
+                "Login"
+              )}
             </Button>
           </form>
         </Form>
