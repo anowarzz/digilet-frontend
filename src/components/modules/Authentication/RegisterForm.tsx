@@ -10,10 +10,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Password from "@/components/ui/Password";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
+import { useRegisterMutation } from "@/redux/features/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { User2, UserCog } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const registerSchema = z
@@ -30,10 +34,13 @@ const registerSchema = z
         message:
           "Phone number must be  Bangladeshi number. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
       }),
-    password: z.string().min(8, { error: "Password is too short, must be 8 character long" }),
-    confirmPassword: z
+    password: z
       .string()
-      .min(8, { error: "Confirm Password is too short, must be 8 character long" }),
+      .min(8, { error: "Password is too short, must be 8 character long" }),
+    confirmPassword: z.string().min(8, {
+      error: "Confirm Password is too short, must be 8 character long",
+    }),
+    role: z.enum(["USER", "AGENT"]),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Password do not match",
@@ -45,6 +52,7 @@ export function RegisterForm({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   const navigate = useNavigate();
+  const [register] = useRegisterMutation();
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -53,6 +61,7 @@ export function RegisterForm({
       phone: "",
       password: "",
       confirmPassword: "",
+      role: "USER",
     },
   });
 
@@ -61,7 +70,18 @@ export function RegisterForm({
       name: data.name,
       phone: data.phone,
       password: data.password,
+      role: data.role,
     };
+
+    try {
+      const res = await register(userInfo).unwrap();
+      console.log(res);
+      toast.success("User created successfully");
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      toast.error("User creation failed");
+    }
 
     console.log(userInfo);
   };
@@ -77,7 +97,7 @@ export function RegisterForm({
 
       <div className="grid gap-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="name"
@@ -85,7 +105,7 @@ export function RegisterForm({
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="John Doe" {...field} />
+                    <Input placeholder="Type Your Name" {...field} />
                   </FormControl>
                   <FormDescription className="sr-only">
                     This is your public display name.
@@ -104,7 +124,7 @@ export function RegisterForm({
                     <Input placeholder="01XXXXXXXXX" type="text" {...field} />
                   </FormControl>
                   <FormDescription className="sr-only">
-                    This is your public display name.
+                    This is your phone number.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -142,7 +162,38 @@ export function RegisterForm({
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full cursor-pointer">
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mb-2">Register as</FormLabel>
+                  <FormControl>
+                    <ToggleGroup
+                      type="single"
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className="flex gap-4"
+                    >
+                      <ToggleGroupItem
+                        value="USER"
+                        className="p-4 rounded-lg border shadow-sm data-[state=on]:bg-fuchsia-800 data-[state=on]:text-white"
+                      >
+                        User <User2 />
+                      </ToggleGroupItem>
+                      <ToggleGroupItem
+                        value="AGENT"
+                        className="p-4 rounded-lg border shadow-sm data-[state=on]:bg-fuchsia-800 data-[state=on]:text-white"
+                      >
+                        Agent <UserCog />
+                      </ToggleGroupItem>
+                    </ToggleGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full cursor-pointer mt-1">
               Submit
             </Button>
           </form>
