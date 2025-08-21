@@ -30,10 +30,10 @@ const registerSchema = z
         message:
           "Phone number must be  Bangladeshi number. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
       }),
-    password: z.string().min(8, { error: "Password is too short" }),
+    password: z.string().min(8, { error: "Password is too short, must be 8 character long" }),
     confirmPassword: z
       .string()
-      .min(8, { error: "Confirm Password is too short" }),
+      .min(8, { error: "Confirm Password is too short, must be 8 character long" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Password do not match",
