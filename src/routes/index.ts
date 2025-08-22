@@ -1,4 +1,6 @@
 import App from "@/App";
+import AuthLayout from "@/components/layout/AuthLayout";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 import About from "@/pages/About/About";
 import Contact from "@/pages/Contact/Contact";
 import Faq from "@/pages/Faq/Faq";
@@ -18,8 +20,20 @@ const router = createBrowserRouter([
       { path: "features", Component: Features },
       { path: "contact", Component: Contact },
       { path: "faq", Component: Faq },
-      { path: "login", Component: Login },
-      { path: "register", Component: Register },
+    ],
+  },
+  {
+    Component: DashboardLayout,
+    path: "/user",
+    children: [
+      
+    ]
+  },
+  {
+    Component: AuthLayout,
+    children: [
+      { path: "/login", Component: Login, index: true },
+      { path: "/register", Component: Register },
     ],
   },
 ]);

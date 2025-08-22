@@ -11,6 +11,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  authApi,
+  useCurrentUserInfoQuery,
+  useLogOutMutation,
+} from "@/redux/features/auth/auth.api";
+import { useAppDispatch } from "@/redux/hook";
+import { CircleUserRoundIcon } from "lucide-react";
 import { Link } from "react-router";
 
 // Navigation links array to be used in both desktop and mobile menus
@@ -20,9 +27,22 @@ const navigationLinks = [
   { href: "/features", label: "Features" },
   { href: "/contact", label: "Contact" },
   { href: "/faq", label: "FAQ" },
+  { href: "/user", label: "Dashboard" },
 ];
 
 const Navbar = () => {
+  const { data: userData } = useCurrentUserInfoQuery(undefined);
+
+  const [logOut] = useLogOutMutation();
+  const dispatch = useAppDispatch();
+
+  const handleLogOut = async () => {
+    await logOut(undefined);
+     dispatch(authApi.util.resetApiState());
+  };
+
+  console.log(userData, "user data in nav");
+
   return (
     <header className="border-b px-4 md:px-6 py-2">
       <div className="flex px-4 container mx-auto h-16 items-center justify-between gap-4">
@@ -101,11 +121,24 @@ const Navbar = () => {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
-          <Link to="/login">
-            <Button variant="outline" className="text-sm">
-              Login
+          {/* <ModeToggle /> */}
+          {userData?.data?.email && (
+            <div className="m-2 flex gap-4 items-center justify-center">
+              <CircleUserRoundIcon />
+              <Button
+                onClick={handleLogOut}
+                variant="destructive"
+                className="text-sm "
+              >
+                Logout
+              </Button>
+            </div>
+          )}
+          {!userData?.data?.email && (
+            <Button asChild className="text-sm text-white ">
+              <Link to="/login">Login</Link>
             </Button>
-          </Link>
+          )}
         </div>
       </div>
     </header>
