@@ -83,8 +83,14 @@ export function RegisterForm({
         "Registration successful. Please login with your credentials."
       );
       navigate("/login");
-    } catch (error) {
-      console.log(error);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.log(error.data.message);
+      if (
+        error.data?.message === "user already exist with this phone number"
+      ) {
+        return toast.error("User already exists with this phone number");
+      }
       toast.error("User creation failed");
     }
 
