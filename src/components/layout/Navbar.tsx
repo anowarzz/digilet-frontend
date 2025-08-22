@@ -38,7 +38,7 @@ const Navbar = () => {
 
   const handleLogOut = async () => {
     await logOut(undefined);
-     dispatch(authApi.util.resetApiState());
+    dispatch(authApi.util.resetApiState());
   };
 
   console.log(userData, "user data in nav");

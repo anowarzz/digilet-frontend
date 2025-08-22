@@ -2,8 +2,8 @@ import Transactions from "@/pages/Agent/Transactions";
 import Wallet from "@/pages/Agent/Wallet";
 import type { ISidebarItem } from "@/types";
 
-// add the agent sidebar items
-export const agentSidebarItems: ISidebarItem[] = [
+// user sidebar items
+export const userSidebarItems: ISidebarItem[] = [
   {
     title: "Wallet Management",
     items: [

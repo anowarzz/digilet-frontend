@@ -3,7 +3,7 @@ import Transactions from "@/pages/Agent/Transactions";
 import Wallet from "@/pages/Agent/Wallet";
 import type { ISidebarItem } from "@/types";
 
-// add the agent sidebar items
+// agent sidebar items
 export const agentSidebarItems: ISidebarItem[] = [
   {
     title: "Agent Home",

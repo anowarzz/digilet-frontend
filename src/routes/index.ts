@@ -8,7 +8,9 @@ import Features from "@/pages/features/Features";
 import Home from "@/pages/home/Home";
 import Login from "@/pages/login/Login";
 import Register from "@/pages/register/Register";
+import { generateRoutes } from "@/utils/generateRoues";
 import { createBrowserRouter } from "react-router";
+import { userSidebarItems } from "./userSideBarItems";
 
 const router = createBrowserRouter([
   {
@@ -25,9 +27,7 @@ const router = createBrowserRouter([
   {
     Component: DashboardLayout,
     path: "/user",
-    children: [
-      
-    ]
+    children: [...generateRoutes(userSidebarItems)],
   },
   {
     Component: AuthLayout,

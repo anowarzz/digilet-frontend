@@ -2,6 +2,7 @@ import AllUsers from "@/pages/Admin/AllUsers";
 import Analytics from "@/pages/Admin/Analytics";
 import type { ISidebarItem } from "@/types";
 
+// admin sidebar items
 export const adminSidebarItems: ISidebarItem[] = [
   {
     title: "Dashboard",

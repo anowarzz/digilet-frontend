@@ -40,7 +40,9 @@ const registerSchema = z
     confirmPassword: z.string().min(8, {
       error: "Confirm Password is too short, must be 8 character long",
     }),
-    role: z.enum(["USER", "AGENT"]),
+    role: z.enum(["USER", "AGENT"], {
+      message: "Please select a role",
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Password do not match",
@@ -77,8 +79,10 @@ export function RegisterForm({
     try {
       const res = await register(userInfo).unwrap();
       console.log(res);
-      toast.success("User created successfully");
-      navigate("/");
+      toast.success(
+        "Registration successful. Please login with your credentials."
+      );
+      navigate("/login");
     } catch (error) {
       console.log(error);
       toast.error("User creation failed");
