@@ -11,13 +11,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
+import {
+  authApi,
+  useCurrentUserInfoQuery,
+  useLogOutMutation,
+} from "@/redux/features/auth/auth.api";
+import { useAppDispatch } from "@/redux/hook";
 import { CircleUserRoundIcon } from "lucide-react";
 import { Link } from "react-router";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
   { href: "/", label: "Home" },
+  { href: "/transactions", label: "Transactions" },
   { href: "/about", label: "About" },
   { href: "/features", label: "Features" },
   { href: "/contact", label: "Contact" },
@@ -26,6 +32,16 @@ const navigationLinks = [
 
 const Navbar = () => {
   const { data: userData } = useCurrentUserInfoQuery(undefined);
+
+  const [logOut] = useLogOutMutation();
+  const dispatch = useAppDispatch();
+
+  const handleLogOut = async () => {
+    await logOut(undefined);
+     dispatch(authApi.util.resetApiState());
+  };
+
+  console.log(userData, "user data in nav");
 
   return (
     <header className="border-b px-4 md:px-6 py-2">
@@ -106,11 +122,11 @@ const Navbar = () => {
         {/* Right side */}
         <div className="flex items-center gap-2">
           {/* <ModeToggle /> */}
-          {userData?.data?.phone && (
+          {userData?.data?.email && (
             <div className="m-2 flex gap-4 items-center justify-center">
               <CircleUserRoundIcon />
               <Button
-                // onClick={handleLogOut}
+                onClick={handleLogOut}
                 variant="destructive"
                 className="text-sm "
               >
@@ -118,7 +134,7 @@ const Navbar = () => {
               </Button>
             </div>
           )}
-          {!userData?.data?.phone && (
+          {!userData?.data?.email && (
             <Button asChild className="text-sm text-white ">
               <Link to="/login">Login</Link>
             </Button>

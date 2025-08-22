@@ -20,7 +20,13 @@ const LoginForm = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
   const navigate = useNavigate();
-  const form = useForm();
+  const form = useForm({
+    defaultValues: {
+      phone: "01234567890",
+      password: "superadmin123",
+    },
+  });
+
   const [login, { isLoading }] = useLoginMutation();
 
   // Handle Login
@@ -29,8 +35,6 @@ const LoginForm = ({
 
     try {
       const res = await login(data).unwrap();
-      console.log(res);
-      console.log("Logging in with data:", data);
 
       if (res.success) {
         toast.success("Login successful!");
