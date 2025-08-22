@@ -9,6 +9,7 @@ import Features from "@/pages/features/Features";
 import Home from "@/pages/home/Home";
 import Login from "@/pages/login/Login";
 import Register from "@/pages/register/Register";
+import Unauthorized from "@/pages/UnAuthorized";
 import type { TRole } from "@/types";
 import { generateRoutes } from "@/utils/generateRoues";
 import { withAuth } from "@/utils/withAuth";
@@ -28,16 +29,6 @@ const router = createBrowserRouter([
       { path: "contact", Component: Contact },
       { path: "faq", Component: Faq },
     ],
-  },
-  {
-    Component: DashboardLayout,
-    path: "/user",
-    children: [...generateRoutes(userSidebarItems)],
-  },
-  {
-    Component: DashboardLayout,
-    path: "/agent",
-    children: [...generateRoutes(agentSidebarItems)],
   },
   {
     Component: withAuth(DashboardLayout, role.ADMIN as TRole),
@@ -70,6 +61,10 @@ const router = createBrowserRouter([
       { path: "/login", Component: Login, index: true },
       { path: "/register", Component: Register },
     ],
+  },
+  {
+    Component: Unauthorized,
+    path: "/unauthorized",
   },
 ]);
 

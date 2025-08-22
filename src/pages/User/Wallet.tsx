@@ -1,4 +1,4 @@
-const    Wallet = () => {
+const    UserWallet = () => {
     return (
         <div>
             Welcome to User Wallet component
@@ -7,4 +7,4 @@ const    Wallet = () => {
     );
 };
 
-export default Wallet;
+export default UserWallet;

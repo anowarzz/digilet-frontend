@@ -1,10 +1,10 @@
-const Transactions = () => {
+const UserTransactions = () => {
     return (
         <div>
-            Welcome to User Transactions component
+            Welcome to User UserTransactions component
 
         </div>
     );
 };
 
-export default Transactions;
+export default UserTransactions;

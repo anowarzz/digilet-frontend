@@ -1,6 +1,8 @@
-import Transactions from "@/pages/Agent/Transactions";
-import Wallet from "@/pages/Agent/Wallet";
-import type { ISidebarItem } from "@/types";
+import { role } from "@/constants/role";
+import UserTransactions from "@/pages/User/Transactions";
+import UserWallet from "@/pages/User/Wallet";
+import type { ISidebarItem, TRole } from "@/types";
+import { withAuth } from "@/utils/withAuth";
 
 // user sidebar items
 export const userSidebarItems: ISidebarItem[] = [
@@ -10,7 +12,7 @@ export const userSidebarItems: ISidebarItem[] = [
       {
         title: "My Wallet",
         url: "/user/my-wallet",
-        Component: Wallet,
+        Component: withAuth(UserWallet, role.USER as TRole),
       },
     ],
   },
@@ -20,7 +22,7 @@ export const userSidebarItems: ISidebarItem[] = [
       {
         title: "Transaction History",
         url: "/user/transaction-history",
-        Component: Transactions,
+        Component: withAuth(UserTransactions, role.USER as TRole),
       },
     ],
   },

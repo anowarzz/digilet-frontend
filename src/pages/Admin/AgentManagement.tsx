@@ -1,10 +1,9 @@
-const PendingAgents = () => {
+const AgentManagement = () => {
     return (
         <div>
-            Welcome to PendingAgents component
-            
+            Welcome to AgentManagement component
         </div>
     );
 };
 
-export default PendingAgents;
+export default AgentManagement;

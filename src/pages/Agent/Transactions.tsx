@@ -1,10 +1,10 @@
-const Transactions = () => {
+const AgentTransactions = () => {
     return (
         <div>
-            Welcome to Agent Transactions component
+            Welcome to Agent AgentTransactions component
             
         </div>
     );
 };
 
-export default Transactions;
+export default AgentTransactions;

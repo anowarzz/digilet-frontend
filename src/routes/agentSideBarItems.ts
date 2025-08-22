@@ -1,7 +1,9 @@
+import { role } from "@/constants/role";
 import Analytics from "@/pages/Agent/Analytics";
 import Transactions from "@/pages/Agent/Transactions";
 import Wallet from "@/pages/Agent/Wallet";
-import type { ISidebarItem } from "@/types";
+import type { ISidebarItem, TRole } from "@/types";
+import { withAuth } from "@/utils/withAuth";
 
 // agent sidebar items
 export const agentSidebarItems: ISidebarItem[] = [
@@ -11,7 +13,7 @@ export const agentSidebarItems: ISidebarItem[] = [
       {
         title: "Analytics",
         url: "/agent/analytics",
-        Component: Analytics,
+        Component: withAuth(Analytics, role.AGENT as TRole),
       },
     ],
   },
@@ -21,7 +23,7 @@ export const agentSidebarItems: ISidebarItem[] = [
       {
         title: "Wallet",
         url: "/agent/wallet",
-        Component: Wallet,
+        Component: withAuth(Wallet, role.AGENT as TRole),
       },
     ],
   },
@@ -31,7 +33,7 @@ export const agentSidebarItems: ISidebarItem[] = [
       {
         title: "Transaction History",
         url: "/agent/transaction-history",
-        Component: Transactions,
+        Component: withAuth(Transactions, role.AGENT as TRole),
       },
     ],
   },

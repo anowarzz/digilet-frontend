@@ -1,6 +1,9 @@
+import { role } from "@/constants/role";
+import AgentManagement from "@/pages/Admin/AgentManagement";
 import AllUsers from "@/pages/Admin/AllUsers";
 import Analytics from "@/pages/Admin/Analytics";
-import type { ISidebarItem } from "@/types";
+import type { ISidebarItem, TRole } from "@/types";
+import { withAuth } from "@/utils/withAuth";
 
 // admin sidebar items
 export const adminSidebarItems: ISidebarItem[] = [
@@ -10,7 +13,7 @@ export const adminSidebarItems: ISidebarItem[] = [
       {
         title: "Analytics",
         url: "/admin/analytics",
-        Component: Analytics,
+        Component: withAuth(Analytics, role.ADMIN as TRole),
       },
     ],
   },
@@ -20,7 +23,7 @@ export const adminSidebarItems: ISidebarItem[] = [
       {
         title: "All Users",
         url: "/admin/all-users",
-        Component: AllUsers,
+        Component: withAuth(AllUsers, role.ADMIN as TRole),
       },
     ],
   },
@@ -30,7 +33,7 @@ export const adminSidebarItems: ISidebarItem[] = [
       {
         title: "All Agents",
         url: "/admin/all-agents",
-        Component: Analytics,
+        Component: withAuth(AgentManagement, role.ADMIN as TRole),
       },
     ],
   },
