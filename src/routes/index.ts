@@ -1,13 +1,13 @@
 import App from "@/App";
 import AuthLayout from "@/components/layout/AuthLayout";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import About from "@/pages/About/About";
-import Contact from "@/pages/Contact/Contact";
-import Faq from "@/pages/Faq/Faq";
-import Features from "@/pages/Features/Features";
-import Home from "@/pages/Home/Home";
-import Login from "@/pages/Login/Login";
-import Register from "@/pages/Register/Register";
+import About from "@/pages/about/About";
+import Contact from "@/pages/contact/Contact";
+import Faq from "@/pages/faq/Faq";
+import Features from "@/pages/features/Features";
+import Home from "@/pages/home/Home";
+import Login from "@/pages/login/Login";
+import Register from "@/pages/register/Register";
 import { createBrowserRouter } from "react-router";
 
 const router = createBrowserRouter([
