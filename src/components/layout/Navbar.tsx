@@ -1,4 +1,5 @@
 import Logo from "@/assets/Logos/Logo";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -20,7 +21,6 @@ import {
 } from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
 import { CircleUserRoundIcon } from "lucide-react";
-import { useEffect } from "react";
 import { Link } from "react-router";
 
 // Navigation links array to be used in both desktop and mobile menus
@@ -45,8 +45,6 @@ export default function Navbar() {
     await logout(undefined);
     dispatch(authApi.util.resetApiState());
   };
-
-
 
   console.log(userData, "user in nav");
 
@@ -123,16 +121,16 @@ export default function Navbar() {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <a href="#" className="text-primary hover:text-primary/90">
+            <Link to="/" className="text-primary hover:text-primary/90">
               <Logo />
-            </a>
+            </Link>
             {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link, index) => (
-                  <>
+                  <React.Fragment key={index}>
                     {link.role === "PUBLIC" && (
-                      <NavigationMenuItem key={index}>
+                      <NavigationMenuItem>
                         <NavigationMenuLink
                           asChild
                           className="text-muted-foreground hover:text-primary py-1.5 font-medium"
@@ -142,7 +140,7 @@ export default function Navbar() {
                       </NavigationMenuItem>
                     )}
                     {link.role === userData?.data?.role && (
-                      <NavigationMenuItem key={index}>
+                      <NavigationMenuItem>
                         <NavigationMenuLink
                           asChild
                           className="text-muted-foreground hover:text-primary py-1.5 font-medium"
@@ -151,7 +149,7 @@ export default function Navbar() {
                         </NavigationMenuLink>
                       </NavigationMenuItem>
                     )}
-                  </>
+                  </React.Fragment>
                 ))}
               </NavigationMenuList>
             </NavigationMenu>
