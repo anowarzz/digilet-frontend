@@ -1,5 +1,6 @@
 import App from "@/App";
 import AuthLayout from "@/components/layout/AuthLayout";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 import About from "@/pages/About/About";
 import Contact from "@/pages/Contact/Contact";
 import Faq from "@/pages/Faq/Faq";
@@ -20,6 +21,13 @@ const router = createBrowserRouter([
       { path: "contact", Component: Contact },
       { path: "faq", Component: Faq },
     ],
+  },
+  {
+    Component: DashboardLayout,
+    path: "/user",
+    children: [
+      
+    ]
   },
   {
     Component: AuthLayout,

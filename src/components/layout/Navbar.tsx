@@ -23,11 +23,11 @@ import { Link } from "react-router";
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
   { href: "/", label: "Home" },
-  { href: "/transactions", label: "Transactions" },
   { href: "/about", label: "About" },
   { href: "/features", label: "Features" },
   { href: "/contact", label: "Contact" },
   { href: "/faq", label: "FAQ" },
+  { href: "/user", label: "Dashboard" },
 ];
 
 const Navbar = () => {
