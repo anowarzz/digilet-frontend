@@ -12,7 +12,7 @@ export const userSidebarItems: ISidebarItem[] = [
       {
         title: "My Wallet",
         url: "/user/my-wallet",
-        Component: withAuth(UserWallet, role.USER as TRole),
+        Component: UserWallet
       },
     ],
   },

@@ -39,7 +39,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    Component: withAuth(DashboardLayout, role.USER as TRole),
+    Component: DashboardLayout,
     path: "/user",
     children: [
       { index: true, element: <Navigate to="/user/my-wallet" /> },
