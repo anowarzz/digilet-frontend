@@ -40,12 +40,12 @@ const UserWallet = () => {
   ];
 
   return (
-    <div className=" dark:from-gray-900 dark:to-slate-900 p-4 lg:p-8">
+    <div className=" dark:from-gray-900 dark:to-slate-900 p-4 lg:pt-4 lg:pb-8">
       <div className="max-w-7xl mx-auto space-y-3 lg:space-y-4">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-muted-foreground dark:text-white">
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-muted-foreground dark:text-white">
               My Wallet
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground dark:text-gray-400 mt-1">
@@ -61,11 +61,13 @@ const UserWallet = () => {
         </div>
 
         {/* Balance Card */}
-        <BalanceCard walletData={walletData} isLoading={isLoading} />
+        <div>
+          <BalanceCard walletData={walletData} isLoading={isLoading} />
+        </div>
 
         {/* Quick Actions */}
-        <div className="space-y-4 sm:space-y-6">
-          <h2 className="text-xl sm:text-2xl font-semibold text-white dark:text-white">
+        <div>
+          <h2 className="text-center sm:text-2xl mb-2 font-semibold dark:text-white">
             Quick Actions
           </h2>
 
@@ -76,24 +78,24 @@ const UserWallet = () => {
                 to={action.route}
                 className="group cursor-pointer"
               >
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-3 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:scale-[1.02] h-full min-h-[120px] sm:min-h-[160px] flex">
-                  <div className="flex flex-col items-center justify-between text-center w-full py-2">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-2 sm:p-4 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:scale-[1.02] h-full min-h-[90px] sm:min-h-[120px] flex">
+                  <div className="flex flex-col items-center justify-between text-center w-full py-1">
                     {/* Icon with gradient background */}
                     <div
-                      className={`w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-gradient-to-r ${action.color} ${action.hoverColor} rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300`}
+                      className={`w-9 h-9 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-r ${action.color} ${action.hoverColor} rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300`}
                     >
                       <img
                         src={action.icon}
-                        className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-white"
+                        className="w-7 h-7 sm:w-9 sm:h-9 lg:w-11 lg:h-11"
                       />
                     </div>
 
                     {/* Content */}
-                    <div className="space-y-1 sm:space-y-2 mt-2 sm:mt-4">
-                      <h3 className="text-xs sm:text-lg font-semibold text-gray-900 dark:text-white leading-tight">
+                    <div className="space-y-1 sm:space-y-2 mt-1 sm:mt-2">
+                      <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-gray-900 dark:text-white leading-tight">
                         {action.title}
                       </h3>
-                      <p className="hidden md:block text-sm sm:text-base text-gray-600 dark:text-gray-400">
+                      <p className="hidden lg:block text-sm sm:text-base text-gray-600 dark:text-gray-400">
                         {action.subtitle}
                       </p>
                     </div>

@@ -37,9 +37,6 @@ const BalanceCard = ({
     }
   };
 
-
-
-
   return (
     <div className={`relative overflow-hidden ${className}`}>
       {/* Main Balance Card */}
@@ -107,7 +104,7 @@ const BalanceCard = ({
               Available Balance
             </p>
             <div className="flex items-center gap-3">
-              <h1 className="text-3xl lg:text-4xl font-bold text-white">
+              <h1 className="text-xl sm:2xl lg:text-3xxl font-bold text-white">
                 {showBalance
                   ? isLoading
                     ? "Loading..."
@@ -127,10 +124,10 @@ const BalanceCard = ({
           </div>
 
           {/* Compact Stats */}
-          <div className="flex gap-4 mb-4">
+          <div className="flex gap-4">
             <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10 flex-1">
               <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-emerald-500/20 rounded-lg">
+                <div className=" bg-emerald-500/20 rounded-lg">
                   <TrendingUp className="w-4 h-4 text-emerald-400" />
                 </div>
                 <div>
@@ -144,7 +141,7 @@ const BalanceCard = ({
 
             <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10 flex-1">
               <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-blue-500/20 rounded-lg">
+                <div className=" bg-blue-500/20 rounded-lg">
                   <CreditCard className="w-4 h-4 text-blue-400" />
                 </div>
                 <div>

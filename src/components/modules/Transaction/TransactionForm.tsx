@@ -9,31 +9,30 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { TransactionType } from "@/constants/transactions";
 import { useGetWalletQuery } from "@/redux/features/wallet/wallet.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WalletIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { TransactionType } from "@/constants/transactions";
-
 
 interface TransactionFormProps {
-  type: string
+  type: string;
   title: string;
   description: string;
   buttonText: string;
   icon: string;
   gradientClass?: string;
-  onSubmit: (data: { agentPhone: string; amount: number }) => void;
+  onSubmit: (data: { phone: string; amount: number }) => void;
 }
 
 // Form schema
 const transactionSchema = z.object({
-  agentPhone: z
-    .string({ error: "Agent Phone Number Is Required" })
+  phone: z
+    .string({ error: "Phone Number Is Required" })
     .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
       message:
-        "Agent phone number must be  Bangladeshi number. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
+        "Phone number must be  Bangladeshi number. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
     }),
   amount: z
     .string()
@@ -58,14 +57,14 @@ const TransactionForm = ({
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
-      agentPhone: "",
+      phone: "",
       amount: "", // Start with empty string
     },
   });
 
   const handleFormSubmit = (values: z.infer<typeof transactionSchema>) => {
     onSubmit({
-      agentPhone: values.agentPhone,
+      phone: values.phone,
       amount: parseFloat(values.amount.toString()) || 0,
     });
   };
@@ -159,7 +158,7 @@ const TransactionForm = ({
                   {/* Phone Number Field */}
                   <FormField
                     control={form.control}
-                    name="agentPhone"
+                    name="phone"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
                         <FormLabel className="text-gray-700 dark:text-gray-300 font-semibold flex items-center gap-2">
@@ -226,10 +225,8 @@ const TransactionForm = ({
                             </div>
                           </div>
                         </FormControl>
-                        <FormDescription>
-                          <div className="text-xs text-gray-600 dark:text-gray-400 bg-yellow-50 dark:bg-yellow-900/20  rounded-lg border-l-2 border-yellow-400">
-                            ⚠️ Minimum withdrawal amount: ৳ 5
-                          </div>
+                        <FormDescription className="text-xs text-gray-600 dark:text-gray-400 bg-yellow-50 dark:bg-yellow-900/20  rounded-lg border-l-2 border-yellow-400">
+                          ⚠️ Minimum withdrawal amount: ৳ 5
                         </FormDescription>
                         <FormMessage className="text-red-500 text-sm" />
                       </FormItem>

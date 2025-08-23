@@ -1,9 +1,41 @@
 import sendMoneyIcon from "@/assets/Icons/send-money.png";
 import TransactionForm from "@/components/modules/Transaction/TransactionForm";
+import { useSendMoneyMutation } from "@/redux/features/wallet/wallet.api";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 const SendMoney = () => {
-  const handleSendMoney = (data: { phoneNumber: string; amount: number }) => {
-    console.log("Send Money:", data);
+  const navigate = useNavigate();
+  const [sendMoney] = useSendMoneyMutation();
+
+  const handleSendMoney = async (sendMoneyData: {
+    phone: string;
+    amount: number;
+  }) => {
+    const sendMoneyPayload = {
+      receiverPhone: sendMoneyData.phone,
+      amount: sendMoneyData.amount,
+    };
+
+    console.log("Send Money:", sendMoneyPayload);
+
+    try {
+      const res = await sendMoney(sendMoneyPayload).unwrap();
+      console.log("Send Money Response:", res);
+
+      if (res.success) {
+        navigate("/user/my-wallet");
+        toast.success("Money Sent Successfully!");
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.log(error.statusCode);
+      if (error.status >= 400 && error.status < 500) {
+        return toast.error(error.data.message);
+      }
+
+      return toast.error("Failed To Send Money");
+    }
   };
 
   return (

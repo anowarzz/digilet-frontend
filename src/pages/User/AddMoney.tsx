@@ -9,13 +9,18 @@ const AddMoney = () => {
   const navigate = useNavigate();
 
   const handleAddMoney = async (addMoneyData: {
-    agentPhone: string;
+    phone: string;
     amount: number;
   }) => {
-    console.log("Add Money:", addMoneyData);
+    const addMoneyPayload = {
+      agentPhone: addMoneyData.phone,
+      amount: addMoneyData.amount,
+    };
+
+    console.log("Add Money:", addMoneyPayload);
 
     try {
-      const res = await addMoney(addMoneyData).unwrap();
+      const res = await addMoney(addMoneyPayload).unwrap();
       console.log("Add Money Response:", res);
 
       if (res.success) {
@@ -24,20 +29,12 @@ const AddMoney = () => {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      if (
-        error.data?.message === "Agent not found with the given phone number"
-      ) {
-        return toast.error("Agent not found with this phone number.");
+      console.log(error.statusCode);
+      if (error.status >= 400 && error.status < 500) {
+        return toast.error(error.data.message);
       }
-      if (
-        error.data?.message?.includes(
-          "This agent wallet does not have enough balance"
-        )
-      ) {
-        return toast.error(`${error.data.message}`);
-      }
-      toast.error("Failed to add money.");
-      console.log(error);
+
+      return toast.error("Failed To Add Money");
     }
   };
 
