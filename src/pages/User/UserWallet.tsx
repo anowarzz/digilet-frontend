@@ -8,13 +8,9 @@ import { HistoryIcon } from "lucide-react";
 import { Link } from "react-router";
 
 const UserWallet = () => {
-
   const { data: walletData, isLoading } = useGetWalletQuery(undefined);
 
   console.log(walletData);
-  
-
-
 
   const quickActions = [
     {
@@ -65,11 +61,7 @@ const UserWallet = () => {
         </div>
 
         {/* Balance Card */}
-        <BalanceCard
-          size="large"
-          walletData={walletData}
-          isLoading={isLoading}
-        />
+        <BalanceCard walletData={walletData} isLoading={isLoading} />
 
         {/* Quick Actions */}
         <div className="space-y-4 sm:space-y-6">

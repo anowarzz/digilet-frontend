@@ -1,4 +1,3 @@
-import BalanceCard from "@/components/modules/Wallet/BalanceCard";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,8 +11,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { useGetWalletQuery } from "@/redux/features/wallet/wallet.api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { WalletIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import z from "zod";
 
 export type TransactionType = "add-money" | "send-money" | "withdraw-money";
 
@@ -35,7 +35,13 @@ const transactionSchema = z.object({
       message:
         "Phone number must be  Bangladeshi number. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
     }),
-  amount: z.number().min(0.01, "Amount must be greater than 0"),
+  amount: z
+    .string()
+    .min(1, "Amount is required")
+    .refine((val) => {
+      const num = parseFloat(val);
+      return !isNaN(num) && num >= 5;
+    }, "Amount must be at least ৳5"),
 });
 
 const TransactionForm = ({
@@ -53,152 +59,211 @@ const TransactionForm = ({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
       phoneNumber: "",
-      amount: 0,
+      amount: "", // Start with empty string
     },
   });
 
   const handleFormSubmit = (values: z.infer<typeof transactionSchema>) => {
     onSubmit({
       phoneNumber: values.phoneNumber,
-      amount: values.amount,
+      amount: parseFloat(values.amount.toString()) || 0,
     });
   };
 
   return (
-    <div className=" dark:from-gray-900 dark:to-slate-900 px-4 py-3 ">
-      <div className="max-w-2xl mx-auto space-y-3">
-        {/* Header */}
+    <div className="bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900 px-4 py-8 md:py-6 min-h-screen ">
+      <div className="max-w-2xl mx-auto space-y-2">
+        {/* Header Section */}
         <div className="text-center space-y-2">
-          <div
-            className={`w-16 h-16 bg-gradient-to-r ${gradientClass} rounded-2xl flex items-center justify-center shadow-lg mx-auto`}
-          >
-            <img src={icon} className="w-12 h-12 text-white" alt={title} />
+          <div className="relative">
+            <div
+              className={`w-10 h-10 bg-gradient-to-r ${gradientClass} rounded-xl flex items-center justify-center shadow-xl mx-auto transform hover:scale-105 transition-transform duration-300`}
+            >
+              <img
+                src={icon}
+                className="w-8 h-8 text-white drop-shadow-lg"
+                alt={title}
+              />
+            </div>
+            {/* Decorative elements */}
+            <div
+              className={`absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r ${gradientClass} rounded-full opacity-60 animate-pulse`}
+            ></div>
+            <div
+              className={`absolute -bottom-1 -left-1 w-3 h-3 bg-gradient-to-r ${gradientClass} rounded-full opacity-40 animate-pulse delay-150`}
+            ></div>
           </div>
-          <h1 className="text-2xl md:text-2xl font-bold">{title}</h1>
-          <p className="text-gray-800">{description}</p>
+          <div className="">
+            <h1 className="text-lg md:text-xl font-semibold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+              {title}
+            </h1>
+            {/* <p className="text-gray-600 text-sm  dark:text-gray-400 ">
+              {description}
+            </p> */}
+          </div>
         </div>
 
         {/* Current Balance Card */}
-        <BalanceCard
-          size="small"
-          walletData={walletData}
-          isLoading={isLoading}
-        />
-
-        {/* Transaction Form */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleFormSubmit)}
-              className="space-y-4 "
-            >
-              {/* Phone Number Field */}
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="md:w-9/12 mx-auto">
-                      {type === "send-money"
-                        ? "Recipient Phone Number"
-                        : "Agent Phone Number"}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter phone number"
-                        type="text"
-                        {...field}
-                        className="md:w-9/12 mx-auto rounded-2xl border bg-gray-50 dark:bg-gray-800 px-5 py-5 text-lg shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all duration-200 placeholder:text-gray-400"
-                      />
-                    </FormControl>
-                    <FormDescription className="text-sm md:w-9/12 mx-auto">
-                      {type === "send-money" &&
-                        "Enter the phone number of the person you want to send money to"}
-                      {type === "add-money" &&
-                        "Enter the agent phone number you want to add money from"}
-                      {type === "withdraw-money" &&
-                        "Enter the agent phone number you want to withdraw money to"}
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Amount Field */}
-              <FormField
-                control={form.control}
-                name="amount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="md:w-9/12 mx-auto">
-                      Amount ৳
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min="1"
-                        placeholder="0.00"
-                        {...field}
-                        onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value) || 0)
-                        }
-                        className="w-full rounded-2xl border bg-gray-50 dark:bg-gray-800 px-5 py-5 text-lg shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all duration-200 placeholder:text-gray-400 md:w-9/12 mx-auto"
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      {type === "withdraw-money" && (
-                        <>
-                          Maximum withdrawal amount: ৳
-                          {walletData?.data?.balance?.toLocaleString()}
-                        </>
-                      )}
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Submit Button */}
-              <div className="md: w-9/12 mx-auto ">
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className={`w-full py-6 text-white font-semibold rounded-lg bg-gradient-to-r ${gradientClass} hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer`}
-                >
-                  {isLoading ? "Processing..." : buttonText}
-                </Button>
+        <div className="relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 blur-sm opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-sm shadow-xl p-4 transform hover:scale-[1.02] transition-transform duration-300">
+            <div className="relative z-10">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white/20 backdrop-blur-sm rounded-xl">
+                    <WalletIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white drop-shadow" />
+                  </div>
+                  <div>
+                    <p className="text-white/90 text-sm font-semibold tracking-wide">
+                      Available Balance
+                    </p>
+                    <p className="text-white/70 text-xs">Ready to use</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="font-bold text-white text-lg sm:text-xl lg:text-2xl drop-shadow-lg">
+                    {isLoading ? (
+                      <div className="flex items-center gap-2">
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        <span className="text-base">Loading...</span>
+                      </div>
+                    ) : (
+                      `৳ ${
+                        walletData?.balance?.toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                        }) || "0.00"
+                      }`
+                    )}
+                  </div>
+                  <p className="text-white/60 text-xs">BDT</p>
+                </div>
               </div>
-            </form>
-          </Form>
+              {/* Decorative pattern */}
+              <div className="absolute top-0 right-0  w-24 h-24 opacity-10">
+                <div className="absolute inset-0 bg-blue-500 rounded-full transform rotate-45 scale-150"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Additional Info based on transaction type */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-          <div className="text-sm text-blue-800 dark:text-blue-200">
-            {type === "add-money" && (
-              <div>
-                <h4 className="font-medium mb-1">How to add money:</h4>
-                <p>Funds will be added to your wallet securely</p>
-              </div>
-            )}
-            {type === "send-money" && (
-              <div>
-                <h4 className="font-medium mb-1">Send money securely:</h4>
-                <p>
-                  The recipient will receive the money instantly in their
-                  wallet.
-                </p>
-              </div>
-            )}
-            {type === "withdraw-money" && (
-              <div>
-                <h4 className="font-medium mb-1">Withdraw to bank:</h4>
-                <p>
-                  Funds will be transferred to your provided agent phone
-                  number's wallet
-                </p>
-              </div>
-            )}
+        {/* Transaction Form Card */}
+        <div className="relative -mt-2 ">
+          <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl blur-sm opacity-80"></div>
+          <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-sm px-6 py-4 shadow-xl border border-gray-100 dark:border-gray-700">
+            <div className="space-y-4">
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(handleFormSubmit)}
+                  className="space-y-3 mb-4"
+                >
+                  {/* Phone Number Field */}
+                  <FormField
+                    control={form.control}
+                    name="phoneNumber"
+                    render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel className="text-gray-700 dark:text-gray-300 font-semibold flex items-center gap-2">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          {type === "send-money"
+                            ? "Recipient Phone Number"
+                            : "Agent Phone Number"}
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              placeholder="01XXXXXXXXX"
+                              type="text"
+                              {...field}
+                              className="w-full rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-gray-50/50 dark:bg-gray-700/50 px-4 py-3 text-base shadow-lg focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 placeholder:text-gray-400 hover:shadow-xl"
+                            />
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            </div>
+                          </div>
+                        </FormControl>
+                        <FormDescription className="text-xs text-gray-600 dark:text-gray-400 bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg border-l-2 border-blue-400">
+                          {type === "send-money" &&
+                            "💸 Enter the phone number of the person you want to send money to"}
+                          {type === "add-money" &&
+                            "💰 Enter the agent phone number you want to add money from"}
+                          {type === "withdraw-money" &&
+                            "🏧 Enter the agent phone number you want to withdraw money to"}
+                        </FormDescription>
+                        <FormMessage className="text-red-500 text-sm m-0" />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Amount Field */}
+                  <FormField
+                    control={form.control}
+                    name="amount"
+                    render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel className="text-gray-700 dark:text-gray-300 font-semibold flex items-center gap-2">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          Amount (৳)
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 flex items-center pl-4">
+                              <span className="text-gray-500 text-base font-semibold">
+                                ৳
+                              </span>
+                            </div>
+                            <Input
+                              type="number"
+                              min="5"
+                              step="1"
+                              placeholder="Enter amount"
+                              {...field}
+                              className="w-full rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-gray-50/50 dark:bg-gray-700/50 pl-10 pr-4 py-3 text-base font-semibold shadow-lg focus:border-green-500 dark:focus:border-green-400 focus:ring-2 focus:ring-green-500/20 transition-all duration-300 placeholder:text-gray-400 hover:shadow-xl"
+                            />
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                              <div className="text-xs text-gray-500 font-medium">
+                                BDT
+                              </div>
+                            </div>
+                          </div>
+                        </FormControl>
+                        <FormDescription>
+                          <div className="text-xs text-gray-600 dark:text-gray-400 bg-yellow-50 dark:bg-yellow-900/20  rounded-lg border-l-2 border-yellow-400">
+                            ⚠️ Minimum withdrawal amount: ৳ 5
+                          </div>
+                        </FormDescription>
+                        <FormMessage className="text-red-500 text-sm" />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Submit Button */}
+                  <div className="pt-1">
+                    <Button
+                      type="submit"
+                      disabled={isLoading}
+                      className={`w-full py-4 text-white font-bold text-base rounded-xl bg-gradient-to-r ${gradientClass} hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 shadow-xl hover:shadow-2xl relative overflow-hidden group`}
+                    >
+                      <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                      <div className="relative flex items-center justify-center gap-2">
+                        {isLoading ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                            <span>Processing...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>{buttonText}</span>
+                            <div className="w-4 h-4 bg-white/20 rounded-full flex items-center justify-center">
+                              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </div>
           </div>
         </div>
       </div>

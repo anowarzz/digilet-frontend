@@ -1,17 +1,25 @@
 import type { IWallet } from "@/types/wallet.type";
-import { Check, Copy, Eye, EyeOff, Wallet as WalletIcon } from "lucide-react";
+import {
+  Check,
+  Copy,
+  CreditCard,
+  Eye,
+  EyeOff,
+  RefreshCw,
+  Shield,
+  TrendingUp,
+  Wallet as WalletIcon,
+} from "lucide-react";
 import { useState } from "react";
 
 interface BalanceCardProps {
   className?: string;
-  size?: "small" | "large";
   walletData?: IWallet;
   isLoading?: boolean;
 }
 
 const BalanceCard = ({
   className = "",
-  size = "large",
   walletData,
   isLoading = false,
 }: BalanceCardProps) => {
@@ -22,86 +30,37 @@ const BalanceCard = ({
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy: ", err);
     }
   };
 
-  const isLarge = size === "large";
-
   return (
     <div className={`relative overflow-hidden ${className}`}>
-      <div
-        className={`bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-2xl lg:rounded-3xl shadow-xl ${
-          isLarge ? "p-6 sm:p-8 lg:p-10" : "p-4 sm:p-6"
-        }`}
-      >
+      {/* Main Balance Card */}
+      <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 rounded-2xl shadow-2xl p-5 lg:p-6 border border-purple-500/20">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-purple-500/5 to-transparent"></div>
+        <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-radial from-purple-400/10 via-transparent to-transparent rounded-full blur-2xl"></div>
+
         <div className="relative z-10">
-          <div
-            className={`flex items-center  justify-between ${
-              isLarge ? "mb-2 sm:mb-3" : "mb-2 sm:mb-3"
-            }`}
-          >
+          {/* Header Section */}
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-white/20 rounded-xl">
-                <WalletIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+              <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl shadow-lg">
+                <WalletIcon className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-white/80 text-xs sm:text-sm font-medium">
-                  Total Balance
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowBalance(!showBalance)}
-              className="p-2 hover:bg-white/20 rounded-lg transition-colors"
-            >
-              {showBalance ? (
-                <Eye
-                  className={`text-white ${isLarge ? "w-8 h-8" : "w-6 h-6"}`}
-                />
-              ) : (
-                <EyeOff
-                  className={`text-white ${isLarge ? "w-8 h-8" : "w-6 h-6"}`}
-                />
-              )}
-            </button>
-          </div>
-
-          <div className="space-y-2">
-            <div
-              className={`font-bold text-white ${
-                isLarge
-                  ? "text-2xl sm:text-3xl lg:text-4xl"
-                  : "text-xl sm:text-2xl lg:text-3xl"
-              }`}
-            >
-              {showBalance
-                ? isLoading
-                  ? "Loading..."
-                  : `৳ ${
-                      walletData?.balance?.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                      }) || "0.00"
-                    }`
-                : "৳ ••••••"}
-            </div>
-
-            {/* Wallet ID */}
-            {walletData?.walletId && (
-              <div className="flex items-center gap-2 mt-3">
-                <span className="text-white/60 text-xs sm:text-sm">
-                  Wallet ID:
-                </span>
+                <h3 className="text-white text-lg font-bold">Digital Wallet</h3>
                 <button
-                  onClick={() =>
-                    copyToClipboard(walletData?.walletId || "")
-                  }
-                  className="flex items-center gap-2 text-white/80 text-xs sm:text-sm font-mono bg-white/10 px-2 py-1 rounded hover:bg-white/20 transition-colors cursor-pointer group"
-                  title="Click to copy"
+                  onClick={() => copyToClipboard(walletData?.walletId || "")}
+                  className="text-purple-200 text-xs font-medium hover:text-white transition-colors cursor-pointer flex items-center gap-1.5 group"
+                  title="Click to copy Wallet ID"
                 >
-                  <span>{walletData?.walletId}</span>
+                  <span className="font-mono">
+                    {walletData?.walletId || "Loading..."}
+                  </span>
                   {copied ? (
                     <Check className="w-3 h-3 text-green-400" />
                   ) : (
@@ -109,7 +68,89 @@ const BalanceCard = ({
                   )}
                 </button>
               </div>
-            )}
+            </div>
+
+            {/* Wallet Status */}
+            <div className="flex items-center gap-2">
+              <div
+                className={`flex items-center gap-1.5 px-2 py-1 rounded-full ${
+                  walletData?.isBlocked
+                    ? "bg-red-500/20 text-red-300"
+                    : "bg-green-500/20 text-green-300"
+                }`}
+              >
+                <Shield className="w-3 h-3" />
+                <span className="text-xs font-medium">
+                  {walletData?.isBlocked ? "Blocked" : "Active"}
+                </span>
+              </div>
+              <button
+                onClick={() => setShowBalance(!showBalance)}
+                className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                {showBalance ? (
+                  <Eye className="w-5 h-5 text-white" />
+                ) : (
+                  <EyeOff className="w-5 h-5 text-white" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Balance Display */}
+          <div className="mb-5">
+            <p className="text-purple-200 text-sm font-medium mb-1">
+              Available Balance
+            </p>
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl lg:text-4xl font-bold text-white">
+                {showBalance
+                  ? isLoading
+                    ? "Loading..."
+                    : `৳ ${
+                        walletData?.balance?.toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                        }) || "0.00"
+                      }`
+                  : "৳ ••••••••"}
+              </h1>
+              {!isLoading && (
+                <button className="p-1.5 hover:bg-white/10 rounded-lg transition-colors group">
+                  <RefreshCw className="w-4 h-4 text-purple-300 group-hover:text-white group-hover:rotate-180 transition-all duration-500" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Compact Stats */}
+          <div className="flex gap-4 mb-4">
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10 flex-1">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-emerald-500/20 rounded-lg">
+                  <TrendingUp className="w-4 h-4 text-emerald-400" />
+                </div>
+                <div>
+                  <p className="text-emerald-400 text-xs font-medium">
+                    This Month
+                  </p>
+                  <p className="text-white text-sm font-bold">৳ 12,450</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10 flex-1">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-blue-500/20 rounded-lg">
+                  <CreditCard className="w-4 h-4 text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-blue-400 text-xs font-medium">
+                    Transactions
+                  </p>
+                  <p className="text-white text-sm font-bold">247</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
