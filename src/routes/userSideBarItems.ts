@@ -25,22 +25,22 @@ export const userSidebarItems: ISidebarItem[] = [
       {
         title: "Add Money",
         url: "/user/add-money",
-        Component: withAuth(AddMoney, role.USER as TRole),
+        Component: AddMoney,
       },
       {
         title: "Send Money",
         url: "/user/send-money",
-        Component: withAuth(SendMoney, role.USER as TRole),
+        Component: SendMoney,
       },
       {
         title: "Withdraw Money",
         url: "/user/withdraw-money",
-        Component: withAuth(WithdrawMoney, role.USER as TRole),
+        Component: WithdrawMoney,
       },
       {
         title: "Transaction History",
         url: "/user/transaction-history",
-        Component: withAuth(UserTransactions, role.USER as TRole),
+        Component: UserTransactions,
       },
     ],
   },

@@ -21,10 +21,11 @@ export const agentSidebarItems: ISidebarItem[] = [
     title: "Wallet Management",
     items: [
       {
-        title: "Wallet",
+        title: "My Wallet",
         url: "/agent/wallet",
         Component: withAuth(Wallet, role.AGENT as TRole),
       },
+
     ],
   },
   {
