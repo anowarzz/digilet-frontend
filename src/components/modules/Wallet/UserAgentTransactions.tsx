@@ -1,6 +1,6 @@
 import MyTransactions from "@/components/modules/Wallet/MyTransactions";
 
-const UserTransactions = () => {
+const UserAgentTransactions = () => {
   return (
     <div className="">
       <h5 className="text-center p-3 mb-2">Manage Transactions</h5>
@@ -9,4 +9,4 @@ const UserTransactions = () => {
   );
 };
 
-export default UserTransactions;
+export default UserAgentTransactions;

@@ -1,11 +1,9 @@
-import { role } from "@/constants/role";
-import AddMoney from "@/pages/User/AddMoney";
-import SendMoney from "@/pages/User/SendMoney";
-import UserTransactions from "@/pages/User/UserTransactions";
+import AddMoney from "@/components/modules/Wallet/AddMoney";
+import SendMoney from "@/components/modules/Wallet/SendMoney";
+import UserTransactions from "@/components/modules/Wallet/UserAgentTransactions";
+import WithdrawMoney from "@/components/modules/Wallet/WithdrawMoney";
 import UserWallet from "@/pages/User/UserWallet";
-import WithdrawMoney from "@/pages/User/WithdrawMoney";
-import type { ISidebarItem, TRole } from "@/types";
-import { withAuth } from "@/utils/withAuth";
+import type { ISidebarItem } from "@/types";
 
 // user sidebar items
 export const userSidebarItems: ISidebarItem[] = [
@@ -24,22 +22,22 @@ export const userSidebarItems: ISidebarItem[] = [
     items: [
       {
         title: "Add Money",
-        url: "/user/add-money",
+        url: "/user/wallet/add-money",
         Component: AddMoney,
       },
       {
         title: "Send Money",
-        url: "/user/send-money",
+        url: "/user/wallet/send-money",
         Component: SendMoney,
       },
       {
         title: "Withdraw Money",
-        url: "/user/withdraw-money",
+        url: "/user/wallet/withdraw-money",
         Component: WithdrawMoney,
       },
       {
         title: "Transaction History",
-        url: "/user/transaction-history",
+        url: "/user/wallet/transaction-history",
         Component: UserTransactions,
       },
     ],

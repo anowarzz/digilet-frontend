@@ -157,9 +157,16 @@ const TransactionForm = ({
                       <FormItem className="space-y-2">
                         <FormLabel className="text-gray-700 dark:text-gray-300 font-semibold flex items-center gap-2">
                           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                          {type === TransactionType.SEND_MONEY
-                            ? "Recipient Phone Number"
-                            : "Agent Phone Number"}
+                          {type === TransactionType.SEND_MONEY &&
+                            "Recipient Phone Number"}
+                          {type === TransactionType.ADD_MONEY &&
+                            "Agent Phone Number"}
+                          {type === TransactionType.WITHDRAW_MONEY &&
+                            "Agent Phone Number"}
+                          {type === TransactionType.CASH_IN &&
+                            "User Phone Number"}
+                          {type === TransactionType.CASH_OUT &&
+                            "User Phone Number"}
                         </FormLabel>
                         <FormControl>
                           <div className="relative">
@@ -181,6 +188,10 @@ const TransactionForm = ({
                             "💰 Enter the agent phone number you want to add money from"}
                           {type === TransactionType.WITHDRAW_MONEY &&
                             "🏧 Enter the agent phone number you want to withdraw money to"}
+                          {type === TransactionType.CASH_IN &&
+                            "🏧 Enter the user phone number you want to cash in to"}
+                          {type === TransactionType.CASH_OUT &&
+                            "🏧 Enter the user phone number you want to cash out from"}
                         </FormDescription>
                         <FormMessage className="text-red-500 text-sm m-0" />
                       </FormItem>
@@ -220,7 +231,7 @@ const TransactionForm = ({
                           </div>
                         </FormControl>
                         <FormDescription className="text-xs text-gray-600 dark:text-gray-400 bg-yellow-50 dark:bg-yellow-900/20  rounded-lg border-l-2 border-yellow-400">
-                          ⚠️ Minimum withdrawal amount: ৳ 5
+                          ⚠️ Minimum transaction amount: ৳ 5
                         </FormDescription>
                         <FormMessage className="text-red-500 text-sm" />
                       </FormItem>

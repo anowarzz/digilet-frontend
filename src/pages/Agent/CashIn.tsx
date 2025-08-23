@@ -4,32 +4,31 @@ import { useAddMoneyMutation } from "@/redux/features/wallet/wallet.api";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
-const AddMoney = () => {
+const CashIn = () => {
   const [addMoney] = useAddMoneyMutation();
   const navigate = useNavigate();
 
-
   // Add money Request Handler
-  const handleAddMoney = async (addMoneyData: {
+  const handleCashIn = async (cashInData: {
     phone: string;
     amount: number;
   }) => {
     const toastId = toast.loading("Adding Money...");
 
     const addMoneyPayload = {
-      agentPhone: addMoneyData.phone,
-      amount: addMoneyData.amount,
+      userPhone: cashInData.phone,
+      amount: cashInData.amount,
     };
 
-    console.log("Add Money:", addMoneyPayload);
+    console.log("Cash In:", addMoneyPayload);
 
     try {
       const res = await addMoney(addMoneyPayload).unwrap();
-      console.log("Add Money Response:", res);
+      console.log("Cash In Response:", res);
 
       if (res.success) {
-        navigate("/user/my-wallet");
-        toast.success("Money Added To Your Wallet successfully!", {
+        navigate("/agent/my-wallet");
+        toast.success("Money Cashed In To User Wallet successfully!", {
           id: toastId,
         });
       }
@@ -40,21 +39,21 @@ const AddMoney = () => {
         return toast.error(error.data.message, { id: toastId });
       }
 
-      return toast.error("Failed To Add Money", { id: toastId });
+      return toast.error("Failed To Cash In Money", { id: toastId });
     }
   };
 
   return (
     <TransactionForm
-      type="add-money"
-      title="Add Money"
-      description="Top up your own wallet instantly"
-      buttonText="Add Money"
+      type="cash-in"
+      title="Cash In"
+      description="Cash In To User Wallet"
+      buttonText="Cash In"
       icon={addMoneyIcon}
       gradientClass="from-emerald-500 to-teal-600"
-      onSubmit={handleAddMoney}
+      onSubmit={handleCashIn}
     />
   );
 };
 
-export default AddMoney;
+export default CashIn;

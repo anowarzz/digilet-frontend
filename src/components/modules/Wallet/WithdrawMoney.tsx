@@ -8,8 +8,7 @@ const WithdrawMoney = () => {
   const navigate = useNavigate();
   const [withdrawMoney] = useWithdrawMoneyMutation();
 
-
- // Money withdraw request Handler 
+  // Money withdraw request Handler
   const handleWithdrawMoney = async (withdrawMoneyData: {
     phone: string;
     amount: number;
