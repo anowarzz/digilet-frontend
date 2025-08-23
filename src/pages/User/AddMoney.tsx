@@ -4,7 +4,7 @@ import TransactionForm from "@/components/modules/Transaction/TransactionForm";
 const AddMoney = () => {
   const handleAddMoney = (data: { phoneNumber: string; amount: number }) => {
     console.log("Add Money:", data);
-  }; 
+  };
 
   return (
     <TransactionForm

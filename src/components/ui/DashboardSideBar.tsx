@@ -13,14 +13,13 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { getSidebarItems } from "@/utils/getSidebarItems";
 import { Link } from "react-router";
-import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 
 export function DashboardSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  
   const { data: userData } = useCurrentUserInfoQuery(undefined);
 
   const data = {

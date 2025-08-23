@@ -29,7 +29,12 @@ interface TransactionFormProps {
 
 // Form schema
 const transactionSchema = z.object({
-  phoneNumber: z.string().min(1, "Phone number is required"),
+  phoneNumber: z
+    .string({ error: "Phone Number Is Required" })
+    .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
+      message:
+        "Phone number must be  Bangladeshi number. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
+    }),
   amount: z.number().min(0.01, "Amount must be greater than 0"),
 });
 
@@ -85,7 +90,7 @@ const TransactionForm = ({
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleFormSubmit)}
-              className="space-y-6"
+              className="space-y-4 "
             >
               {/* Phone Number Field */}
               <FormField
@@ -93,7 +98,7 @@ const TransactionForm = ({
                 name="phoneNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
+                    <FormLabel className="md:w-9/12 mx-auto">
                       {type === "send-money"
                         ? "Recipient Phone Number"
                         : "Agent Phone Number"}
@@ -101,11 +106,12 @@ const TransactionForm = ({
                     <FormControl>
                       <Input
                         placeholder="Enter phone number"
+                        type="text"
                         {...field}
-                        className="w-full"
+                        className="md:w-9/12 mx-auto rounded-2xl border bg-gray-50 dark:bg-gray-800 px-5 py-5 text-lg shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all duration-200 placeholder:text-gray-400"
                       />
                     </FormControl>
-                    <FormDescription>
+                    <FormDescription className="text-sm md:w-9/12 mx-auto">
                       {type === "send-money" &&
                         "Enter the phone number of the person you want to send money to"}
                       {type === "add-money" &&
@@ -124,18 +130,19 @@ const TransactionForm = ({
                 name="amount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Amount ($)</FormLabel>
+                    <FormLabel className="md:w-9/12 mx-auto">
+                      Amount ৳
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
-                        step="1"
                         min="1"
                         placeholder="0.00"
                         {...field}
                         onChange={(e) =>
                           field.onChange(parseFloat(e.target.value) || 0)
                         }
-                        className="w-full"
+                        className="w-full rounded-2xl border bg-gray-50 dark:bg-gray-800 px-5 py-5 text-lg shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all duration-200 placeholder:text-gray-400 md:w-9/12 mx-auto"
                       />
                     </FormControl>
                     <FormDescription>
@@ -152,13 +159,15 @@ const TransactionForm = ({
               />
 
               {/* Submit Button */}
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className={`w-full py-3 text-white font-semibold rounded-lg bg-gradient-to-r ${gradientClass} hover:opacity-90 transition-opacity disabled:opacity-50`}
-              >
-                {isLoading ? "Processing..." : buttonText}
-              </Button>
+              <div className="md: w-9/12 mx-auto ">
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className={`w-full py-6 text-white font-semibold rounded-lg bg-gradient-to-r ${gradientClass} hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer`}
+                >
+                  {isLoading ? "Processing..." : buttonText}
+                </Button>
+              </div>
             </form>
           </Form>
         </div>
