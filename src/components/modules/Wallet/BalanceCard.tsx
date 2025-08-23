@@ -17,15 +17,18 @@ interface BalanceCardProps {
   className?: string;
   walletData?: IWallet;
   isLoading?: boolean;
+  onRefresh?: () => void;
 }
 
 const BalanceCard = ({
   className = "",
   walletData,
   isLoading = false,
+  onRefresh,
 }: BalanceCardProps) => {
   const [showBalance, setShowBalance] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -34,6 +37,17 @@ const BalanceCard = ({
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy: ", err);
+    }
+  };
+
+  const handleRefresh = async () => {
+    if (onRefresh && !isRefreshing) {
+      setIsRefreshing(true);
+      try {
+        onRefresh();
+      } finally {
+        setTimeout(() => setIsRefreshing(false), 500);
+      }
     }
   };
 
@@ -116,8 +130,16 @@ const BalanceCard = ({
                   : "৳ ••••••••"}
               </h1>
               {!isLoading && (
-                <Button className="p-1.5 hover:bg-white/10 rounded-lg transition-colors group">
-                  <RefreshCw className="w-4 h-4 text-purple-300 group-hover:text-white group-hover:rotate-180 transition-all duration-500" />
+                <Button
+                  onClick={handleRefresh}
+                  disabled={isRefreshing}
+                  className="p-1.5 hover:bg-white/10 rounded-lg transition-colors group disabled:opacity-50 cursor-pointer"
+                >
+                  <RefreshCw
+                    className={`w-4 h-4 text-purple-300 group-hover:text-white transition-colors duration-300 ${
+                      isRefreshing ? "animate-spin" : ""
+                    }`}
+                  />
                 </Button>
               )}
             </div>
@@ -125,31 +147,31 @@ const BalanceCard = ({
 
           {/* Compact Stats */}
           <div className="flex gap-4">
-            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10 flex-1">
-              <div className="flex items-center gap-2">
-                <div className=" bg-emerald-500/20 rounded-lg">
-                  <TrendingUp className="w-4 h-4 text-emerald-400" />
-                </div>
-                <div>
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-2 border border-white/10 flex-1">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-emerald-500/20 rounded-lg">
+                    <TrendingUp className="w-3 h-3 text-emerald-400" />
+                  </div>
                   <p className="text-emerald-400 text-xs font-medium">
                     This Month
                   </p>
-                  <p className="text-white text-sm font-bold">৳ 12,450</p>
                 </div>
+                <p className="text-white text-sm font-bold">৳ 12,450</p>
               </div>
             </div>
 
-            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10 flex-1">
-              <div className="flex items-center gap-2">
-                <div className=" bg-blue-500/20 rounded-lg">
-                  <CreditCard className="w-4 h-4 text-blue-400" />
-                </div>
-                <div>
-                  <p className="text-blue-400 text-xs font-medium">
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-2 border border-white/10 flex-1">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-blue-500/20 rounded-lg">
+                    <CreditCard className="w-3 h-3 text-blue-400" />
+                  </div>
+                  <p className="text-emerald-400 text-xs font-medium">
                     Transactions
                   </p>
-                  <p className="text-white text-sm font-bold">247</p>
                 </div>
+                <p className="text-white text-sm font-bold">247</p>
               </div>
             </div>
           </div>

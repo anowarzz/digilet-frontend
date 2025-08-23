@@ -8,7 +8,7 @@ import { HistoryIcon } from "lucide-react";
 import { Link } from "react-router";
 
 const UserWallet = () => {
-  const { data: walletData, isLoading } = useGetWalletQuery(undefined);
+  const { data: walletData, isLoading, refetch } = useGetWalletQuery(undefined);
 
   console.log(walletData);
 
@@ -62,7 +62,11 @@ const UserWallet = () => {
 
         {/* Balance Card */}
         <div>
-          <BalanceCard walletData={walletData} isLoading={isLoading} />
+          <BalanceCard
+            walletData={walletData}
+            isLoading={isLoading}
+            onRefresh={refetch}
+          />
         </div>
 
         {/* Quick Actions */}
