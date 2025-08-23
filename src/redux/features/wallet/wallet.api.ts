@@ -7,6 +7,7 @@ export const walletApi = baseApi.injectEndpoints({
         url: "/wallet/me",
         method: "GET",
       }),
+      transformResponse: (response) => response.data,
     }),
     addMoney: builder.mutation({
       query: (addMoneyPayload) => ({

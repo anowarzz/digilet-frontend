@@ -1,14 +1,20 @@
 import addMoneyIcon from "@/assets/Icons/add-money.png";
 import sendrawMoneyIcon from "@/assets/Icons/send-money.png";
 import withdrawMoneyIcon from "@/assets/Icons/withdraw-money.png";
+import BalanceCard from "@/components/modules/Wallet/BalanceCard";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, HistoryIcon, Wallet as WalletIcon } from "lucide-react";
-import { useState } from "react";
+import { useGetWalletQuery } from "@/redux/features/wallet/wallet.api";
+import { HistoryIcon } from "lucide-react";
 import { Link } from "react-router";
 
 const UserWallet = () => {
-  const [showBalance, setShowBalance] = useState(true);
-  const [balance] = useState(15420.5); // Mock balance data
+
+  const { data: walletData, isLoading } = useGetWalletQuery(undefined);
+
+  console.log(walletData);
+  
+
+
 
   const quickActions = [
     {
@@ -59,44 +65,11 @@ const UserWallet = () => {
         </div>
 
         {/* Balance Card */}
-        <div className="relative overflow-hidden">
-          <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-2xl lg:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl">
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4 sm:mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 sm:p-3 bg-white/20 rounded-xl">
-                    <WalletIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-white/80 text-xs sm:text-sm font-medium">
-                      Total Balance
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowBalance(!showBalance)}
-                  className="p-2 hover:bg-white/20 rounded-lg transition-colors"
-                >
-                  {showBalance ? (
-                    <Eye className="w-5 h-5 text-white" />
-                  ) : (
-                    <EyeOff className="w-5 h-5 text-white" />
-                  )}
-                </button>
-              </div>
-
-              <div className="space-y-2">
-                <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
-                  {showBalance
-                    ? `$${balance.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                      })}`
-                    : "••••••"}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <BalanceCard
+          size="large"
+          walletData={walletData}
+          isLoading={isLoading}
+        />
 
         {/* Quick Actions */}
         <div className="space-y-4 sm:space-y-6">

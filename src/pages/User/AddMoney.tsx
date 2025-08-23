@@ -10,12 +10,11 @@ const AddMoney = () => {
     <TransactionForm
       type="add-money"
       title="Add Money"
-      description="Top up your wallet instantly"
+      description="Top up your own wallet instantly"
       buttonText="Add Money"
       icon={addMoneyIcon}
       gradientClass="from-emerald-500 to-teal-600"
       onSubmit={handleAddMoney}
-      isLoading={false}
     />
   );
 };

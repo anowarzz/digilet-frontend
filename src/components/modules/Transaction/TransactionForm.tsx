@@ -1,3 +1,4 @@
+import BalanceCard from "@/components/modules/Wallet/BalanceCard";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -9,9 +10,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useGetWalletQuery } from "@/redux/features/wallet/wallet.api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, WalletIcon } from "lucide-react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -25,7 +25,6 @@ interface TransactionFormProps {
   icon: string;
   gradientClass?: string;
   onSubmit: (data: { phoneNumber: string; amount: number }) => void;
-  isLoading?: boolean;
 }
 
 // Form schema
@@ -42,10 +41,8 @@ const TransactionForm = ({
   icon,
   gradientClass,
   onSubmit,
-  isLoading = false,
 }: TransactionFormProps) => {
-  const [showBalance, setShowBalance] = useState(true);
-  const [balance] = useState(15420.5); // Mock balance - replace with real data
+  const { data: walletData, isLoading } = useGetWalletQuery(undefined);
 
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),
@@ -63,51 +60,25 @@ const TransactionForm = ({
   };
 
   return (
-    <div className=" dark:from-gray-900 dark:to-slate-900 p-4 lg:p-8 min-h-screen">
-      <div className="max-w-2xl mx-auto space-y-6">
+    <div className=" dark:from-gray-900 dark:to-slate-900 px-4 py-3 ">
+      <div className="max-w-2xl mx-auto space-y-3">
         {/* Header */}
         <div className="text-center space-y-2">
           <div
-            className={`w-20 h-20 bg-gradient-to-r ${gradientClass} rounded-2xl flex items-center justify-center shadow-lg mx-auto`}
+            className={`w-16 h-16 bg-gradient-to-r ${gradientClass} rounded-2xl flex items-center justify-center shadow-lg mx-auto`}
           >
-            <img src={icon} className="w-10 h-10 text-white" alt={title} />
+            <img src={icon} className="w-12 h-12 text-white" alt={title} />
           </div>
-          <h1 className="text-3xl font-bold">{title}</h1>
-        <p className="text-gray-800">{description}</p>
+          <h1 className="text-2xl md:text-2xl font-bold">{title}</h1>
+          <p className="text-gray-800">{description}</p>
         </div>
 
         {/* Current Balance Card */}
-        <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-2xl p-6 shadow-xl">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-white/20 rounded-xl">
-                <WalletIcon className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="text-white/80 text-sm font-medium">
-                  Current Balance
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowBalance(!showBalance)}
-              className="p-2 hover:bg-white/20 rounded-lg transition-colors"
-            >
-              {showBalance ? (
-                <Eye className="w-5 h-5 text-white" />
-              ) : (
-                <EyeOff className="w-5 h-5 text-white" />
-              )}
-            </button>
-          </div>
-          <div className="text-3xl font-bold text-white">
-            {showBalance
-              ? `$${balance.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                })}`
-              : "••••••"}
-          </div>
-        </div>
+        <BalanceCard
+          size="small"
+          walletData={walletData}
+          isLoading={isLoading}
+        />
 
         {/* Transaction Form */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
@@ -125,7 +96,7 @@ const TransactionForm = ({
                     <FormLabel>
                       {type === "send-money"
                         ? "Recipient Phone Number"
-                        : "Phone Number"}
+                        : "Agent Phone Number"}
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -135,9 +106,12 @@ const TransactionForm = ({
                       />
                     </FormControl>
                     <FormDescription>
-                      {type === "send-money"
-                        ? "Enter the phone number of the person you want to send money to"
-                        : "Enter your phone number"}
+                      {type === "send-money" &&
+                        "Enter the phone number of the person you want to send money to"}
+                      {type === "add-money" &&
+                        "Enter the agent phone number you want to add money from"}
+                      {type === "withdraw-money" &&
+                        "Enter the agent phone number you want to withdraw money to"}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -154,8 +128,8 @@ const TransactionForm = ({
                     <FormControl>
                       <Input
                         type="number"
-                        step="0.01"
-                        min="0.01"
+                        step="1"
+                        min="1"
                         placeholder="0.00"
                         {...field}
                         onChange={(e) =>
@@ -167,7 +141,8 @@ const TransactionForm = ({
                     <FormDescription>
                       {type === "withdraw-money" && (
                         <>
-                          Maximum withdrawal amount: ${balance.toLocaleString()}
+                          Maximum withdrawal amount: ৳
+                          {walletData?.data?.balance?.toLocaleString()}
                         </>
                       )}
                     </FormDescription>
@@ -194,10 +169,7 @@ const TransactionForm = ({
             {type === "add-money" && (
               <div>
                 <h4 className="font-medium mb-1">How to add money:</h4>
-                <p>
-                  Funds will be added to your wallet instantly after
-                  verification.
-                </p>
+                <p>Funds will be added to your wallet securely</p>
               </div>
             )}
             {type === "send-money" && (
@@ -213,8 +185,8 @@ const TransactionForm = ({
               <div>
                 <h4 className="font-medium mb-1">Withdraw to bank:</h4>
                 <p>
-                  Funds will be transferred to your linked bank account within
-                  1-2 business days.
+                  Funds will be transferred to your provided agent phone
+                  number's wallet
                 </p>
               </div>
             )}

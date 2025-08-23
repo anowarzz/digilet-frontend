@@ -15,7 +15,6 @@ const SendMoney = () => {
       icon={sendMoneyIcon}
       gradientClass="from-fuchsia-500 to-purple-600"
       onSubmit={handleSendMoney}
-      isLoading={false} 
     />
   );
 };
