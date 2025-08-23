@@ -8,10 +8,14 @@ const AddMoney = () => {
   const [addMoney] = useAddMoneyMutation();
   const navigate = useNavigate();
 
+
+  // Add money Request Handler
   const handleAddMoney = async (addMoneyData: {
     phone: string;
     amount: number;
   }) => {
+    const toastId = toast.loading("Adding Money...");
+
     const addMoneyPayload = {
       agentPhone: addMoneyData.phone,
       amount: addMoneyData.amount,
@@ -25,16 +29,18 @@ const AddMoney = () => {
 
       if (res.success) {
         navigate("/user/my-wallet");
-        toast.success("Money Added To Your Wallet successfully!");
+        toast.success("Money Added To Your Wallet successfully!", {
+          id: toastId,
+        });
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error.statusCode);
       if (error.status >= 400 && error.status < 500) {
-        return toast.error(error.data.message);
+        return toast.error(error.data.message, { id: toastId });
       }
 
-      return toast.error("Failed To Add Money");
+      return toast.error("Failed To Add Money", { id: toastId });
     }
   };
 

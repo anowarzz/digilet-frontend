@@ -8,10 +8,14 @@ const WithdrawMoney = () => {
   const navigate = useNavigate();
   const [withdrawMoney] = useWithdrawMoneyMutation();
 
+
+ // Money withdraw request Handler 
   const handleWithdrawMoney = async (withdrawMoneyData: {
     phone: string;
     amount: number;
   }) => {
+    const toastId = toast.loading("Withdrawing Money...");
+
     const withdrawMoneyPayload = {
       agentPhone: withdrawMoneyData.phone,
       amount: withdrawMoneyData.amount,
@@ -25,16 +29,16 @@ const WithdrawMoney = () => {
 
       if (res.success) {
         navigate("/user/my-wallet");
-        toast.success("Money Withdrawn Successfully!");
+        toast.success("Money Withdrawn Successfully!", { id: toastId });
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error.statusCode);
       if (error.status >= 400 && error.status < 500) {
-        return toast.error(error.data.message);
+        return toast.error(error.data.message, { id: toastId });
       }
 
-      return toast.error("Failed To Withdraw Money");
+      return toast.error("Failed To Withdraw Money", { id: toastId });
     }
   };
 

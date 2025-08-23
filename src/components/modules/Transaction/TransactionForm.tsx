@@ -85,12 +85,6 @@ const TransactionForm = ({
               />
             </div>
             {/* Decorative elements */}
-            <div
-              className={`absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r ${gradientClass} rounded-full opacity-60 animate-pulse`}
-            ></div>
-            <div
-              className={`absolute -bottom-1 -left-1 w-3 h-3 bg-gradient-to-r ${gradientClass} rounded-full opacity-40 animate-pulse delay-150`}
-            ></div>
           </div>
           <div className="">
             <h1 className="text-lg md:text-xl font-semibold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">

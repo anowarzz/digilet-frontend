@@ -8,10 +8,14 @@ const SendMoney = () => {
   const navigate = useNavigate();
   const [sendMoney] = useSendMoneyMutation();
 
+
+  // Send Money Request Handler
   const handleSendMoney = async (sendMoneyData: {
     phone: string;
     amount: number;
   }) => {
+    const toastId = toast.loading("Sending Money...");
+
     const sendMoneyPayload = {
       receiverPhone: sendMoneyData.phone,
       amount: sendMoneyData.amount,
@@ -25,16 +29,16 @@ const SendMoney = () => {
 
       if (res.success) {
         navigate("/user/my-wallet");
-        toast.success("Money Sent Successfully!");
+        toast.success("Money Sent Successfully!", { id: toastId });
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error.statusCode);
       if (error.status >= 400 && error.status < 500) {
-        return toast.error(error.data.message);
+        return toast.error(error.data.message, { id: toastId });
       }
 
-      return toast.error("Failed To Send Money");
+      return toast.error("Failed To Send Money", { id: toastId });
     }
   };
 
