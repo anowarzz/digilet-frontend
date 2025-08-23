@@ -1,7 +1,7 @@
 import { role } from "@/constants/role";
 import AddMoney from "@/pages/User/AddMoney";
 import SendMoney from "@/pages/User/SendMoney";
-import UserTransactions from "@/pages/User/Transactions";
+import UserTransactions from "@/pages/User/UserTransactions";
 import UserWallet from "@/pages/User/UserWallet";
 import WithdrawMoney from "@/pages/User/WithdrawMoney";
 import type { ISidebarItem, TRole } from "@/types";

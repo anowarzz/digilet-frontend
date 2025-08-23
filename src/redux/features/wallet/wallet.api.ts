@@ -34,7 +34,20 @@ export const walletApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["WALLET"],
     }),
+    transactionsHistory: builder.query({
+      query: () => ({
+        url: "/transaction/me/history",
+        method: "GET",
+      }),
+      providesTags: ["WALLET"],
+    }),
   }),
 });
 
-export const { useGetWalletQuery, useAddMoneyMutation, useSendMoneyMutation, useWithdrawMoneyMutation } = walletApi;
+export const {
+  useGetWalletQuery,
+  useAddMoneyMutation,
+  useSendMoneyMutation,
+  useWithdrawMoneyMutation,
+  useTransactionsHistoryQuery,
+} = walletApi;
