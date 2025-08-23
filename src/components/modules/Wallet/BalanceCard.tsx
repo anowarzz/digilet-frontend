@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import type { IWallet } from "@/types/wallet.type";
 import {
   Check,
@@ -35,6 +36,9 @@ const BalanceCard = ({
       console.error("Failed to copy: ", err);
     }
   };
+
+
+
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
@@ -115,9 +119,9 @@ const BalanceCard = ({
                   : "৳ ••••••••"}
               </h1>
               {!isLoading && (
-                <button className="p-1.5 hover:bg-white/10 rounded-lg transition-colors group">
+                <Button className="p-1.5 hover:bg-white/10 rounded-lg transition-colors group">
                   <RefreshCw className="w-4 h-4 text-purple-300 group-hover:text-white group-hover:rotate-180 transition-all duration-500" />
-                </button>
+                </Button>
               )}
             </div>
           </div>

@@ -14,26 +14,26 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { WalletIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import z from "zod";
+import { TransactionType } from "@/constants/transactions";
 
-export type TransactionType = "add-money" | "send-money" | "withdraw-money";
 
 interface TransactionFormProps {
-  type: TransactionType;
+  type: string
   title: string;
   description: string;
   buttonText: string;
   icon: string;
   gradientClass?: string;
-  onSubmit: (data: { phoneNumber: string; amount: number }) => void;
+  onSubmit: (data: { agentPhone: string; amount: number }) => void;
 }
 
 // Form schema
 const transactionSchema = z.object({
-  phoneNumber: z
-    .string({ error: "Phone Number Is Required" })
+  agentPhone: z
+    .string({ error: "Agent Phone Number Is Required" })
     .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
       message:
-        "Phone number must be  Bangladeshi number. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
+        "Agent phone number must be  Bangladeshi number. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
     }),
   amount: z
     .string()
@@ -58,14 +58,14 @@ const TransactionForm = ({
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
-      phoneNumber: "",
+      agentPhone: "",
       amount: "", // Start with empty string
     },
   });
 
   const handleFormSubmit = (values: z.infer<typeof transactionSchema>) => {
     onSubmit({
-      phoneNumber: values.phoneNumber,
+      agentPhone: values.agentPhone,
       amount: parseFloat(values.amount.toString()) || 0,
     });
   };
@@ -106,7 +106,7 @@ const TransactionForm = ({
         {/* Current Balance Card */}
         <div className="relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 blur-sm opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <div className="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-sm shadow-xl p-4 transform hover:scale-[1.02] transition-transform duration-300">
+          <div className="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-sm shadow-xl p-4 transform  transition-transform duration-300">
             <div className="relative z-10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -159,12 +159,12 @@ const TransactionForm = ({
                   {/* Phone Number Field */}
                   <FormField
                     control={form.control}
-                    name="phoneNumber"
+                    name="agentPhone"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
                         <FormLabel className="text-gray-700 dark:text-gray-300 font-semibold flex items-center gap-2">
                           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                          {type === "send-money"
+                          {type === TransactionType.SEND_MONEY
                             ? "Recipient Phone Number"
                             : "Agent Phone Number"}
                         </FormLabel>
@@ -182,11 +182,11 @@ const TransactionForm = ({
                           </div>
                         </FormControl>
                         <FormDescription className="text-xs text-gray-600 dark:text-gray-400 bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg border-l-2 border-blue-400">
-                          {type === "send-money" &&
+                          {type === TransactionType.SEND_MONEY &&
                             "💸 Enter the phone number of the person you want to send money to"}
-                          {type === "add-money" &&
+                          {type === TransactionType.ADD_MONEY &&
                             "💰 Enter the agent phone number you want to add money from"}
-                          {type === "withdraw-money" &&
+                          {type === TransactionType.WITHDRAW_MONEY &&
                             "🏧 Enter the agent phone number you want to withdraw money to"}
                         </FormDescription>
                         <FormMessage className="text-red-500 text-sm m-0" />
