@@ -76,7 +76,7 @@ const TransactionForm = ({
         <div className="text-center space-y-2">
           <div className="relative">
             <div
-              className={`w-10 h-10 bg-gradient-to-r ${gradientClass} rounded-xl flex items-center justify-center shadow-xl mx-auto transform hover:scale-105 transition-transform duration-300`}
+              className={`w-10 h-10 bg-gradient-to-r ${gradientClass} rounded flex items-center justify-center shadow-xl mx-auto transform hover:scale-105 transition-transform duration-300`}
             >
               <img
                 src={icon}

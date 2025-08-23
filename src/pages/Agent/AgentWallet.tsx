@@ -3,12 +3,20 @@ import sendrawMoneyIcon from "@/assets/Icons/send-money.png";
 import withdrawMoneyIcon from "@/assets/Icons/withdraw-money.png";
 import BalanceCard from "@/components/modules/Wallet/BalanceCard";
 import { Button } from "@/components/ui/button";
+import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { useGetWalletQuery } from "@/redux/features/wallet/wallet.api";
 import { HistoryIcon } from "lucide-react";
 import { Link } from "react-router";
 
 const AgentWallet = () => {
-  const { data: walletData, isLoading, refetch } = useGetWalletQuery(undefined);
+  const {
+    data: walletData,
+    isLoading: isLoadingWallet,
+    refetch,
+  } = useGetWalletQuery(undefined);
+  const { data: agentData } = useCurrentUserInfoQuery(undefined);
+
+  console.log(agentData);
 
   console.log(walletData);
 
@@ -54,7 +62,10 @@ const AgentWallet = () => {
           </div>
           <div className="flex items-center gap-2">
             <Link to="/agent/transaction-history">
-              <Button variant="outline" className="flex text items-center cursor-pointer">
+              <Button
+                variant="outline"
+                className="flex text items-center cursor-pointer"
+              >
                 <HistoryIcon className="w-4 h-4" />
                 <span className="sm:inline">Transaction History</span>
               </Button>
@@ -66,7 +77,7 @@ const AgentWallet = () => {
         <div>
           <BalanceCard
             walletData={walletData}
-            isLoading={isLoading}
+            isLoading={isLoadingWallet}
             onRefresh={refetch}
           />
         </div>
