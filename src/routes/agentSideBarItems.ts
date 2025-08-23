@@ -1,7 +1,7 @@
 import { role } from "@/constants/role";
 import Analytics from "@/pages/Agent/Analytics";
 import Transactions from "@/pages/Agent/Transactions";
-import Wallet from "@/pages/Agent/Wallet";
+import Wallet from "@/pages/Agent/AgentWallet";
 import type { ISidebarItem, TRole } from "@/types";
 import { withAuth } from "@/utils/withAuth";
 

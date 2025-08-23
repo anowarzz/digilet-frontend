@@ -38,15 +38,15 @@ const UserWallet = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-br from-emerald-900 to-fuchsia-950 dark:from-gray-900 dark:to-slate-900 p-4 lg:p-8">
+    <div className=" dark:from-gray-900 dark:to-slate-900 p-4 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-3 lg:space-y-4">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white dark:text-white">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-muted-foreground dark:text-white">
               My Wallet
             </h1>
-            <p className="text-sm sm:text-base text-gray-200 dark:text-gray-400 mt-1">
+            <p className="text-sm sm:text-base text-muted-foreground dark:text-gray-400 mt-1">
               Manage your digital wallet with ease
             </p>
           </div>
