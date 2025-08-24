@@ -31,10 +31,11 @@ const AuthNavbar = () => {
         {/* Right side - Auth button */}
         <div className="flex items-center">
           {isLoginPage && (
+      
             <Link to="/register">
               <Button
                 variant="outline"
-                className="px-4 py-2 rounded-md text-sm font-medium  transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-md text-sm font-medium  transition-colors"
               >
                 Register
               </Button>

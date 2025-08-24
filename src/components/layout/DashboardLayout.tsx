@@ -8,6 +8,7 @@ import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { Outlet } from "react-router";
 import UserAvatar from "../Avatar";
 import { DashboardSidebar } from "../ui/DashboardSideBar";
+import { ModeToggle } from "./ModeToogler";
 
 const DashboardLayout = () => {
   const { data: userData } = useCurrentUserInfoQuery(undefined);
@@ -25,7 +26,10 @@ const DashboardLayout = () => {
               className="mr-2 data-[orientation=vertical]:h-4"
             />
           </div>
-          <UserAvatar role={role} />
+          <div className="flex items-center gap-4">
+            <ModeToggle />
+            <UserAvatar role={role} />
+          </div>
         </header>
 
         <div className="flex flex-1 flex-col gap-4">

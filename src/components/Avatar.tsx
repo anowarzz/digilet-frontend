@@ -8,9 +8,13 @@ export default function UserAvatar({ role }: { role?: string }) {
   return (
     <Link to={profilePath}>
       <Avatar>
-        <AvatarImage src={userImage} alt="Avatar Image" />
+        <AvatarImage src={userImage} alt="Avatar Image" className="dark:bg-emerald-500 "/>
         <AvatarFallback>
-          <CircleUserIcon size={32} aria-hidden="true" />
+          <CircleUserIcon
+            size={32}
+            aria-hidden="true"
+            className="border-2 text-neutral-800 dark:text-white"
+          />
         </AvatarFallback>
       </Avatar>
     </Link>

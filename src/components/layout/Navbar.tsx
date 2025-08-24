@@ -22,6 +22,7 @@ import {
 import { useAppDispatch } from "@/redux/hook";
 import { Link, useNavigate } from "react-router";
 import UserAvatar from "../Avatar";
+import { ModeToggle } from "./ModeToogler";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -160,21 +161,21 @@ export default function Navbar() {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
-          {/* <ModeToggle /> */}
+          <ModeToggle />
           {userData?.data?.phone && (
             <div className="m-2 flex gap-4 items-center justify-center">
               <UserAvatar role={role} />
               <Button
                 onClick={handleLogOut}
                 variant="destructive"
-                className="text-sm cursor-pointer"
+                className="text-sm"
               >
                 Logout
               </Button>
             </div>
           )}
           {!userData?.data?.phone && !isUserLoading && (
-            <Button asChild className="text-sm text-white ">
+            <Button asChild className="text-sm">
               <Link to="/login">Login</Link>
             </Button>
           )}
