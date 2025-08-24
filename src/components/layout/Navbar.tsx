@@ -13,7 +13,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 // import { ModeToggle } from "./ModeToggler";
-import { role } from "@/constants/role";
+import { UserRole } from "@/constants/role";
 import {
   authApi,
   useCurrentUserInfoQuery,
@@ -30,9 +30,9 @@ const navigationLinks = [
   { href: "/features", label: "Features", role: "PUBLIC" },
   { href: "/contact", label: "Contact", role: "PUBLIC" },
   { href: "/faq", label: "FAQ", role: "PUBLIC" },
-  { href: "/user", label: "Dashboard", role: role.USER },
-  { href: "/admin", label: "Dashboard", role: role.ADMIN },
-  { href: "/agent", label: "Dashboard", role: role.AGENT },
+  { href: "/user", label: "Dashboard", role: UserRole.USER },
+  { href: "/admin", label: "Dashboard", role: UserRole.ADMIN },
+  { href: "/agent", label: "Dashboard", role: UserRole.AGENT },
 ];
 
 export default function Navbar() {

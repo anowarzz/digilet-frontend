@@ -17,12 +17,14 @@ interface BalanceCardProps {
   className?: string;
   walletData?: IWallet;
   isLoading?: boolean;
+  phone: string;
   onRefresh?: () => void;
 }
 
 const BalanceCard = ({
   className = "",
   walletData,
+  phone,
   isLoading = false,
   onRefresh,
 }: BalanceCardProps) => {
@@ -67,10 +69,10 @@ const BalanceCard = ({
                 <WalletIcon className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-white text-lg font-bold">Digital Wallet</h3>
+                <h3 className="text-white text-lg font-bold">{phone}</h3>
                 <button
                   onClick={() => copyToClipboard(walletData?.walletId || "")}
-                  className="text-purple-200 text-xs font-medium hover:text-white transition-colors cursor-pointer flex items-center gap-1.5 group"
+                  className="text-purple-200 text-xs hover:text-white transition-colors cursor-pointer flex items-center gap-1.5 group"
                   title="Click to copy Wallet ID"
                 >
                   <span className="font-mono">

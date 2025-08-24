@@ -9,16 +9,18 @@ import { HistoryIcon } from "lucide-react";
 import { Link } from "react-router";
 
 const AgentWallet = () => {
-  const {
-    data: walletData,
-    isLoading: isLoadingWallet,
-    refetch,
-  } = useGetWalletQuery(undefined);
+
+
+  const { data: walletData,isLoading: isLoadingWallet, refetch} = useGetWalletQuery(undefined);
+
+
   const { data: agentData } = useCurrentUserInfoQuery(undefined);
 
-  console.log(agentData);
+  console.log(agentData.data);
+  
+  const phoneNumber = agentData?.data?.phone;
 
-  console.log(walletData);
+
 
   const quickActions = [
     {
@@ -76,6 +78,7 @@ const AgentWallet = () => {
         {/* Balance Card */}
         <div>
           <BalanceCard
+            phone={phoneNumber || ""}
             walletData={walletData}
             isLoading={isLoadingWallet}
             onRefresh={refetch}

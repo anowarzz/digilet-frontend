@@ -1,7 +1,7 @@
 import App from "@/App";
 import AuthLayout from "@/components/layout/AuthLayout";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { role } from "@/constants/role";
+import { UserRole } from "@/constants/role";
 import About from "@/pages/about/About";
 import Contact from "@/pages/contact/Contact";
 import Faq from "@/pages/faq/Faq";
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    Component: withAuth(DashboardLayout, role.ADMIN as TRole),
+    Component: withAuth(DashboardLayout, UserRole.ADMIN as TRole),
     path: "/admin",
     children: [
       { index: true, element: <Navigate to="/admin/analytics" /> },
@@ -39,7 +39,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    Component: withAuth(DashboardLayout, role.USER as TRole),
+    Component: withAuth(DashboardLayout, UserRole.USER as TRole),
     path: "/user",
     children: [
       { index: true, element: <Navigate to="/user/my-wallet" /> },
@@ -47,7 +47,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    Component: withAuth(DashboardLayout, role.AGENT as TRole),
+    Component: withAuth(DashboardLayout, UserRole.AGENT as TRole),
     path: "/agent",
     children: [
       { index: true, element: <Navigate to="/agent/analytics" /> },

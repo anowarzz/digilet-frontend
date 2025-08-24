@@ -9,6 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { UserRole, UserStatus } from "@/constants/role";
 import { TransactionType } from "@/constants/transactions";
 import { useGetWalletQuery } from "@/redux/features/wallet/wallet.api";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +20,8 @@ import z from "zod";
 interface TransactionFormProps {
   type: string;
   title: string;
+  role?: string;
+  status?: string;
   description: string;
   buttonText: string;
   icon: string;
@@ -46,6 +49,8 @@ const transactionSchema = z.object({
 const TransactionForm = ({
   type,
   title,
+  role,
+  status,
   description,
   buttonText,
   icon,
@@ -100,7 +105,7 @@ const TransactionForm = ({
         <div className="relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 blur-sm opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div className="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-sm shadow-xl p-4 transform  transition-transform duration-300">
-            <div className="relative z-10">
+            <div className="relative z-10 ">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-white/20 backdrop-blur-sm rounded-xl">
@@ -112,6 +117,13 @@ const TransactionForm = ({
                     </p>
                     <p className="text-white/70 text-xs">Ready to use</p>
                   </div>
+                </div>
+                <div className="flex-1 flex justify-center">
+                  {role === UserRole.AGENT && status === UserStatus.PENDING && (
+                    <p className="text-center text-yellow-300 text-xs font-medium mt-2">
+                      Your agent status is still pending
+                    </p>
+                  )}
                 </div>
                 <div className="text-right">
                   <div className="font-bold text-white text-lg sm:text-xl lg:text-2xl drop-shadow-lg">

@@ -3,6 +3,7 @@ import sendrawMoneyIcon from "@/assets/Icons/send-money.png";
 import withdrawMoneyIcon from "@/assets/Icons/withdraw-money.png";
 import BalanceCard from "@/components/modules/Wallet/BalanceCard";
 import { Button } from "@/components/ui/button";
+import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { useGetWalletQuery } from "@/redux/features/wallet/wallet.api";
 import { HistoryIcon } from "lucide-react";
 import { Link } from "react-router";
@@ -10,8 +11,12 @@ import { Link } from "react-router";
 const UserWallet = () => {
   const { data: walletData, isLoading, refetch } = useGetWalletQuery(undefined);
 
-  console.log(walletData);
+  const { data: userData } = useCurrentUserInfoQuery(undefined);
+  const phone = userData?.data?.phone;
 
+
+
+  
   const quickActions = [
     {
       title: "Add Money",
@@ -63,6 +68,7 @@ const UserWallet = () => {
         {/* Balance Card */}
         <div>
           <BalanceCard
+            phone={phone}
             walletData={walletData}
             isLoading={isLoading}
             onRefresh={refetch}

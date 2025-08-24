@@ -2,7 +2,7 @@ import AddMoney from "@/components/modules/Wallet/AddMoney";
 import SendMoney from "@/components/modules/Wallet/SendMoney";
 import UserAgentTransactions from "@/components/modules/Wallet/UserAgentTransactions";
 import WithdrawMoney from "@/components/modules/Wallet/WithdrawMoney";
-import { role } from "@/constants/role";
+import { UserRole } from "@/constants/role";
 import AgentWallet from "@/pages/Agent/AgentWallet";
 import Analytics from "@/pages/Agent/Analytics";
 import CashIn from "@/pages/Agent/CashIn";
@@ -18,7 +18,7 @@ export const agentSidebarItems: ISidebarItem[] = [
       {
         title: "Analytics",
         url: "/agent/analytics",
-        Component: withAuth(Analytics, role.AGENT as TRole),
+        Component: withAuth(Analytics, UserRole.AGENT as TRole),
       },
     ],
   },
