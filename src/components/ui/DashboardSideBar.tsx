@@ -12,150 +12,47 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
-import { Link } from "react-router";
+import {
+  authApi,
+  useCurrentUserInfoQuery,
+  useLogOutMutation,
+} from "@/redux/features/auth/auth.api";
+import { useAppDispatch } from "@/redux/hook";
+import { getSidebarItems } from "@/utils/getSidebarItems";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
+import { Button } from "./button";
 
 export function DashboardSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const { data: userData } = useCurrentUserInfoQuery(undefined);
+  const { setOpenMobile, isMobile } = useSidebar();
+  const navigate = useNavigate();
+
+  const [logOut] = useLogOutMutation();
+  const dispatch = useAppDispatch();
+
+  //handle logout
+  const handleLogOut = async () => {
+    const toastId = "log-out";
+    await logOut(undefined);
+    navigate("/");
+    toast.info("Logged out successfully", { id: toastId });
+
+    dispatch(authApi.util.resetApiState());
+  };
+
   const data = {
-    navMain: [
-      {
-        title: "Getting Started",
-        url: "#",
-        items: [
-          {
-            title: "Installation",
-            url: "#",
-          },
-          {
-            title: "Project Structure",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "Building Your Application",
-        url: "#",
-        items: [
-          {
-            title: "Routing",
-            url: "#",
-          },
-          {
-            title: "Data Fetching",
-            url: "#",
-            isActive: true,
-          },
-          {
-            title: "Rendering",
-            url: "#",
-          },
-          {
-            title: "Caching",
-            url: "#",
-          },
-          {
-            title: "Styling",
-            url: "#",
-          },
-          {
-            title: "Optimizing",
-            url: "#",
-          },
-          {
-            title: "Configuring",
-            url: "#",
-          },
-          {
-            title: "Testing",
-            url: "#",
-          },
-          {
-            title: "Authentication",
-            url: "#",
-          },
-          {
-            title: "Deploying",
-            url: "#",
-          },
-          {
-            title: "Upgrading",
-            url: "#",
-          },
-          {
-            title: "Examples",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "API Reference",
-        url: "#",
-        items: [
-          {
-            title: "Components",
-            url: "#",
-          },
-          {
-            title: "File Conventions",
-            url: "#",
-          },
-          {
-            title: "Functions",
-            url: "#",
-          },
-          {
-            title: "next.config.js Options",
-            url: "#",
-          },
-          {
-            title: "CLI",
-            url: "#",
-          },
-          {
-            title: "Edge Runtime",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "Architecture",
-        url: "#",
-        items: [
-          {
-            title: "Accessibility",
-            url: "#",
-          },
-          {
-            title: "Fast Refresh",
-            url: "#",
-          },
-          {
-            title: "Next.js Compiler",
-            url: "#",
-          },
-          {
-            title: "Supported Browsers",
-            url: "#",
-          },
-          {
-            title: "Turbopack",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "Community",
-        url: "#",
-        items: [
-          {
-            title: "Contribution Guide",
-            url: "#",
-          },
-        ],
-      },
-    ],
+    navMain: getSidebarItems(userData?.data?.role),
+  };
+
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
   };
 
   return (
@@ -175,7 +72,9 @@ export function DashboardSidebar({
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <Link to={item.url}>{item.title}</Link>
+                      <Link to={item.url} onClick={handleLinkClick}>
+                        {item.title}
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -183,7 +82,19 @@ export function DashboardSidebar({
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
+
+        {/* Bottom section for logout button*/}
+        <div className="absolute  bottom-0 left-0 w-full p-4 flex justify-center">
+          <Button
+            variant="destructive"
+            className="w-full cursor-pointer"
+            onClick={handleLogOut}
+          >
+            Logout
+          </Button>
+        </div>
       </SidebarContent>
+      <SidebarRail />
       <SidebarRail />
     </Sidebar>
   );

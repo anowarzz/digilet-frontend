@@ -11,41 +11,49 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import React from "react";
+// import { ModeToggle } from "./ModeToggler";
+import { UserRole } from "@/constants/role";
 import {
   authApi,
   useCurrentUserInfoQuery,
   useLogOutMutation,
 } from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
-import { CircleUserRoundIcon } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import UserAvatar from "../Avatar";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/features", label: "Features" },
-  { href: "/contact", label: "Contact" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/user", label: "Dashboard" },
+  { href: "/", label: "Home", role: "PUBLIC" },
+  { href: "/about", label: "About", role: "PUBLIC" },
+  { href: "/features", label: "Features", role: "PUBLIC" },
+  { href: "/contact", label: "Contact", role: "PUBLIC" },
+  { href: "/faq", label: "FAQ", role: "PUBLIC" },
+  { href: "/user", label: "Dashboard", role: UserRole.USER },
+  { href: "/admin", label: "Dashboard", role: UserRole.ADMIN },
+  { href: "/agent", label: "Dashboard", role: UserRole.AGENT },
 ];
 
-const Navbar = () => {
-  const { data: userData } = useCurrentUserInfoQuery(undefined);
-
-  const [logOut] = useLogOutMutation();
+export default function Navbar() {
+  const { data: userData, isLoading: isUserLoading } =
+    useCurrentUserInfoQuery(undefined);
+  const [logout] = useLogOutMutation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const role = userData?.data?.role;
 
   const handleLogOut = async () => {
-    await logOut(undefined);
-     dispatch(authApi.util.resetApiState());
+    await logout(undefined);
+    navigate("/");
+    dispatch(authApi.util.resetApiState());
   };
 
-  console.log(userData, "user data in nav");
+  console.log(userData, "user in nav");
 
   return (
-    <header className="border-b px-4 md:px-6 py-2">
-      <div className="flex px-4 container mx-auto h-16 items-center justify-between gap-4">
+    <header className="border-b">
+      <div className="container mx-auto px-4 flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex items-center gap-2">
           {/* Mobile menu trigger */}
@@ -87,11 +95,28 @@ const Navbar = () => {
               <NavigationMenu className="max-w-none *:w-full">
                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                   {navigationLinks.map((link, index) => (
-                    <NavigationMenuItem key={index} className="w-full">
-                      <NavigationMenuLink asChild className="py-1.5">
-                        <Link to={link.href}>{link.label}</Link>
-                      </NavigationMenuLink>
-                    </NavigationMenuItem>
+                    <>
+                      {link.role === "PUBLIC" && (
+                        <NavigationMenuItem key={index}>
+                          <NavigationMenuLink
+                            asChild
+                            className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                          >
+                            <Link to={link.href}>{link.label}</Link>
+                          </NavigationMenuLink>
+                        </NavigationMenuItem>
+                      )}
+                      {link.role === userData?.data?.role && (
+                        <NavigationMenuItem key={index}>
+                          <NavigationMenuLink
+                            asChild
+                            className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                          >
+                            <Link to={link.href}>{link.label}</Link>
+                          </NavigationMenuLink>
+                        </NavigationMenuItem>
+                      )}
+                    </>
                   ))}
                 </NavigationMenuList>
               </NavigationMenu>
@@ -106,14 +131,28 @@ const Navbar = () => {
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link, index) => (
-                  <NavigationMenuItem key={index}>
-                    <NavigationMenuLink
-                      asChild
-                      className="text-muted-foreground hover:text-primary py-1.5 font-medium"
-                    >
-                      <Link to={link.href}>{link.label}</Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
+                  <React.Fragment key={index}>
+                    {link.role === "PUBLIC" && (
+                      <NavigationMenuItem>
+                        <NavigationMenuLink
+                          asChild
+                          className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                        >
+                          <Link to={link.href}>{link.label}</Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    )}
+                    {link.role === userData?.data?.role && (
+                      <NavigationMenuItem>
+                        <NavigationMenuLink
+                          asChild
+                          className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                        >
+                          <Link to={link.href}>{link.label}</Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    )}
+                  </React.Fragment>
                 ))}
               </NavigationMenuList>
             </NavigationMenu>
@@ -122,27 +161,28 @@ const Navbar = () => {
         {/* Right side */}
         <div className="flex items-center gap-2">
           {/* <ModeToggle /> */}
-          {userData?.data?.email && (
+          {userData?.data?.phone && (
             <div className="m-2 flex gap-4 items-center justify-center">
-              <CircleUserRoundIcon />
+              <UserAvatar role={role} />
               <Button
                 onClick={handleLogOut}
                 variant="destructive"
-                className="text-sm "
+                className="text-sm cursor-pointer"
               >
                 Logout
               </Button>
             </div>
           )}
-          {!userData?.data?.email && (
+          {!userData?.data?.phone && !isUserLoading && (
             <Button asChild className="text-sm text-white ">
               <Link to="/login">Login</Link>
             </Button>
+          )}
+          {isUserLoading && (
+            <div className="w-20 h-10 bg-gray-200 animate-pulse rounded"></div>
           )}
         </div>
       </div>
     </header>
   );
-};
-
-export default Navbar;
+}

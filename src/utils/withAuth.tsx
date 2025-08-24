@@ -1,0 +1,24 @@
+import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
+import type { TRole } from "@/types";
+import type { ComponentType } from "react";
+import { Navigate } from "react-router-dom";
+
+export const withAuth = (Component: ComponentType, requiredRole?: TRole) => {
+  return function AuthWrapper() {
+    const { data, isLoading } = useCurrentUserInfoQuery(undefined);
+
+    console.log(data?.data?.role);
+    
+
+
+    if (!isLoading && !data?.data?.phone) {
+      return <Navigate to="/login" />;
+    }
+
+    if (requiredRole && !isLoading && requiredRole !== data?.data?.role) {
+      return <Navigate to="/unauthorized" />;
+    }
+
+    return <Component />;
+  };
+};

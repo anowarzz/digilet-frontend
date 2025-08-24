@@ -10,7 +10,8 @@ import {
 import { Input } from "@/components/ui/input";
 import Password from "@/components/ui/Password";
 import { cn } from "@/lib/utils";
-import { useLoginMutation } from "@/redux/features/auth/auth.api";
+import { authApi, useLoginMutation } from "@/redux/features/auth/auth.api";
+import { useAppDispatch } from "@/redux/hook";
 import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -20,6 +21,7 @@ const LoginForm = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const form = useForm({
     defaultValues: {
       phone: "01234567890",
@@ -37,7 +39,11 @@ const LoginForm = ({
       const res = await login(data).unwrap();
 
       if (res.success) {
-        toast.success("Login successful!");
+        dispatch(authApi.util.invalidateTags(["USER"]));
+        toast.success("Login successful!", {
+          duration: 2000,
+          position: "bottom-center",
+        });
         navigate("/");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,15 +52,17 @@ const LoginForm = ({
       if (err.data?.message === "Incorrect Password Provided") {
         return toast.error("Incorrect password. Please try again.", {
           id: toastId,
+          duration: 2000,
         });
       }
 
       if (err.data?.message === "User does not exist") {
         return toast.error("User does not exist with this phone", {
           id: toastId,
+          duration: 4000,
         });
       }
-      toast.error("Login failed. Please try again.");
+      toast.error("Login failed. Please try again.", { duration: 4000 });
     }
   };
 
@@ -144,7 +152,7 @@ const LoginForm = ({
           </span>
         </div>
 
-        <Button variant="outline" className="w-full cursor-pointer">
+        <Button variant="outline" className="w-full">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"

@@ -34,7 +34,7 @@ const AuthNavbar = () => {
             <Link to="/register">
               <Button
                 variant="outline"
-                className="px-4 py-2 rounded-md text-sm font-medium  transition-colors"
+                className="px-4 py-2 rounded-md text-sm font-medium  transition-colors cursor-pointer"
               >
                 Register
               </Button>
@@ -44,7 +44,7 @@ const AuthNavbar = () => {
             <Link to="/login">
               <Button
                 variant="outline"
-                className="px-4 py-2 rounded-md text-sm font-medium  transition-colors"
+                className="px-4 py-2 rounded-md text-sm font-medium  transition-colors cursor-pointer"
               >
                 Login
               </Button>
