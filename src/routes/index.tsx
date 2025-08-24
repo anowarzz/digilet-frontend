@@ -8,20 +8,22 @@ import Faq from "@/pages/faq/Faq";
 import Features from "@/pages/features/Features";
 import Home from "@/pages/home/Home";
 import Login from "@/pages/login/Login";
+import NotFound from "@/pages/NotFound";
 import Register from "@/pages/register/Register";
 import Unauthorized from "@/pages/UnAuthorized";
 import type { TRole } from "@/types";
 import { generateRoutes } from "@/utils/generateRoues";
 import { withAuth } from "@/utils/withAuth";
 import { createBrowserRouter, Navigate } from "react-router";
-import { adminSidebarItems } from "./adminSideBarItems";
-import { agentSidebarItems } from "./agentSideBarItems";
-import { userSidebarItems } from "./userSideBarItems";
+import { adminSidebarItems } from "./adminSidebarItems";
+import { agentSidebarItems } from "./agentSidebarItems";
+import { userSidebarItems } from "./userSidebarItems";
 
 const router = createBrowserRouter([
   {
     Component: App,
     path: "/",
+    errorElement: <NotFound />,
     children: [
       { index: true, Component: Home },
       { path: "about", Component: About },
@@ -33,6 +35,7 @@ const router = createBrowserRouter([
   {
     Component: withAuth(DashboardLayout, UserRole.ADMIN as TRole),
     path: "/admin",
+    errorElement: <NotFound />,
     children: [
       { index: true, element: <Navigate to="/admin/analytics" /> },
       ...generateRoutes(adminSidebarItems),
@@ -41,6 +44,7 @@ const router = createBrowserRouter([
   {
     Component: withAuth(DashboardLayout, UserRole.USER as TRole),
     path: "/user",
+    errorElement: <NotFound />,
     children: [
       { index: true, element: <Navigate to="/user/my-wallet" /> },
       ...generateRoutes(userSidebarItems),
@@ -49,6 +53,7 @@ const router = createBrowserRouter([
   {
     Component: withAuth(DashboardLayout, UserRole.AGENT as TRole),
     path: "/agent",
+    errorElement: <NotFound />,
     children: [
       { index: true, element: <Navigate to="/agent/analytics" /> },
       ...generateRoutes(agentSidebarItems),
@@ -57,6 +62,7 @@ const router = createBrowserRouter([
 
   {
     Component: AuthLayout,
+    errorElement: <NotFound />,
     children: [
       { path: "/login", Component: Login, index: true },
       { path: "/register", Component: Register },
