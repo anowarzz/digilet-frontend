@@ -33,12 +33,19 @@ export const adminApi = baseApi.injectEndpoints({
         },
       }),
     }),
+    allTransactions: builder.query({
+      query: () => ({
+        url: "/admin/all-transactions",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
 export const {
   useAllUsersandAgentsQuery,
   usePendingAgentsQuery,
+  useAllTransactionsQuery,
   useActiveAgentsQuery,
   useAllUsersQuery,
 } = adminApi;
