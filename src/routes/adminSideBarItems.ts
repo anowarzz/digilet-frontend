@@ -1,4 +1,4 @@
-import AllAgents from "@/pages/Admin/AllAgents";
+import ActiveAgents from "@/pages/Admin/ActiveAgents";
 import AllUsers from "@/pages/Admin/AllUsers";
 import AllWallets from "@/pages/Admin/AllWallets";
 import Analytics from "@/pages/Admin/Analytics";
@@ -31,9 +31,9 @@ export const adminSidebarItems: ISidebarItem[] = [
     title: "Agent Management",
     items: [
       {
-        title: "All Agents",
-        url: "/admin/all-agents",
-        Component: AllAgents,
+        title: "All Active Agents",
+        url: "/admin/active-agents",
+        Component: ActiveAgents,
       },
       {
         title: "Pending Agents",

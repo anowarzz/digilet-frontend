@@ -1,4 +1,7 @@
 const AllTransactions = () => {
+
+
+
     return (
         <div>
             Welcome to AllTransactions component

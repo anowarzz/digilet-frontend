@@ -7,16 +7,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAllUsersQuery } from "@/redux/features/admin/admin.api";
+import { useActiveAgentsQuery } from "@/redux/features/admin/admin.api";
 
-const AllUsers = () => {
-  const { data: allUsers, isLoading } = useAllUsersQuery(undefined);
-  const users = allUsers?.data || [];
+const AllActiveAgents = () => {
+  const { data: allAgents, isLoading } = useActiveAgentsQuery(undefined);
+  const agents = allAgents?.data || [];
+
+  console.log(agents);
 
   return (
     <div className="w-full px-2 sm:px-4 md:px-8 py-6">
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
-        All Users
+        All Agents
       </h2>
       <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-2 sm:p-4 border border-gray-100 dark:border-gray-800 overflow-x-auto">
         <Table className="min-w-[500px]">
@@ -36,35 +38,37 @@ const AllUsers = () => {
                   Loading...
                 </TableCell>
               </TableRow>
-            ) : users.length === 0 ? (
+            ) : agents.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-8">
-                  No users found
+                  No active agents found
                 </TableCell>
               </TableRow>
             ) : (
-              users.map((user: any) => {
-                const walletStatus = user.wallet?.isBlocked
-                  ? "Blocked"
-                  : "Active";
+              agents.map((agent: any) => {
+                // Use agent.status for the status column
+                let statusColor = "bg-gray-100 text-gray-600";
+                if (agent.status === "ACTIVE")
+                  statusColor = "bg-green-100 text-green-600";
+                else if (agent.status === "BLOCKED")
+                  statusColor = "bg-red-100 text-red-600";
+                else if (agent.status === "PENDING")
+                  statusColor = "bg-yellow-100 text-yellow-600";
                 return (
-                  <TableRow key={user._id}>
+                  <TableRow key={agent._id}>
                     <TableCell className="font-medium break-words">
-                      {user.name}
+                      {agent.name}
                     </TableCell>
-                    <TableCell className="break-words">{user.phone}</TableCell>
+                    <TableCell className="break-words">{agent.phone}</TableCell>
                     <TableCell className="break-words">
-                      {user.wallet?.balance ?? 0} {user.wallet?.currency ?? ""}
+                      {agent.wallet?.balance ?? 0}{" "}
+                      {agent.wallet?.currency ?? ""}
                     </TableCell>
                     <TableCell>
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          walletStatus === "Blocked"
-                            ? "bg-red-100 text-red-600"
-                            : "bg-green-100 text-green-600"
-                        }`}
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${statusColor}`}
                       >
-                        {walletStatus}
+                        {agent.status}
                       </span>
                     </TableCell>
                     <TableCell>
@@ -83,4 +87,4 @@ const AllUsers = () => {
   );
 };
 
-export default AllUsers;
+export default AllActiveAgents;
