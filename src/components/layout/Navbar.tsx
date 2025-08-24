@@ -20,8 +20,8 @@ import {
   useLogOutMutation,
 } from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
-import { CircleUserRoundIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router";
+import UserAvatar from "../Avatar";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -162,7 +162,7 @@ export default function Navbar() {
           {/* <ModeToggle /> */}
           {userData?.data?.phone && (
             <div className="m-2 flex gap-4 items-center justify-center">
-              <CircleUserRoundIcon />
+              <UserAvatar />
               <Button
                 onClick={handleLogOut}
                 variant="destructive"

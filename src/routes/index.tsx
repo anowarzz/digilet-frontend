@@ -1,6 +1,7 @@
 import App from "@/App";
 import AuthLayout from "@/components/layout/AuthLayout";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import Profile from "@/components/modules/Profile/Profile";
 import { UserRole } from "@/constants/role";
 import About from "@/pages/about/About";
 import Contact from "@/pages/contact/Contact";
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/admin/analytics" /> },
       ...generateRoutes(adminSidebarItems),
+      { path: "profile", Component: Profile },
     ],
   },
   {
@@ -48,6 +50,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/user/my-wallet" /> },
       ...generateRoutes(userSidebarItems),
+      { path: "profile", Component: Profile },
     ],
   },
   {
@@ -57,6 +60,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/agent/analytics" /> },
       ...generateRoutes(agentSidebarItems),
+      { path: "profile", Component: Profile },
     ],
   },
 
