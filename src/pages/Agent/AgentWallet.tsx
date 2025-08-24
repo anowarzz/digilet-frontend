@@ -1,51 +1,63 @@
 import addMoneyIcon from "@/assets/Icons/add-money.png";
-import sendrawMoneyIcon from "@/assets/Icons/send-money.png";
-import withdrawMoneyIcon from "@/assets/Icons/withdraw-money.png";
+import cashInIcon from "@/assets/Icons/cash-in.png";
+import cashOutIcon from "@/assets/Icons/cash-out.png";
 import BalanceCard from "@/components/modules/Wallet/BalanceCard";
 import { Button } from "@/components/ui/button";
 import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
-import { useGetWalletQuery } from "@/redux/features/wallet/wallet.api";
+import {
+  useGetWalletQuery,
+  useTransactionsHistoryQuery,
+} from "@/redux/features/wallet/wallet.api";
+import type { ITransaction } from "@/types/transaction.type";
+import { getTransactionDetails } from "@/utils/getTransactionDetails";
 import { HistoryIcon } from "lucide-react";
 import { Link } from "react-router";
 
 const AgentWallet = () => {
-
-
-  const { data: walletData,isLoading: isLoadingWallet, refetch} = useGetWalletQuery(undefined);
-
+  const {
+    data: walletData,
+    isLoading: isLoadingWallet,
+    refetch,
+  } = useGetWalletQuery(undefined);
 
   const { data: agentData } = useCurrentUserInfoQuery(undefined);
 
-  console.log(agentData.data);
-  
-  const phoneNumber = agentData?.data?.phone;
+  const { data: agentTransactions, isLoading } =
+    useTransactionsHistoryQuery(undefined);
 
+  const phone = agentData?.data?.phone;
 
+  // Process recent transactions (first 5)
+  const recentTransactions =
+    agentTransactions?.data?.slice(0, 5)?.map((transaction: ITransaction) => ({
+      ...transaction,
+      ...getTransactionDetails(transaction),
+    })) || [];
 
   const quickActions = [
     {
-      title: "Add Money",
-      subtitle: "Top up wallet",
-      icon: addMoneyIcon,
+      title: "Cash In",
+      subtitle: "Top up user wallet",
+      icon: cashInIcon,
       color: "from-emerald-500 to-teal-600",
       hoverColor: "hover:from-emerald-600 hover:to-teal-700",
-      route: "/user/add-money",
+      route: "/agent/cash-in",
     },
     {
-      title: "Send Money",
-      subtitle: "Transfer to others",
-      icon: sendrawMoneyIcon,
+      title: "Cash Out",
+      subtitle: "Withdraw from user wallet",
+      icon: cashOutIcon,
       color: "from-fuchsia-500 to-purple-600",
       hoverColor: "hover:from-fuchsia-600 hover:to-purple-700",
-      route: "/user/send-money",
+      route: "/agent/cash-out",
     },
     {
-      title: "Withdraw Money",
-      subtitle: "Cash out to bank",
-      icon: withdrawMoneyIcon,
+      title: "Add Money",
+      subtitle: "Add money from user wallet ",
+      icon: addMoneyIcon,
       color: "from-pink-500 to-rose-600",
       hoverColor: "hover:from-pink-600 hover:to-rose-700",
-      route: "/user/withdraw-money",
+      route: "/agent/wallet/add-money",
     },
   ];
 
@@ -63,7 +75,7 @@ const AgentWallet = () => {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Link to="/agent/transaction-history">
+            <Link to="/agent/wallet/transaction-history">
               <Button
                 variant="outline"
                 className="flex text items-center cursor-pointer"
@@ -78,7 +90,7 @@ const AgentWallet = () => {
         {/* Balance Card */}
         <div>
           <BalanceCard
-            phone={phoneNumber || ""}
+            phone={phone || ""}
             walletData={walletData}
             isLoading={isLoadingWallet}
             onRefresh={refetch}
@@ -129,67 +141,86 @@ const AgentWallet = () => {
         {/* Recent Activity Preview */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-lg border border-gray-100 dark:border-gray-700">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl sm:text-2xl font-semibold text-white dark:text-white">
+            <h3 className="text-xl sm:text-2xl font-semibol dark:text-white">
               Recent Activity
             </h3>
-            <button className="text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">
-              View All
-            </button>
+            <Link to="/agent/wallet/transaction-history">
+              <Button
+                variant="link"
+                className="cursor-pointer text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+              >
+                View All
+              </Button>
+            </Link>
           </div>
 
           <div className="space-y-4">
-            {/* Mock recent transactions */}
-            {[
-              {
-                type: "Received",
-                amount: "+$250.00",
-                from: "John Doe",
-                time: "2 hours ago",
-                color: "text-green-600",
-              },
-              {
-                type: "Sent",
-                amount: "-$75.50",
-                to: "Coffee Shop",
-                time: "5 hours ago",
-                color: "text-red-600",
-              },
-              {
-                type: "Added",
-                amount: "+$500.00",
-                from: "Bank Transfer",
-                time: "1 day ago",
-                color: "text-blue-600",
-              },
-            ].map((transaction, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl"
-              >
-                <div className="flex items-center gap-4">
-                  <div
-                    className={`w-2 h-2 rounded-full ${
-                      transaction.type === "Received"
-                        ? "bg-green-500"
-                        : transaction.type === "Sent"
-                        ? "bg-red-500"
-                        : "bg-blue-500"
-                    }`}
-                  ></div>
-                  <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      {transaction.type} {transaction.from || transaction.to}
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {transaction.time}
-                    </p>
+            {isLoading ? (
+              // Loading skeleton
+              Array.from({ length: 3 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl animate-pulse"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                    <div className="space-y-2">
+                      <div className="h-4 w-32 bg-gray-400 rounded"></div>
+                      <div className="h-3 w-16 bg-gray-400 rounded"></div>
+                    </div>
                   </div>
+                  <div className="h-4 w-16 bg-gray-400 rounded"></div>
                 </div>
-                <div className={`font-semibold ${transaction.color}`}>
-                  {transaction.amount}
-                </div>
+              ))
+            ) : recentTransactions.length > 0 ? (
+              // Real transactions (first 5)
+              recentTransactions.map(
+                (
+                  transaction: ITransaction & {
+                    displayType: string;
+                    displayAmount: string;
+                    color: string;
+                    bgColor: string;
+                    timeAgo: string;
+                    fee: number;
+                  }
+                ) => (
+                  <div
+                    key={transaction._id}
+                    className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`w-2 h-2 rounded-full ${transaction.bgColor}`}
+                      ></div>
+                      <div>
+                        <p className="md: font-medium text-gray-900 dark:text-white">
+                          {transaction.displayType} - From Dummy User
+                        </p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          {transaction.timeAgo} • {transaction.status}
+                        </p>
+                      </div>
+                    </div>
+                    <div className={`md:font-semibold ${transaction.color}`}>
+                      {transaction.displayAmount}
+                      {transaction.fee > 0 && (
+                        <span className="text-xs text-gray-500 ml-1">
+                          (Fee: ${transaction.fee})
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )
+              )
+            ) : (
+              // No transactions
+              <div className="text-center py-8">
+                <p className="text-gray-500 dark:text-gray-400">
+                  No recent transactions found
+                </p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>

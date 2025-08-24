@@ -20,6 +20,11 @@ export const agentSidebarItems: ISidebarItem[] = [
         url: "/agent/analytics",
         Component: withAuth(Analytics, UserRole.AGENT as TRole),
       },
+      {
+        title: "My Wallet",
+        url: "/agent/wallet",
+        Component: AgentWallet,
+      },
     ],
   },
 
@@ -41,11 +46,6 @@ export const agentSidebarItems: ISidebarItem[] = [
   {
     title: "Wallet Management",
     items: [
-      {
-        title: "My Wallet",
-        url: "/agent/wallet",
-        Component: AgentWallet,
-      },
       {
         title: "Add Money",
         url: "/agent/wallet/add-money",
