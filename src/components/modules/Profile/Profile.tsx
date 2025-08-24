@@ -1,4 +1,4 @@
-import AvatarImg from "@/assets/images/user.png";
+import userIcon from "@/assets/images/user.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -71,22 +71,22 @@ const updateUserZodSchema = z.object({
 type UpdateUserFormData = z.infer<typeof updateUserZodSchema>;
 
 const Profile = () => {
-  // Example data - replace with fetched data
-  const [userData, setUserData] = useState({
-    name: "Alexander Morgan",
-    userName: "alexmorgan",
-    email: "alex.morgan@example.com",
-    phone: "+8801234567890",
-    address: "123 Crypto Street, Digital City, DC 10001",
-    nidNumber: "1234567890",
-    picture: AvatarImg,
-    password: "A@1111",
-    walletBalance: "12,450.00",
-    walletId: "0x742d...b48e",
-  });
-
   const [editingField, setEditingField] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+
+  const [userData, setUserData] = useState({
+    name: "John Doe",
+    userName: "john_doe",
+    email: "john.doe@example.com",
+    phone: "+8801712345678",
+    address: "123 Main Street, Dhaka, Bangladesh",
+    nidNumber: "1234567890",
+    picture: userIcon,
+    password: "Password@123",
+    walletId: "WLT123456",
+    walletBalance: 5000,
+    _id: "user123",
+  });
 
   // Single form to handle all fields
   const form = useForm<UpdateUserFormData>({
@@ -114,11 +114,10 @@ const Profile = () => {
       };
 
       console.log("Sending update to backend:", {
-        userId: "user_id_here", // Replace with actual user ID
+        userId: userData._id || "",
         payload: updatePayload,
       });
 
-      // TODO: Replace with actual API call
       // const updatedUser = await updateUser(userId, updatePayload);
 
       // For password, don't update the display value
@@ -127,10 +126,7 @@ const Profile = () => {
         setEditingField(null);
         form.reset({ password: "" });
       } else {
-        // API-First Approach: Use server response as single source of truth
-        // TODO: Replace with actual API call
         // const updatedUser = await updateUser(userId, updatePayload);
-        // setUserData(updatedUser); // Use the complete updated user object from backend
 
         // Temporary: Update local state until real API is implemented
         setUserData((prev) => ({
@@ -143,7 +139,6 @@ const Profile = () => {
     } catch (error) {
       console.error("Failed to update user:", error);
       // Handle error - show toast notification
-      // No need to revert since we only update state on successful API response
     }
   };
 

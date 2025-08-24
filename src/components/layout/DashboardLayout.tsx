@@ -4,11 +4,15 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { Outlet } from "react-router";
 import UserAvatar from "../Avatar";
 import { DashboardSidebar } from "../ui/DashboardSideBar";
 
 const DashboardLayout = () => {
+  const { data: userData } = useCurrentUserInfoQuery(undefined);
+  const role = userData?.data?.role;
+
   return (
     <SidebarProvider>
       <DashboardSidebar />
@@ -21,7 +25,7 @@ const DashboardLayout = () => {
               className="mr-2 data-[orientation=vertical]:h-4"
             />
           </div>
-          <UserAvatar />
+          <UserAvatar role={role} />
         </header>
 
         <div className="flex flex-1 flex-col gap-4">

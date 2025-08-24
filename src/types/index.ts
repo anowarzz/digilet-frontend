@@ -2,6 +2,8 @@ import type { ComponentType } from "react";
 
 export type TRole = "ADMIN" | "USER" | "AGENT";
 
+export type TStatus = "ACTIVE" | "BLOCKED" | "PENDING" | "SUSPENDED";
+
 export interface ISidebarItem {
   title: string;
   items: {

@@ -41,6 +41,7 @@ export default function Navbar() {
   const [logout] = useLogOutMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const role = userData?.data?.role;
 
   const handleLogOut = async () => {
     await logout(undefined);
@@ -162,7 +163,7 @@ export default function Navbar() {
           {/* <ModeToggle /> */}
           {userData?.data?.phone && (
             <div className="m-2 flex gap-4 items-center justify-center">
-              <UserAvatar />
+              <UserAvatar role={role} />
               <Button
                 onClick={handleLogOut}
                 variant="destructive"

@@ -1,6 +1,8 @@
-import AgentManagement from "@/pages/Admin/AgentManagement";
+import AllAgents from "@/pages/Admin/AllAgents";
 import AllUsers from "@/pages/Admin/AllUsers";
+import AllWallets from "@/pages/Admin/AllWallets";
 import Analytics from "@/pages/Admin/Analytics";
+import PendingAgents from "@/pages/Admin/PendingAgents";
 import type { ISidebarItem } from "@/types";
 
 // admin sidebar items
@@ -31,7 +33,22 @@ export const adminSidebarItems: ISidebarItem[] = [
       {
         title: "All Agents",
         url: "/admin/all-agents",
-        Component: AgentManagement,
+        Component: AllAgents,
+      },
+      {
+        title: "Pending Agents",
+        url: "/admin/pending-agents",
+        Component: PendingAgents,
+      },
+    ],
+  },
+  {
+    title: "Wallet Management",
+    items: [
+      {
+        title: "All Wallets",
+        url: "/admin/all-wallets",
+        Component: AllWallets,
       },
     ],
   },
