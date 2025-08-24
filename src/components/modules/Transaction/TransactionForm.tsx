@@ -13,7 +13,7 @@ import { UserRole, UserStatus } from "@/constants/role";
 import { TransactionType } from "@/constants/transactions";
 import { useGetWalletQuery } from "@/redux/features/wallet/wallet.api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { WalletIcon } from "lucide-react";
+import { Loader, ShieldCheck, WalletIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
@@ -23,6 +23,7 @@ interface TransactionFormProps {
   role?: string;
   status?: string;
   description: string;
+  isLoading?: boolean;
   buttonText: string;
   icon: string;
   gradientClass?: string;
@@ -56,8 +57,10 @@ const TransactionForm = ({
   icon,
   gradientClass,
   onSubmit,
+  isLoading,
 }: TransactionFormProps) => {
-  const { data: walletData, isLoading } = useGetWalletQuery(undefined);
+  const { data: walletData, isLoading: walletLoading } =
+    useGetWalletQuery(undefined);
 
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),
@@ -98,6 +101,20 @@ const TransactionForm = ({
             {/* <p className="text-gray-600 text-sm  dark:text-gray-400 ">
               {description}
             </p> */}
+            <div className="flex-1 flex justify-center">
+              {role === UserRole.AGENT &&
+                (status === UserStatus.PENDING ? (
+                  <p className="text-center text-blue-900 text-xs font-medium mt-2 flex items-center justify-center gap-1">
+                    Your agent status is still pending
+                    <Loader className="w-3 h-3" />
+                  </p>
+                ) : status === UserStatus.ACTIVE ? (
+                  <p className="text-center text-blue-900 text-xs font-medium mt-2 flex items-center justify-center gap-1">
+                    Your agent status is active
+                    <ShieldCheck className="w-3 h-3" />
+                  </p>
+                ) : null)}
+            </div>
           </div>
         </div>
 
@@ -118,13 +135,7 @@ const TransactionForm = ({
                     <p className="text-white/70 text-xs">Ready to use</p>
                   </div>
                 </div>
-                <div className="flex-1 flex justify-center">
-                  {role === UserRole.AGENT && status === UserStatus.PENDING && (
-                    <p className="text-center text-yellow-300 text-xs font-medium mt-2">
-                      Your agent status is still pending
-                    </p>
-                  )}
-                </div>
+
                 <div className="text-right">
                   <div className="font-bold text-white text-lg sm:text-xl lg:text-2xl drop-shadow-lg">
                     {isLoading ? (
@@ -255,7 +266,7 @@ const TransactionForm = ({
                     <Button
                       type="submit"
                       disabled={isLoading}
-                      className={`w-full py-4 text-white font-bold text-base rounded-xl bg-gradient-to-r ${gradientClass} hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 shadow-xl hover:shadow-2xl relative overflow-hidden group`}
+                      className={`w-full py-4 text-white font-bold text-base rounded-xl bg-gradient-to-r ${gradientClass} hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 shadow-xl hover:shadow-2xl relative overflow-hidden group cursor-pointer`}
                     >
                       <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                       <div className="relative flex items-center justify-center gap-2">

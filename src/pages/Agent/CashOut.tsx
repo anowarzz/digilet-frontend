@@ -1,11 +1,17 @@
 import cashOutIcon from "@/assets/Icons/cash-out.png";
 import TransactionForm from "@/components/modules/Transaction/TransactionForm";
 import { useCashOutMutation } from "@/redux/features/agent/agent.api";
+import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 const CashOut = () => {
-  const [cashOut] = useCashOutMutation();
+  const [cashOut, {isLoading}] = useCashOutMutation();
+
+  const { data } = useCurrentUserInfoQuery(undefined);
+
+  const role = data?.data?.role;
+  const status = data?.data?.status;
 
   const navigate = useNavigate();
 
@@ -46,6 +52,9 @@ const CashOut = () => {
 
   return (
     <TransactionForm
+      role={role}
+      status={status}
+      isLoading={isLoading}
       type="cash-out"
       title="Cash Out"
       description="Cash Out From User Wallet"

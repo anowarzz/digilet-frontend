@@ -1,11 +1,16 @@
 import cashInIcon from "@/assets/Icons/cash-in.png";
 import TransactionForm from "@/components/modules/Transaction/TransactionForm";
 import { useCashInMutation } from "@/redux/features/agent/agent.api";
+import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 const CashIn = () => {
-  const [cashIn] = useCashInMutation();
+  const [cashIn, { isLoading }] = useCashInMutation();
+  const { data } = useCurrentUserInfoQuery(undefined);
+
+  const role = data?.data?.role;
+  const status = data?.data?.status;
 
   const navigate = useNavigate();
 
@@ -48,6 +53,9 @@ const CashIn = () => {
     <TransactionForm
       type="cash-in"
       title="Cash In"
+      role={role}
+      isLoading={isLoading}
+      status={status}
       description="Cash In To User Wallet"
       buttonText="Cash In"
       icon={cashInIcon}
