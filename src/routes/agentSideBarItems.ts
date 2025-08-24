@@ -2,13 +2,11 @@ import AddMoney from "@/components/modules/Wallet/AddMoney";
 import SendMoney from "@/components/modules/Wallet/SendMoney";
 import UserAgentTransactions from "@/components/modules/Wallet/UserAgentTransactions";
 import WithdrawMoney from "@/components/modules/Wallet/WithdrawMoney";
-import { UserRole } from "@/constants/role";
 import AgentWallet from "@/pages/Agent/AgentWallet";
 import Analytics from "@/pages/Agent/Analytics";
 import CashIn from "@/pages/Agent/CashIn";
 import CashOut from "@/pages/Agent/CashOut";
-import type { ISidebarItem, TRole } from "@/types";
-import { withAuth } from "@/utils/withAuth";
+import type { ISidebarItem } from "@/types";
 
 // agent sidebar items
 export const agentSidebarItems: ISidebarItem[] = [
@@ -18,7 +16,7 @@ export const agentSidebarItems: ISidebarItem[] = [
       {
         title: "Analytics",
         url: "/agent/analytics",
-        Component: withAuth(Analytics, UserRole.AGENT as TRole),
+        Component: Analytics,
       },
       {
         title: "My Wallet",

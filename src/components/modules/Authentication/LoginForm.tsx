@@ -40,7 +40,10 @@ const LoginForm = ({
 
       if (res.success) {
         dispatch(authApi.util.invalidateTags(["USER"]));
-        toast.success("Login successful!", { duration: 2000 });
+        toast.success("Login successful!", {
+          duration: 2000,
+          position: "bottom-center",
+        });
         navigate("/");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

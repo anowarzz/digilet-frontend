@@ -1,5 +1,4 @@
 import Logo from "@/assets/Logos/Logo";
-import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -12,6 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import React from "react";
 // import { ModeToggle } from "./ModeToggler";
 import { UserRole } from "@/constants/role";
 import {
@@ -21,7 +21,7 @@ import {
 } from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
 import { CircleUserRoundIcon } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -40,9 +40,11 @@ export default function Navbar() {
     useCurrentUserInfoQuery(undefined);
   const [logout] = useLogOutMutation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleLogOut = async () => {
     await logout(undefined);
+    navigate("/");
     dispatch(authApi.util.resetApiState());
   };
 
@@ -164,7 +166,7 @@ export default function Navbar() {
               <Button
                 onClick={handleLogOut}
                 variant="destructive"
-                className="text-sm "
+                className="text-sm cursor-pointer"
               >
                 Logout
               </Button>
