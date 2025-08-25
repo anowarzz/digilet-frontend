@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import type { Theme } from "@/providers/theme-provider";
 import { createContext } from "react";
 

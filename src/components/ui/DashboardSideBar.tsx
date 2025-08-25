@@ -1,6 +1,17 @@
 import * as React from "react";
 
 import Logo from "@/assets/Logos/Logo";
+
+import {
+  authApi,
+  useCurrentUserInfoQuery,
+  useLogOutMutation,
+} from "@/redux/features/auth/auth.api";
+import { useAppDispatch } from "@/redux/hook";
+import { getSidebarItems } from "@/utils/getSidebarItems";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
+import { Button } from "./button";
 import {
   Sidebar,
   SidebarContent,
@@ -12,18 +23,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import {
-  authApi,
-  useCurrentUserInfoQuery,
-  useLogOutMutation,
-} from "@/redux/features/auth/auth.api";
-import { useAppDispatch } from "@/redux/hook";
-import { getSidebarItems } from "@/utils/getSidebarItems";
-import { Link, useNavigate } from "react-router";
-import { toast } from "sonner";
-import { Button } from "./button";
+} from "./sidebar";
+import { useSidebar } from "./useSidebar";
 
 export function DashboardSidebar({
   ...props
