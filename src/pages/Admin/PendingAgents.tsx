@@ -12,6 +12,7 @@ import {
   usePendingAgentsQuery,
 } from "@/redux/features/admin/admin.api";
 import type { IAgent } from "@/types/agent.types";
+import { Clock, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 const PendingAgents = () => {
@@ -21,19 +22,14 @@ const PendingAgents = () => {
     refetch,
   } = usePendingAgentsQuery(undefined);
   const agents = pendingAgents?.data || [];
-
   const [approveAgent] = useApproveAgentMutation();
 
-  // Handle Agent Approve
   const handleApproveAgent = async (agentId: string) => {
     const toastId = toast.loading("Approving agent...");
-
     try {
       const res = await approveAgent(agentId);
-
       if (res?.data?.success) {
         refetch();
-        console.log(res);
         toast.success("Agent approved successfully", { id: toastId });
       }
     } catch (err) {
@@ -42,44 +38,52 @@ const PendingAgents = () => {
     }
   };
 
-  console.log(agents);
-
   return (
     <div className="w-full px-2 sm:px-4 md:px-8 py-6">
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
         All Pending Agents
       </h2>
-      <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-2 sm:p-4 border border-gray-100 dark:border-gray-800 overflow-x-auto">
-        <Table className="min-w-[500px]">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="min-w-[120px]">Name</TableHead>
-              <TableHead className="min-w-[120px]">Phone</TableHead>
-              <TableHead className="min-w-[140px]">Wallet Balance</TableHead>
-              <TableHead className="min-w-[100px] text-center">
-                Action
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
+
+      {isLoading ? (
+        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
+          <Loader2 className="mx-auto h-12 w-12 animate-spin text-gray-400 mb-4" />
+          <p className="text-lg font-medium text-gray-600 dark:text-gray-400">
+            Loading pending agents...
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+            Please wait while we fetch the data
+          </p>
+        </div>
+      ) : agents.length === 0 ? (
+        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
+          <Clock className="mx-auto h-16 w-16 text-gray-400 mb-6" />
+          <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            No Pending Agents
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            There are currently no agents waiting for approval.
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-500">
+            New agent registration requests will appear here.
+          </p>
+        </div>
+      ) : (
+        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-2 sm:p-4 border border-gray-100 dark:border-gray-800 overflow-x-auto">
+          <Table className="min-w-[500px]">
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-8">
-                  Loading...
-                </TableCell>
+                <TableHead className="min-w-[120px]">Name</TableHead>
+                <TableHead className="min-w-[120px]">Phone</TableHead>
+                <TableHead className="min-w-[140px]">Wallet Balance</TableHead>
+                <TableHead className="min-w-[100px] text-center">
+                  Action
+                </TableHead>
               </TableRow>
-            ) : agents.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={4} className="text-center py-8">
-                  No pending agents found
-                </TableCell>
-              </TableRow>
-            ) : (
-              agents.map((agent: IAgent) => (
+            </TableHeader>
+            <TableBody>
+              {agents.map((agent: IAgent) => (
                 <TableRow key={agent._id}>
-                  <TableCell className="font-medium break-words">
-                    {agent.name}
-                  </TableCell>
+                  <TableCell className="break-words">{agent.name}</TableCell>
                   <TableCell className="break-words">{agent.phone}</TableCell>
                   <TableCell className="break-words">
                     {agent.wallet?.balance ?? 0} {agent.wallet?.currency ?? ""}
@@ -93,7 +97,6 @@ const PendingAgents = () => {
                       >
                         Approve
                       </Button>
-
                       <Button
                         size={"sm"}
                         className="rounded w-16 bg-accent text-red-600 text-xs font-semibold hover:bg-accent-foreground transition-colors"
@@ -103,11 +106,11 @@ const PendingAgents = () => {
                     </div>
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -71,6 +72,7 @@ const AllUsers = () => {
               <TableHead className="min-w-[120px]">Phone</TableHead>
               <TableHead className="min-w-[140px]">Wallet Balance</TableHead>
               <TableHead className="min-w-[100px]">Status</TableHead>
+              <TableHead className="min-w-[100px]">Action</TableHead>
               <TableHead className="min-w-[100px]">Details</TableHead>
             </TableRow>
           </TableHeader>
@@ -99,26 +101,47 @@ const AllUsers = () => {
                       {user.wallet?.balance ?? 0} {user.wallet?.currency ?? ""}
                     </TableCell>
                     <TableCell>
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold
+                          ${
+                            user?.status === UserStatus.BLOCKED
+                              ? "bg-red-100 text-red-600"
+                              : "bg-green-100 text-green-600"
+                          }
+                        `}
+                      >
+                        {user.status}
+                      </span>
+                    </TableCell>
+                    <TableCell>
                       {user?.status === UserStatus.BLOCKED ? (
-                        <Button
-                          aria-label="Unblock user"
-                          title="Unblock user"
-                          size="sm"
-                          className="w-16 text-xs font-semibold   bg-red-100 text-red-600 hover:bg-black"
-                          onClick={() => handleUnblockUser(user._id)}
+                        <ConfirmationDialog
+                          description="Are you sure you want to unblock this user?"
+                          onConfirm={() => handleUnblockUser(user._id)}
                         >
-                          {user.status}
-                        </Button>
+                          <Button
+                            aria-label="Unblock user"
+                            title="Unblock user"
+                            size="sm"
+                            className="w-16 text-xs font-semibold bg-green-100 text-green-600 hover:bg-green-300"
+                          >
+                            Unblock
+                          </Button>
+                        </ConfirmationDialog>
                       ) : (
-                        <Button
-                          aria-label="Block user"
-                          title="Block user"
-                          size="sm"
-                          className="w-16 text-xs font-semibold bg-green-100 text-green-600 hover:bg-green-300 transition-colors"
-                          onClick={() => handleBlockUser(user._id)}
+                        <ConfirmationDialog
+                          description="Are you sure you want to block this user?"
+                          onConfirm={() => handleBlockUser(user._id)}
                         >
-                          {user.status}
-                        </Button>
+                          <Button
+                            aria-label="Block user"
+                            title="Block user"
+                            size="sm"
+                            className="w-16 text-xs font-semibold bg-red-100 text-red-600 hover:bg-black"
+                          >
+                            Block
+                          </Button>
+                        </ConfirmationDialog>
                       )}
                     </TableCell>
                     <TableCell>
