@@ -8,19 +8,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  useActiveAgentsQuery,
   useApproveAgentMutation,
-  usePendingAgentsQuery,
+  useSuspendedAgentsQuery,
 } from "@/redux/features/admin/admin.api";
 import type { IAgent } from "@/types/agent.types";
 import { toast } from "sonner";
 
-const PendingAgents = () => {
+const SuspendedAgents = () => {
   const {
-    data: pendingAgents,
+    data: suspendedAgents,
     isLoading,
-    refetch,
-  } = usePendingAgentsQuery(undefined);
-  const agents = pendingAgents?.data || [];
+    refetch: suspendRefetch,
+  } = useSuspendedAgentsQuery(undefined);
+
+  const { refetch: allAgentsRefetch } = useActiveAgentsQuery(undefined);
+
+  const agents = suspendedAgents?.data || [];
 
   const [approveAgent] = useApproveAgentMutation();
 
@@ -32,7 +36,8 @@ const PendingAgents = () => {
       const res = await approveAgent(agentId);
 
       if (res?.data?.success) {
-        refetch();
+        suspendRefetch();
+        allAgentsRefetch();
         console.log(res);
         toast.success("Agent approved successfully", { id: toastId });
       }
@@ -47,7 +52,7 @@ const PendingAgents = () => {
   return (
     <div className="w-full px-2 sm:px-4 md:px-8 py-6">
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
-        All Pending Agents
+        All Suspended Agents
       </h2>
       <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-2 sm:p-4 border border-gray-100 dark:border-gray-800 overflow-x-auto">
         <Table className="min-w-[500px]">
@@ -71,11 +76,11 @@ const PendingAgents = () => {
             ) : agents.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} className="text-center py-8">
-                  No pending agents found
+                  No suspended agents found
                 </TableCell>
               </TableRow>
             ) : (
-              agents.map((agent: IAgent) => (
+              agents?.map((agent: IAgent) => (
                 <TableRow key={agent._id}>
                   <TableCell className="font-medium break-words">
                     {agent.name}
@@ -93,13 +98,6 @@ const PendingAgents = () => {
                       >
                         Approve
                       </Button>
-
-                      <Button
-                        size={"sm"}
-                        className="rounded w-16 bg-accent text-red-600 text-xs font-semibold hover:bg-accent-foreground transition-colors"
-                      >
-                        Reject
-                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -112,4 +110,4 @@ const PendingAgents = () => {
   );
 };
 
-export default PendingAgents;
+export default SuspendedAgents;

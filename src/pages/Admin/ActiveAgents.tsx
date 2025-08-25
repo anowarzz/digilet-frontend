@@ -10,12 +10,20 @@ import {
 import {
   useActiveAgentsQuery,
   useSuspendAgentMutation,
+  useSuspendedAgentsQuery,
 } from "@/redux/features/admin/admin.api";
 import type { IAgent } from "@/types/agent.types";
 import { toast } from "sonner";
 
 const AllActiveAgents = () => {
-  const { data: allAgents, isLoading } = useActiveAgentsQuery(undefined);
+  const {
+    data: allAgents,
+    isLoading,
+    refetch,
+  } = useActiveAgentsQuery(undefined);
+
+  const { refetch: suspendRefetch } = useSuspendedAgentsQuery(undefined);
+
   const agents = allAgents?.data || [];
 
   const [suspendAgent] = useSuspendAgentMutation();
@@ -28,6 +36,8 @@ const AllActiveAgents = () => {
       const res = await suspendAgent(agentId);
 
       if (res?.data?.success) {
+        refetch();
+        suspendRefetch();
         console.log(res);
         toast.success("Agent suspended successfully", { id: toastId });
       }
@@ -51,8 +61,8 @@ const AllActiveAgents = () => {
               <TableHead className="min-w-[120px]">Name</TableHead>
               <TableHead className="min-w-[120px]">Phone</TableHead>
               <TableHead className="min-w-[140px]">Wallet Balance</TableHead>
-              <TableHead className="min-w-[100px]">Status</TableHead>
-              <TableHead className="min-w-[100px]">Action</TableHead>
+              <TableHead className="min-w-[100px]">Manage Status</TableHead>
+              <TableHead className="min-w-[100px]">Details</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -93,7 +103,7 @@ const AllActiveAgents = () => {
                     </TableCell>
                     <TableCell>
                       <Button className="px-4 py-1 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors">
-                        Details
+                        Profile
                       </Button>
                     </TableCell>
                   </TableRow>

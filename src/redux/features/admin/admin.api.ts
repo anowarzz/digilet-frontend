@@ -58,9 +58,21 @@ export const adminApi = baseApi.injectEndpoints({
         invalidatesTags: ["AGENTS"],
       }),
     }),
+    // Get all suspended agents
+    suspendedAgents: builder.query({
+      query: () => ({
+        url: "/admin/all-agents",
+        method: "GET",
+        params: {
+          role: "AGENT",
+          status: "SUSPENDED",
+        },
+        invalidatesTags: ["AGENTS"],
+      }),
+    }),
     // Approve  pending agent
     approveAgent: builder.mutation({
-      query: (agentId) => ({
+      query: (agentId: string) => ({
         url: `/admin/agents/approve/${agentId}`,
         method: "PATCH",
       }),
@@ -69,7 +81,7 @@ export const adminApi = baseApi.injectEndpoints({
 
     // Suspend agent
     suspendAgent: builder.mutation({
-      query: (agentId) => ({
+      query: (agentId: string) => ({
         url: `/admin/agents/suspend/${agentId}`,
         method: "PATCH",
       }),
@@ -91,6 +103,7 @@ export const {
   usePendingAgentsQuery,
   useAllTransactionsQuery,
   useActiveAgentsQuery,
+  useSuspendedAgentsQuery,
   useApproveAgentMutation,
   useSuspendAgentMutation,
   useAllUsersQuery,
