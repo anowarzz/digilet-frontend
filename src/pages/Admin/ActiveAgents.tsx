@@ -7,19 +7,42 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useActiveAgentsQuery } from "@/redux/features/admin/admin.api";
+import {
+  useActiveAgentsQuery,
+  useSuspendAgentMutation,
+} from "@/redux/features/admin/admin.api";
 import type { IAgent } from "@/types/agent.types";
+import { toast } from "sonner";
 
 const AllActiveAgents = () => {
   const { data: allAgents, isLoading } = useActiveAgentsQuery(undefined);
   const agents = allAgents?.data || [];
+
+  const [suspendAgent] = useSuspendAgentMutation();
+
+  // Suspend agent
+  const handleSuspendAgent = async (agentId: string) => {
+    const toastId = toast.loading("Suspending agent...");
+
+    try {
+      const res = await suspendAgent(agentId);
+
+      if (res?.data?.success) {
+        console.log(res);
+        toast.success("Agent suspended successfully", { id: toastId });
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to suspend agent", { id: toastId });
+    }
+  };
 
   console.log(agents);
 
   return (
     <div className="w-full px-2 sm:px-4 md:px-8 py-6">
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
-        All Agents
+        Active Agents
       </h2>
       <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-2 sm:p-4 border border-gray-100 dark:border-gray-800 overflow-x-auto">
         <Table className="min-w-[500px]">
@@ -47,14 +70,6 @@ const AllActiveAgents = () => {
               </TableRow>
             ) : (
               agents.map((agent: IAgent) => {
-                // Use agent.status for the status column
-                let statusColor = "bg-gray-100 text-gray-600";
-                if (agent.status === "ACTIVE")
-                  statusColor = "bg-green-100 text-green-600";
-                else if (agent.status === "BLOCKED")
-                  statusColor = "bg-red-100 text-red-600";
-                else if (agent.status === "PENDING")
-                  statusColor = "bg-yellow-100 text-yellow-600";
                 return (
                   <TableRow key={agent._id}>
                     <TableCell className="font-medium break-words">
@@ -66,11 +81,15 @@ const AllActiveAgents = () => {
                       {agent.wallet?.currency ?? ""}
                     </TableCell>
                     <TableCell>
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${statusColor}`}
+                      <Button
+                        onClick={() => handleSuspendAgent(agent._id)}
+                        aria-label="Suspend Agent"
+                        title="Suspend Agent"
+                        size="sm"
+                        className="w-16 text-xs font-semibold bg-green-100 text-green-600 hover:bg-green-300 transition-colors"
                       >
                         {agent.status}
-                      </span>
+                      </Button>
                     </TableCell>
                     <TableCell>
                       <Button className="px-4 py-1 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors">

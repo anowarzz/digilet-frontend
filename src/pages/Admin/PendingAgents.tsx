@@ -7,12 +7,35 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { usePendingAgentsQuery } from "@/redux/features/admin/admin.api";
+import {
+  useApproveAgentMutation,
+  usePendingAgentsQuery,
+} from "@/redux/features/admin/admin.api";
 import type { IAgent } from "@/types/agent.types";
+import { toast } from "sonner";
 
 const PendingAgents = () => {
   const { data: pendingAgents, isLoading } = usePendingAgentsQuery(undefined);
   const agents = pendingAgents?.data || [];
+
+  const [approveAgent] = useApproveAgentMutation();
+
+  // Handle Agent Approve
+  const handleApproveAgent = async (agentId: string) => {
+    const toastId = toast.loading("Approving agent...");
+
+    try {
+      const res = await approveAgent(agentId);
+
+      if (res?.data?.success) {
+        console.log(res);
+        toast.success("Agent approved successfully", { id: toastId });
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to approve agent", { id: toastId });
+    }
+  };
 
   console.log(agents);
 
@@ -28,7 +51,9 @@ const PendingAgents = () => {
               <TableHead className="min-w-[120px]">Name</TableHead>
               <TableHead className="min-w-[120px]">Phone</TableHead>
               <TableHead className="min-w-[140px]">Wallet Balance</TableHead>
-              <TableHead className="min-w-[100px]">Action</TableHead>
+              <TableHead className="min-w-[100px] text-center">
+                Action
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -55,9 +80,22 @@ const PendingAgents = () => {
                     {agent.wallet?.balance ?? 0} {agent.wallet?.currency ?? ""}
                   </TableCell>
                   <TableCell>
-                    <Button className="px-4 py-1 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors">
-                      Approve
-                    </Button>
+                    <div className="flex gap-4 md:gap-8 justify-center items-center">
+                      <Button
+                        onClick={() => handleApproveAgent(agent._id)}
+                        size={"sm"}
+                        className="rounded w-16 bg-blue-500 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
+                      >
+                        Approve
+                      </Button>
+
+                      <Button
+                        size={"sm"}
+                        className="rounded w-16 bg-accent text-red-600 text-xs font-semibold hover:bg-accent-foreground transition-colors"
+                      >
+                        Reject
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

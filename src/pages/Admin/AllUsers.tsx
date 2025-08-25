@@ -23,7 +23,6 @@ const AllUsers = () => {
   const [blockUser] = useBlockUserMutation();
   const [unblockUser] = useUnblockUserMutation();
 
-
   // Handle blocking a user
   const handleBlockUser = async (userId: string) => {
     const toastId = toast.loading("Blocking user...");
@@ -33,7 +32,7 @@ const AllUsers = () => {
 
       if (res?.data?.success) {
         console.log(res);
-        
+
         toast.success("User blocked successfully", { id: toastId });
       }
     } catch (err) {
@@ -105,7 +104,7 @@ const AllUsers = () => {
                           aria-label="Unblock user"
                           title="Unblock user"
                           size="sm"
-                          className="w-16 text-xs font-semibold   bg-red-100 text-red-600"
+                          className="w-16 text-xs font-semibold   bg-red-100 text-red-600 hover:bg-black"
                           onClick={() => handleUnblockUser(user._id)}
                         >
                           {user.status}
@@ -115,7 +114,7 @@ const AllUsers = () => {
                           aria-label="Block user"
                           title="Block user"
                           size="sm"
-                          className="w-16 text-xs font-semibold bg-green-100 text-green-600"
+                          className="w-16 text-xs font-semibold bg-green-100 text-green-600 hover:bg-green-300 transition-colors"
                           onClick={() => handleBlockUser(user._id)}
                         >
                           {user.status}
@@ -124,8 +123,10 @@ const AllUsers = () => {
                     </TableCell>
                     <TableCell>
                       <Button
+                        aria-label="View profile"
+                        title="View profile"
                         size={"sm"}
-                        className="rounded-lg w-16 bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
+                        className="rounded w-16 bg-blue-500 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
                       >
                         Profile
                       </Button>

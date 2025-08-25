@@ -3,12 +3,15 @@ import { type TUserStatus } from "./../../../types/index";
 
 export const adminApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    // Get all users and agents
     allUsersandAgents: builder.query({
       query: () => ({
         url: "/admin/all/users-and-agents",
         method: "GET",
       }),
     }),
+
+    // Get all users
     allUsers: builder.query({
       query: () => ({
         url: "/admin/all-users",
@@ -16,6 +19,8 @@ export const adminApi = baseApi.injectEndpoints({
       }),
       providesTags: ["USERS"],
     }),
+
+    // blocking user
     blockUser: builder.mutation({
       query: (userId) => ({
         url: `/admin/users/block/${userId}`,
@@ -23,6 +28,8 @@ export const adminApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["USERS"],
     }),
+
+    // unblocking user
     unblockUser: builder.mutation({
       query: (userId) => ({
         url: `/admin/users/unblock/${userId}`,
@@ -30,6 +37,7 @@ export const adminApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["USERS"],
     }),
+    // Get all active agents
     activeAgents: builder.query({
       query: () => ({
         url: "/admin/all-agents",
@@ -39,6 +47,7 @@ export const adminApi = baseApi.injectEndpoints({
         },
       }),
     }),
+    // Get all pending agents
     pendingAgents: builder.query({
       query: () => ({
         url: "/admin/all-agents",
@@ -46,8 +55,28 @@ export const adminApi = baseApi.injectEndpoints({
         params: {
           status: "PENDING" as TUserStatus,
         },
+        invalidatesTags: ["AGENTS"],
       }),
     }),
+    // Approve  pending agent
+    approveAgent: builder.mutation({
+      query: (agentId) => ({
+        url: `/admin/agents/approve/${agentId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["AGENTS"],
+    }),
+
+    // Suspend agent
+    suspendAgent: builder.mutation({
+      query: (agentId) => ({
+        url: `/admin/agents/suspend/${agentId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["AGENTS"],
+    }),
+
+    // Get all transactions
     allTransactions: builder.query({
       query: () => ({
         url: "/admin/all-transactions",
@@ -62,6 +91,8 @@ export const {
   usePendingAgentsQuery,
   useAllTransactionsQuery,
   useActiveAgentsQuery,
+  useApproveAgentMutation,
+  useSuspendAgentMutation,
   useAllUsersQuery,
   useBlockUserMutation,
   useUnblockUserMutation,
