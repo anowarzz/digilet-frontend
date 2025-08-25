@@ -7,13 +7,57 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAllUsersQuery } from "@/redux/features/admin/admin.api";
+import { UserStatus } from "@/constants/role";
+import {
+  useAllUsersQuery,
+  useBlockUserMutation,
+  useUnblockUserMutation,
+} from "@/redux/features/admin/admin.api";
 import type { IUser } from "@/types/user.types";
+import { toast } from "sonner";
 
 const AllUsers = () => {
   const { data: allUsers, isLoading } = useAllUsersQuery(undefined);
   const users = allUsers?.data || [];
 
+  const [blockUser] = useBlockUserMutation();
+  const [unblockUser] = useUnblockUserMutation();
+
+
+  // Handle blocking a user
+  const handleBlockUser = async (userId: string) => {
+    const toastId = toast.loading("Blocking user...");
+
+    try {
+      const res = await blockUser(userId);
+
+      if (res?.data?.success) {
+        console.log(res);
+        
+        toast.success("User blocked successfully", { id: toastId });
+      }
+    } catch (err) {
+      console.log(err);
+
+      toast.error("Failed to block user", { id: toastId });
+    }
+  };
+
+  // Handle unblocking a user
+  const handleUnblockUser = async (userId: string) => {
+    const toastId = toast.loading("Unblocking user...");
+    try {
+      const res = await unblockUser(userId);
+      if (res?.data?.success) {
+        console.log(res);
+        toast.success("User unblocked successfully", { id: toastId });
+      }
+    } catch (err) {
+      console.log(err);
+
+      toast.error("Failed to unblock user", { id: toastId });
+    }
+  };
 
   return (
     <div className="w-full px-2 sm:px-4 md:px-8 py-6">
@@ -28,7 +72,7 @@ const AllUsers = () => {
               <TableHead className="min-w-[120px]">Phone</TableHead>
               <TableHead className="min-w-[140px]">Wallet Balance</TableHead>
               <TableHead className="min-w-[100px]">Status</TableHead>
-              <TableHead className="min-w-[100px]">Action</TableHead>
+              <TableHead className="min-w-[100px]">Details</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -46,9 +90,6 @@ const AllUsers = () => {
               </TableRow>
             ) : (
               users.map((user: IUser) => {
-                const walletStatus = user.wallet?.isBlocked
-                  ? "Blocked"
-                  : "Active";
                 return (
                   <TableRow key={user._id}>
                     <TableCell className="font-medium break-words">
@@ -59,19 +100,34 @@ const AllUsers = () => {
                       {user.wallet?.balance ?? 0} {user.wallet?.currency ?? ""}
                     </TableCell>
                     <TableCell>
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          walletStatus === "Blocked"
-                            ? "bg-red-100 text-red-600"
-                            : "bg-green-100 text-green-600"
-                        }`}
-                      >
-                        {walletStatus}
-                      </span>
+                      {user?.status === UserStatus.BLOCKED ? (
+                        <Button
+                          aria-label="Unblock user"
+                          title="Unblock user"
+                          size="sm"
+                          className="w-16 text-xs font-semibold   bg-red-100 text-red-600"
+                          onClick={() => handleUnblockUser(user._id)}
+                        >
+                          {user.status}
+                        </Button>
+                      ) : (
+                        <Button
+                          aria-label="Block user"
+                          title="Block user"
+                          size="sm"
+                          className="w-16 text-xs font-semibold bg-green-100 text-green-600"
+                          onClick={() => handleBlockUser(user._id)}
+                        >
+                          {user.status}
+                        </Button>
+                      )}
                     </TableCell>
                     <TableCell>
-                      <Button className="px-4 py-1 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors">
-                        Details
+                      <Button
+                        size={"sm"}
+                        className="rounded-lg w-16 bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
+                      >
+                        Profile
                       </Button>
                     </TableCell>
                   </TableRow>

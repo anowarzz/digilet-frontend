@@ -14,6 +14,21 @@ export const adminApi = baseApi.injectEndpoints({
         url: "/admin/all-users",
         method: "GET",
       }),
+      providesTags: ["USERS"],
+    }),
+    blockUser: builder.mutation({
+      query: (userId) => ({
+        url: `/admin/users/block/${userId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["USERS"],
+    }),
+    unblockUser: builder.mutation({
+      query: (userId) => ({
+        url: `/admin/users/unblock/${userId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["USERS"],
     }),
     activeAgents: builder.query({
       query: () => ({
@@ -48,4 +63,6 @@ export const {
   useAllTransactionsQuery,
   useActiveAgentsQuery,
   useAllUsersQuery,
+  useBlockUserMutation,
+  useUnblockUserMutation,
 } = adminApi;
