@@ -8,10 +8,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { usePendingAgentsQuery } from "@/redux/features/admin/admin.api";
+import type { IAgent } from "@/types/agent.types";
 
 const PendingAgents = () => {
   const { data: pendingAgents, isLoading } = usePendingAgentsQuery(undefined);
   const agents = pendingAgents?.data || [];
+
+  console.log(agents);
 
   return (
     <div className="w-full px-2 sm:px-4 md:px-8 py-6">
@@ -42,7 +45,7 @@ const PendingAgents = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              agents.map((agent: any) => (
+              agents.map((agent: IAgent) => (
                 <TableRow key={agent._id}>
                   <TableCell className="font-medium break-words">
                     {agent.name}

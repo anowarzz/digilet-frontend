@@ -49,20 +49,12 @@ const LoginForm = ({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("Login failed:", err);
-      if (err.data?.message === "Incorrect Password Provided") {
-        return toast.error("Incorrect password. Please try again.", {
+      if (err.status >= 400 && err.status < 500) {
+        return toast.error(err.data?.message || "Something went wrong.", {
           id: toastId,
-          duration: 2000,
         });
       }
-
-      if (err.data?.message === "User does not exist") {
-        return toast.error("User does not exist with this phone", {
-          id: toastId,
-          duration: 4000,
-        });
-      }
-      toast.error("Login failed. Please try again.", { duration: 4000 });
+      return toast.error("Login failed. Please try again.", { id: toastId });
     }
   };
 

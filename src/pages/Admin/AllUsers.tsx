@@ -8,10 +8,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useAllUsersQuery } from "@/redux/features/admin/admin.api";
+import type { IUser } from "@/types/user.types";
 
 const AllUsers = () => {
   const { data: allUsers, isLoading } = useAllUsersQuery(undefined);
   const users = allUsers?.data || [];
+
 
   return (
     <div className="w-full px-2 sm:px-4 md:px-8 py-6">
@@ -43,7 +45,7 @@ const AllUsers = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              users.map((user: any) => {
+              users.map((user: IUser) => {
                 const walletStatus = user.wallet?.isBlocked
                   ? "Blocked"
                   : "Active";

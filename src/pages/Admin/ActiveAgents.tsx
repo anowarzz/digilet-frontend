@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useActiveAgentsQuery } from "@/redux/features/admin/admin.api";
+import type { IAgent } from "@/types/agent.types";
 
 const AllActiveAgents = () => {
   const { data: allAgents, isLoading } = useActiveAgentsQuery(undefined);
@@ -45,7 +46,7 @@ const AllActiveAgents = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              agents.map((agent: any) => {
+              agents.map((agent: IAgent) => {
                 // Use agent.status for the status column
                 let statusColor = "bg-gray-100 text-gray-600";
                 if (agent.status === "ACTIVE")
