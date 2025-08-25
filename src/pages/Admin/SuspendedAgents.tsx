@@ -1,3 +1,4 @@
+import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -67,7 +68,7 @@ const SuspendedAgents = () => {
           </p>
         </div>
       ) : agents.length === 0 ? (
-        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
+        <div className="w-full min-h-screen bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
           <UserX className="mx-auto h-16 w-16 text-gray-400 mb-6" />
           <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
             No Suspended Agents
@@ -80,7 +81,7 @@ const SuspendedAgents = () => {
           </p>
         </div>
       ) : (
-        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-2 sm:p-4 border border-gray-100 dark:border-gray-800 overflow-x-auto">
+        <div className="w-full min-h-screen bg-white dark:bg-gray-900 rounded-xl shadow-lg p-2 sm:p-4 border border-gray-100 dark:border-gray-800 overflow-x-auto">
           <Table className="min-w-[500px]">
             <TableHeader>
               <TableRow>
@@ -108,13 +109,17 @@ const SuspendedAgents = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-4 md:gap-8 justify-center items-center">
-                      <Button
-                        onClick={() => handleApproveAgent(agent._id)}
-                        size={"sm"}
-                        className="rounded w-16 bg-blue-500 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
+                      <ConfirmationDialog
+                        description={`Are you sure you want to approve agent "${agent.name}"? This action will activate their account and allow them to perform transactions.`}
+                        onConfirm={() => handleApproveAgent(agent._id)}
                       >
-                        Approve
-                      </Button>
+                        <Button
+                          size={"sm"}
+                          className="rounded w-16 bg-blue-500 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
+                        >
+                          Approve
+                        </Button>
+                      </ConfirmationDialog>
                     </div>
                   </TableCell>
                 </TableRow>

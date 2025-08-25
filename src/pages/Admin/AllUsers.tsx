@@ -12,9 +12,11 @@ import { UserStatus } from "@/constants/role";
 import {
   useAllUsersQuery,
   useBlockUserMutation,
+  useDeleteUserMutation,
   useUnblockUserMutation,
 } from "@/redux/features/admin/admin.api";
 import type { IUser } from "@/types/user.types";
+import { Loader2, Trash2, Users } from "lucide-react";
 import { toast } from "sonner";
 
 const AllUsers = () => {
@@ -23,6 +25,24 @@ const AllUsers = () => {
 
   const [blockUser] = useBlockUserMutation();
   const [unblockUser] = useUnblockUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
+
+  // Handle deleting a user
+  const handleDeleteUser = async (userId: string) => {
+    const toastId = toast.loading("Deleting user...");
+
+    try {
+      const res = await deleteUser(userId);
+
+      if (res?.data?.success) {
+        console.log(res);
+        toast.success("User deleted successfully", { id: toastId });
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to delete user", { id: toastId });
+    }
+  };
 
   // Handle blocking a user
   const handleBlockUser = async (userId: string) => {
@@ -64,33 +84,46 @@ const AllUsers = () => {
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
         All Users
       </h2>
-      <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-2 sm:p-4 border border-gray-100 dark:border-gray-800 overflow-x-auto">
-        <Table className="min-w-[500px]">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="min-w-[120px]">Name</TableHead>
-              <TableHead className="min-w-[120px]">Phone</TableHead>
-              <TableHead className="min-w-[140px]">Wallet Balance</TableHead>
-              <TableHead className="min-w-[100px]">Status</TableHead>
-              <TableHead className="min-w-[100px]">Action</TableHead>
-              <TableHead className="min-w-[100px]">Details</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
+
+      {isLoading ? (
+        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
+          <Loader2 className="mx-auto h-12 w-12 animate-spin text-gray-400 mb-4" />
+          <p className="text-lg font-medium text-gray-600 dark:text-gray-400">
+            Loading users...
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+            Please wait
+          </p>
+        </div>
+      ) : users.length === 0 ? (
+        <div className="w-full min-h-screen bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
+          <Users className="mx-auto h-16 w-16 text-gray-400 mb-6" />
+          <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            No Users Found
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            There are currently no users registered in the system.
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-500">
+            Users will appear here once they register for the platform.
+          </p>
+        </div>
+      ) : (
+        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-2 sm:p-4 border border-gray-100 dark:border-gray-800 overflow-x-auto">
+          <Table className="min-w-[500px]">
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8">
-                  Loading...
-                </TableCell>
+                <TableHead className="min-w-[120px]">Name</TableHead>
+                <TableHead className="min-w-[140px]">Phone</TableHead>
+                <TableHead className="min-w-[100px]">Wallet Balance</TableHead>
+                <TableHead className="min-w-[100px]">Status</TableHead>
+                <TableHead className="min-w-[100px]">Action</TableHead>
+                <TableHead className="min-w-[100px]">Details</TableHead>
+                <TableHead className="min-w-[100px]">Delete</TableHead>
               </TableRow>
-            ) : users.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center py-8">
-                  No users found
-                </TableCell>
-              </TableRow>
-            ) : (
-              users.map((user: IUser) => {
+            </TableHeader>
+            <TableBody>
+              {users.map((user: IUser) => {
                 return (
                   <TableRow key={user._id}>
                     <TableCell className="font-medium break-words">
@@ -154,13 +187,29 @@ const AllUsers = () => {
                         Profile
                       </Button>
                     </TableCell>
+                    <TableCell>
+                      <ConfirmationDialog
+                        description={`Are you sure you want to delete user "${user.name}"? This action cannot be undone and will permanently remove all user data.`}
+                        onConfirm={() => handleDeleteUser(user._id)}
+                      >
+                        <Button
+                          aria-label="Delete user"
+                          title="Delete user"
+                          size="sm"
+                          variant="destructive"
+                          className="w-16 text-xs font-semibold"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </ConfirmationDialog>
+                    </TableCell>
                   </TableRow>
                 );
-              })
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              })}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   );
 };

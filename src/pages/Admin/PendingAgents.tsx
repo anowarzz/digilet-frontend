@@ -45,17 +45,17 @@ const PendingAgents = () => {
       </h2>
 
       {isLoading ? (
-        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
+        <div className="w-full min-h-screen bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
           <Loader2 className="mx-auto h-12 w-12 animate-spin text-gray-400 mb-4" />
           <p className="text-lg font-medium text-gray-600 dark:text-gray-400">
             Loading pending agents...
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-            Please wait while we fetch the data
+            Please wait
           </p>
         </div>
       ) : agents.length === 0 ? (
-        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
+        <div className="w-full min-h-svh bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
           <Clock className="mx-auto h-16 w-16 text-gray-400 mb-6" />
           <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
             No Pending Agents

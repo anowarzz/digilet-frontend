@@ -28,6 +28,14 @@ export const adminApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["USERS"],
     }),
+    // Deleting a user
+    deleteUser: builder.mutation({
+      query: (userId) => ({
+        url: `/admin/users/delete/${userId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["USERS"],
+    }),
 
     // unblocking user
     unblockUser: builder.mutation({
@@ -103,6 +111,7 @@ export const {
   usePendingAgentsQuery,
   useAllTransactionsQuery,
   useActiveAgentsQuery,
+  useDeleteUserMutation,
   useSuspendedAgentsQuery,
   useApproveAgentMutation,
   useSuspendAgentMutation,
