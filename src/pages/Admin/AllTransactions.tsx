@@ -1,13 +1,20 @@
 import TransactionTable from "@/components/modules/Transaction/TransactionsTable";
 import { useAllTransactionsQuery } from "@/redux/features/admin/admin.api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const AllTransactions = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState("ALL");
+
+  // Reset to page 1 when status filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter]);
 
   const { data, isLoading } = useAllTransactionsQuery({
     page: currentPage,
     limit: 10,
+    ...(statusFilter !== "ALL" && { status: statusFilter }),
   });
 
   const totalPages = data?.meta?.totalPages || 1;
@@ -26,6 +33,8 @@ const AllTransactions = () => {
           transactions={transactions}
           isLoading={isLoading}
           totalPages={totalPages}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
         />
       </div>
     </div>

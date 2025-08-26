@@ -1,4 +1,5 @@
 import { ConfirmationDialog } from "@/components/ConfirmationDialog";
+import SearchInput from "@/components/serachInput";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -15,14 +16,19 @@ import {
 } from "@/redux/features/admin/admin.api";
 import type { IAgent } from "@/types/agent.types";
 import { Loader2, Users } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const AllActiveAgents = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
   const {
     data: allAgents,
     isLoading,
     refetch,
-  } = useActiveAgentsQuery(undefined);
+  } = useActiveAgentsQuery(
+    searchTerm.trim().length >= 2 ? { searchTerm: searchTerm.trim() } : {}
+  );
 
   const { refetch: suspendRefetch } = useSuspendedAgentsQuery(undefined);
 
@@ -56,6 +62,18 @@ const AllActiveAgents = () => {
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
         Active Agents
       </h2>
+
+      {/* Search Bar */}
+      <div className="flex justify-center mb-6">
+        <div className="w-full max-w-md">
+          <SearchInput
+            value={searchTerm}
+            onChange={setSearchTerm}
+            placeholder="Search agents by name, phone, or email (min 2 chars)..."
+            onClear={() => setSearchTerm("")}
+          />
+        </div>
+      </div>
 
       {isLoading ? (
         <div className="w-full min-h-screen bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">

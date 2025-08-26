@@ -22,6 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TransactionStatus } from "@/constants/transactions";
 import type { ITransaction } from "@/types/transaction.type";
 import { formatAmount } from "@/utils/formateAmount";
 import { formatDate } from "@/utils/formateDate";
@@ -32,7 +33,9 @@ interface TransactionTableProps {
   isLoading?: boolean;
   totalPages: number;
   currentPage: number;
-  setCurrentPage: (page: number) => void;
+  setCurrentPage: (pageNumber: number) => void;
+  statusFilter?: string;
+  setStatusFilter?: (statusValue: string) => void;
 }
 
 const TransactionTable = ({
@@ -41,15 +44,16 @@ const TransactionTable = ({
   totalPages,
   currentPage,
   setCurrentPage,
+  statusFilter = "ALL",
+  setStatusFilter,
 }: TransactionTableProps) => {
-  // Filter state (must be at top level)
+  // Local filter states for client-side filtering (type and date range)
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [rangeFilter, setRangeFilter] = useState("ALL");
 
-  // Remove unused currentPage state
-  // const [currentPage, setCurrentPage] = useState(1);
+  // Note: Status filtering is handled by the backend through the API call
 
-  console.log(typeFilter);
+
 
   if (isLoading) {
     return (
@@ -87,6 +91,14 @@ const TransactionTable = ({
     { label: "Withdraw Money", value: "WITHDRAW_MONEY" },
   ];
 
+  // Transaction status options
+  const transactionStatusOptions = [
+    { label: "All Statuses", value: "ALL" },
+    { label: "Pending", value: TransactionStatus.PENDING },
+    { label: "Completed", value: TransactionStatus.COMPLETED },
+    { label: "Failed", value: TransactionStatus.FAILED },
+  ];
+
   // Date range options
   const rangeOptions = [
     { label: "All Time", value: "ALL" },
@@ -95,14 +107,6 @@ const TransactionTable = ({
     { label: "Last 15 Days", value: "15d" },
     { label: "Last 30 Days", value: "30d" },
   ];
-
-  // Only filter by type
-  const filteredTransactions =
-    typeFilter === "ALL" || !typeFilter
-      ? transactions
-      : transactions.filter(
-          (transaction) => transaction.transactionType === typeFilter
-        );
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -116,10 +120,11 @@ const TransactionTable = ({
 
   return (
     <div>
-      {/* Centered filter header with label */}
+      {/* Responsive filter header */}
       <div className="flex flex-col items-center justify-center mb-6">
-        <div className="flex items-center gap-6">
-          <div className="flex flex-col gap-1 items-center">
+        {/* Filter options - Responsive layout */}
+        <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
+          <div className="flex flex-col gap-1 items-center min-w-[140px]">
             <span className="text-sm font-medium">Transaction Type</span>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
               <SelectTrigger className="w-40">
@@ -134,7 +139,22 @@ const TransactionTable = ({
               </SelectContent>
             </Select>
           </div>
-          <div className="flex flex-col gap-1 items-center">
+          <div className="flex flex-col gap-1 items-center min-w-[140px]">
+            <span className="text-sm font-medium">Transaction Status</span>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="All Statuses" />
+              </SelectTrigger>
+              <SelectContent>
+                {transactionStatusOptions.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex flex-col gap-1 items-center min-w-[140px]">
             <span className="text-sm font-medium">Date Range</span>
             <Select value={rangeFilter} onValueChange={setRangeFilter}>
               <SelectTrigger className="w-40">
@@ -163,8 +183,8 @@ const TransactionTable = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredTransactions.length > 0 ? (
-              filteredTransactions.map((transaction) => (
+            {transactions.length > 0 ? (
+              transactions.map((transaction) => (
                 <TableRow key={transaction._id}>
                   <TableCell className="font-medium text-sm">
                     {transaction.transactionId}

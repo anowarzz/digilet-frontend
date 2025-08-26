@@ -56,36 +56,40 @@ export const adminApi = baseApi.injectEndpoints({
     }),
     // Get all active agents
     activeAgents: builder.query({
-      query: () => ({
+      query: (params = {}) => ({
         url: "/admin/all-agents",
         method: "GET",
         params: {
           status: "ACTIVE" as TUserStatus,
+          ...params,
         },
       }),
+      providesTags: ["AGENTS"],
     }),
     // Get all pending agents
     pendingAgents: builder.query({
-      query: () => ({
+      query: (params = {}) => ({
         url: "/admin/all-agents",
         method: "GET",
         params: {
           status: "PENDING" as TUserStatus,
+          ...params,
         },
-        invalidatesTags: ["AGENTS"],
       }),
+      providesTags: ["AGENTS"],
     }),
     // Get all suspended agents
     suspendedAgents: builder.query({
-      query: () => ({
+      query: (params = {}) => ({
         url: "/admin/all-agents",
         method: "GET",
         params: {
           role: "AGENT",
           status: "SUSPENDED",
+          ...params,
         },
-        invalidatesTags: ["AGENTS"],
       }),
+      providesTags: ["AGENTS"],
     }),
     // Approve  pending agent
     approveAgent: builder.mutation({
