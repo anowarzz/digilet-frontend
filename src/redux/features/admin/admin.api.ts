@@ -126,6 +126,13 @@ export const adminApi = baseApi.injectEndpoints({
       }),
       providesTags: ["TRANSACTIONS"],
     }),
+    // get analytics overview
+    analyticsOverview: builder.query({
+      query: () => ({
+        url: "/admin/analytics/overview",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -133,6 +140,7 @@ export const {
   useAllUsersandAgentsQuery,
   usePendingAgentsQuery,
   useRejectAgentMutation,
+  useAnalyticsOverviewQuery,
   useAllAgentsQuery,
   useAllTransactionsQuery,
   useActiveAgentsQuery,
