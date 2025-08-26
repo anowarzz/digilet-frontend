@@ -1,4 +1,3 @@
-import ActiveAgents from "@/pages/Admin/ActiveAgents";
 import AllAgents from "@/pages/Admin/AllAgents";
 import AllTransactions from "@/pages/Admin/AllTransactions";
 import AllUsers from "@/pages/Admin/AllUsers";
