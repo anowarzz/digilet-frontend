@@ -135,7 +135,7 @@ const BalanceCard = ({
                 <Button
                   onClick={handleRefresh}
                   disabled={isRefreshing}
-                  className="p-1.5 hover:bg-white/10 rounded-lg transition-colors group disabled:opacity-50 cursor-pointer"
+                  className="p-1.5 bg-transparent hover:bg-white/10 rounded-lg transition-colors group disabled:opacity-50 cursor-pointer"
                 >
                   <RefreshCw
                     className={`w-4 h-4 text-purple-300 group-hover:text-white transition-colors duration-300 ${

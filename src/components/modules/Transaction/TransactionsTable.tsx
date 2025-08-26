@@ -30,9 +30,9 @@ import { useState } from "react";
 interface TransactionTableProps {
   transactions: ITransaction[];
   isLoading?: boolean;
-  totalPages?: number;
-  currentPage?: number;
-  setCurrentPage?: (page: number) => void;
+  totalPages: number;
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
 }
 
 const TransactionTable = ({
@@ -111,7 +111,7 @@ const TransactionTable = ({
   };
 
   const handleNextPage = () => {
-    setCurrentPage(currentPage + 1);
+    setCurrentPage((currentPage as number) + 1);
   };
 
   return (
@@ -151,42 +151,44 @@ const TransactionTable = ({
           </div>
         </div>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Transaction ID</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredTransactions.length > 0 ? (
-            filteredTransactions.map((transaction) => (
-              <TableRow key={transaction._id}>
-                <TableCell className="font-medium text-sm">
-                  {transaction.transactionId}
-                </TableCell>
-                <TableCell>
-                  {transaction.transactionType.replace(/_/g, " ")}
-                </TableCell>
-                <TableCell>{transaction.status}</TableCell>
-                <TableCell>{formatDate(transaction.createdAt)}</TableCell>
-                <TableCell className="text-right">
-                  {formatAmount(transaction.amount)}
+      <div className="px-4">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Transaction ID</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead className="text-right">Amount</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredTransactions.length > 0 ? (
+              filteredTransactions.map((transaction) => (
+                <TableRow key={transaction._id}>
+                  <TableCell className="font-medium text-sm">
+                    {transaction.transactionId}
+                  </TableCell>
+                  <TableCell>
+                    {transaction.transactionType.replace(/_/g, " ")}
+                  </TableCell>
+                  <TableCell>{transaction.status}</TableCell>
+                  <TableCell>{formatDate(transaction.createdAt)}</TableCell>
+                  <TableCell className="text-right">
+                    {formatAmount(transaction.amount)}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-4">
+                  No transactions found
                 </TableCell>
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={5} className="text-center py-4">
-                No transactions found
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            )}
+          </TableBody>
+        </Table>
+      </div>
       <div className="mt-8">
         <Pagination>
           <PaginationContent>

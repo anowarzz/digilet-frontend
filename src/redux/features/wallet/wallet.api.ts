@@ -35,9 +35,10 @@ export const walletApi = baseApi.injectEndpoints({
       invalidatesTags: ["WALLET"],
     }),
     transactionsHistory: builder.query({
-      query: () => ({
+      query: (params) => ({
         url: "/transaction/me/history",
         method: "GET",
+        params
       }),
       providesTags: ["WALLET"],
     }),
