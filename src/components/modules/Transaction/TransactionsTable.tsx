@@ -1,4 +1,12 @@
 import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -15,35 +23,33 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { ITransaction } from "@/types/transaction.type";
+import { formatAmount } from "@/utils/formateAmount";
+import { formatDate } from "@/utils/formateDate";
 import { useState } from "react";
 
 interface TransactionTableProps {
   transactions: ITransaction[];
   isLoading?: boolean;
+  totalPages?: number;
+  currentPage?: number;
+  setCurrentPage?: (page: number) => void;
 }
 
 const TransactionTable = ({
   transactions,
   isLoading = false,
+  totalPages,
+  currentPage,
+  setCurrentPage,
 }: TransactionTableProps) => {
   // Filter state (must be at top level)
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [rangeFilter, setRangeFilter] = useState("ALL");
 
+  // Remove unused currentPage state
+  // const [currentPage, setCurrentPage] = useState(1);
+
   console.log(typeFilter);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const formatAmount = (amount: number) => {
-    return `৳${amount.toFixed(2)}`;
-  };
 
   if (isLoading) {
     return (
@@ -73,8 +79,6 @@ const TransactionTable = ({
     );
   }
 
-  // ...existing code...
-
   // Transaction type options
   const transactionTypeOptions = [
     { label: "All Transactions", value: "ALL" },
@@ -99,6 +103,16 @@ const TransactionTable = ({
       : transactions.filter(
           (transaction) => transaction.transactionType === typeFilter
         );
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
 
   return (
     <div>
@@ -138,11 +152,6 @@ const TransactionTable = ({
         </div>
       </div>
       <Table>
-        <TableCaption>
-          {filteredTransactions?.length > 0
-            ? `Your recent transactions (${filteredTransactions.length} total)`
-            : "No transactions found"}
-        </TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Transaction ID</TableHead>
@@ -178,6 +187,41 @@ const TransactionTable = ({
           )}
         </TableBody>
       </Table>
+      <div className="mt-8">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={handlePreviousPage}
+                className={
+                  currentPage === 1
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+              />
+            </PaginationItem>
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+              (page) => (
+                <PaginationItem key={page} onClick={() => setCurrentPage(page)}>
+                  <PaginationLink isActive={currentPage === page}>
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              )
+            )}
+            <PaginationItem>
+              <PaginationNext
+                onClick={handleNextPage}
+                className={
+                  currentPage === totalPages
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </div>
   );
 };
