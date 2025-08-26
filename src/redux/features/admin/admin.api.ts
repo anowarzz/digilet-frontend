@@ -126,6 +126,16 @@ export const adminApi = baseApi.injectEndpoints({
       }),
       providesTags: ["TRANSACTIONS"],
     }),
+
+    // Get all wallets
+    allWallets: builder.query({
+      query: (params) => ({
+        url: "/admin/wallets/all",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["TRANSACTIONS"],
+    }),
     // get analytics overview
     analyticsOverview: builder.query({
       query: () => ({
@@ -139,6 +149,7 @@ export const adminApi = baseApi.injectEndpoints({
 export const {
   useAllUsersandAgentsQuery,
   usePendingAgentsQuery,
+  useAllWalletsQuery,
   useRejectAgentMutation,
   useAnalyticsOverviewQuery,
   useAllAgentsQuery,

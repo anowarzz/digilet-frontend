@@ -172,7 +172,7 @@ const AnalyticsOverview = () => {
         </motion.div>
       )}
 
-      <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+      <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-indigo-900 dark:to-blue-900 rounded-xl p-6 border border-blue-100 dark:border-indigo-700">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">

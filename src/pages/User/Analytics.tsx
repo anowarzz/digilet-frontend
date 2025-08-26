@@ -123,7 +123,7 @@ const UserAnalytics = () => {
               );
             })}
           </motion.div>
-          <div className="mt-8 bg-gradient-to-r from-purple-50 to-amber-50 dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 border border-purple-100 dark:border-gray-800 flex flex-col items-center">
+          <div className="mt-8 bg-gradient-to-r from-purple-50 to-amber-50 dark:from-purple-900 dark:to-amber-900 rounded-xl p-6 border border-purple-100 dark:border-purple-700 flex flex-col items-center">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
               Summary
             </h3>
