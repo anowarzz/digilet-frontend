@@ -26,7 +26,6 @@ import { TransactionStatus } from "@/constants/transactions";
 import type { ITransaction } from "@/types/transaction.type";
 import { formatAmount } from "@/utils/formateAmount";
 import { formatDate } from "@/utils/formateDate";
-import { useState } from "react";
 
 interface TransactionTableProps {
   transactions: ITransaction[];
@@ -38,6 +37,8 @@ interface TransactionTableProps {
   setStatusFilter?: (statusValue: string) => void;
   typeFilter?: string;
   setTypeFilter?: (typeValue: string) => void;
+  rangeFilter?: string;
+  setRangeFilter?: (rangeValue: string) => void;
 }
 
 const TransactionTable = ({
@@ -50,12 +51,11 @@ const TransactionTable = ({
   setStatusFilter,
   typeFilter = "ALL",
   setTypeFilter,
+  rangeFilter = "ALL",
+  setRangeFilter,
 }: TransactionTableProps) => {
-  // Local filter states for client-side filtering (date range only)
-  const [rangeFilter, setRangeFilter] = useState("ALL");
 
-  // Note: Status and Type filtering are handled by the backend through the API call
-
+  
   if (isLoading) {
     return (
       <Table>
@@ -129,7 +129,10 @@ const TransactionTable = ({
         <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
           <div className="flex flex-col gap-1 items-center min-w-[140px]">
             <span className="text-sm font-medium">Transaction Type</span>
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <Select
+              value={typeFilter}
+              onValueChange={setTypeFilter || (() => {})}
+            >
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="All Transactions" />
               </SelectTrigger>
@@ -144,7 +147,10 @@ const TransactionTable = ({
           </div>
           <div className="flex flex-col gap-1 items-center min-w-[140px]">
             <span className="text-sm font-medium">Transaction Status</span>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <Select
+              value={statusFilter}
+              onValueChange={setStatusFilter || (() => {})}
+            >
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="All Statuses" />
               </SelectTrigger>
@@ -159,7 +165,10 @@ const TransactionTable = ({
           </div>
           <div className="flex flex-col gap-1 items-center min-w-[140px]">
             <span className="text-sm font-medium">Date Range</span>
-            <Select value={rangeFilter} onValueChange={setRangeFilter}>
+            <Select
+              value={rangeFilter}
+              onValueChange={setRangeFilter || (() => {})}
+            >
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Select date range" />
               </SelectTrigger>

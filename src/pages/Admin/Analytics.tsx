@@ -1,10 +1,170 @@
-const Analytics = () => {
-    return (
-        <div>
-            Welcome to Analytics component
-            
+import { motion } from "framer-motion";
+import {
+  CreditCard,
+  DollarSign,
+  TrendingDown,
+  TrendingUp,
+  UserCheck,
+  Users,
+} from "lucide-react";
+
+const AnalyticsOverview = () => {
+  const analyticsData = [
+    {
+      id: 1,
+      title: "Total Users",
+      value: "24,567",
+      change: "+12.5%",
+      trend: "up",
+      icon: Users,
+      color: "bg-blue-500",
+      lightColor: "bg-blue-50",
+      textColor: "text-blue-600",
+    },
+    {
+      id: 2,
+      title: "Active Agents",
+      value: "1,234",
+      change: "+8.2%",
+      trend: "up",
+      icon: UserCheck,
+      color: "bg-emerald-500",
+      lightColor: "bg-emerald-50",
+      textColor: "text-emerald-600",
+    },
+    {
+      id: 3,
+      title: "Transaction Count",
+      value: "89,456",
+      change: "+15.3%",
+      trend: "up",
+      icon: CreditCard,
+      color: "bg-purple-500",
+      lightColor: "bg-purple-50",
+      textColor: "text-purple-600",
+    },
+    {
+      id: 4,
+      title: "Transaction Volume",
+      value: "$2.4M",
+      change: "-2.1%",
+      trend: "down",
+      icon: DollarSign,
+      color: "bg-amber-500",
+      lightColor: "bg-amber-50",
+      textColor: "text-amber-600",
+    },
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: {
+      opacity: 0,
+      y: 20,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  return (
+    <div className="w-full max-w-7xl mx-auto p-6">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Analytics Overview
+        </h1>
+        <p className="text-gray-600">
+          Monitor key performance metrics for your digital wallet platform
+        </p>
+      </div>
+
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {analyticsData.map((item) => {
+          const IconComponent = item.icon;
+          const TrendIcon = item.trend === "up" ? TrendingUp : TrendingDown;
+
+          return (
+            <motion.div
+              key={item.id}
+              variants={cardVariants}
+              whileHover={{
+                y: -4,
+                transition: { duration: 0.2 },
+              }}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className={`${item.lightColor} p-3 rounded-lg`}>
+                  <IconComponent className={`w-6 h-6 ${item.textColor}`} />
+                </div>
+                <div
+                  className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${
+                    item.trend === "up"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
+                  }`}
+                >
+                  <TrendIcon className="w-3 h-3" />
+                  <span>{item.change}</span>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <h3 className="text-sm font-medium text-gray-600">
+                  {item.title}
+                </h3>
+                <p className="text-2xl font-bold text-gray-900">{item.value}</p>
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <p className="text-xs text-gray-500">
+                  {item.trend === "up" ? "Increased" : "Decreased"} from last
+                  month
+                </p>
+              </div>
+            </motion.div>
+          );
+        })}
+      </motion.div>
+
+      <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">
+              Performance Summary
+            </h3>
+            <p className="text-sm text-gray-600">
+              Overall platform growth is trending positively with strong user
+              engagement
+            </p>
+          </div>
+          <div className="flex items-center space-x-2 text-green-600">
+            <TrendingUp className="w-5 h-5" />
+            <span className="text-sm font-medium">+11.2% Overall Growth</span>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
-export default Analytics;
+export default AnalyticsOverview;

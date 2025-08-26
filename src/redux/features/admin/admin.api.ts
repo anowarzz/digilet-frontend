@@ -99,6 +99,14 @@ export const adminApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["AGENTS"],
     }),
+    // reject  pending agent
+    rejectAgent: builder.mutation({
+      query: (agentId: string) => ({
+        url: `/admin/agents/reject/${agentId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["AGENTS"],
+    }),
 
     // Suspend agent
     suspendAgent: builder.mutation({
@@ -124,6 +132,7 @@ export const adminApi = baseApi.injectEndpoints({
 export const {
   useAllUsersandAgentsQuery,
   usePendingAgentsQuery,
+  useRejectAgentMutation,
   useAllAgentsQuery,
   useAllTransactionsQuery,
   useActiveAgentsQuery,

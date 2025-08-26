@@ -11,6 +11,7 @@ import {
 import {
   useApproveAgentMutation,
   usePendingAgentsQuery,
+  useRejectAgentMutation,
 } from "@/redux/features/admin/admin.api";
 import type { IAgent } from "@/types/agent.types";
 import { Clock, Loader2 } from "lucide-react";
@@ -29,7 +30,9 @@ const PendingAgents = () => {
   );
   const agents = pendingAgents?.data || [];
   const [approveAgent] = useApproveAgentMutation();
+  const [rejectAgent] = useRejectAgentMutation() ;
 
+  // approve agent request
   const handleApproveAgent = async (agentId: string) => {
     const toastId = toast.loading("Approving agent...");
     try {
@@ -41,6 +44,21 @@ const PendingAgents = () => {
     } catch (err) {
       console.log(err);
       toast.error("Failed to approve agent", { id: toastId });
+    }
+  };
+
+  // reject agent requests
+  const handleRejectAgent = async (agentId: string) => {
+    const toastId = toast.loading("Rejecting agent...");
+    try {
+      const res = await rejectAgent(agentId);
+      if (res?.data?.success) {
+        refetch();
+        toast.success("Agent rejected successfully", { id: toastId });
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to reject agent", { id: toastId });
     }
   };
 
@@ -116,6 +134,7 @@ const PendingAgents = () => {
                         Approve
                       </Button>
                       <Button
+                        onClick={() => handleRejectAgent(agent._id)}
                         size={"sm"}
                         className="rounded w-16 bg-accent text-red-600 text-xs font-semibold hover:bg-accent-foreground transition-colors"
                       >

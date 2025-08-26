@@ -1,27 +1,60 @@
 import TransactionTable from "@/components/modules/Transaction/TransactionsTable";
 import { useAllTransactionsQuery } from "@/redux/features/admin/admin.api";
-import { useEffect, useState } from "react";
+import type { ITransaction } from "@/types/transaction.type";
+import { useEffect, useMemo, useState } from "react";
 
 const AllTransactions = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [typeFilter, setTypeFilter] = useState("ALL");
+  const [rangeFilter, setRangeFilter] = useState("ALL");
 
-  // Reset to page 1 when filters change
+  // Reset to page 1 when any filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [statusFilter, typeFilter]);
+  }, [statusFilter, typeFilter, rangeFilter]);
 
-  const { data, isLoading } = useAllTransactionsQuery({
+  const apiParams = {
     page: currentPage,
     limit: 10,
     ...(statusFilter !== "ALL" && { status: statusFilter }),
     ...(typeFilter !== "ALL" && { transactionType: typeFilter }),
-  });
+  };
+
+  const { data, isLoading } = useAllTransactionsQuery(apiParams);
 
   const totalPages = data?.meta?.totalPages || 1;
 
-  const transactions = data?.data || [];
+  // Filter transactions by date range on frontend
+  const filteredTransactions = useMemo(() => {
+    const allTransactions = data?.data || [];
+    if (rangeFilter === "ALL") return allTransactions;
+
+    const now = new Date();
+    const filterDate = new Date();
+
+    switch (rangeFilter) {
+      case "24h":
+        filterDate.setDate(now.getDate() - 1);
+        break;
+      case "7d":
+        filterDate.setDate(now.getDate() - 7);
+        break;
+      case "15d":
+        filterDate.setDate(now.getDate() - 15);
+        break;
+      case "30d":
+        filterDate.setDate(now.getDate() - 30);
+        break;
+      default:
+        return allTransactions;
+    }
+
+    return allTransactions.filter((transaction: ITransaction) => {
+      const transactionDate = new Date(transaction.createdAt);
+      return transactionDate >= filterDate;
+    });
+  }, [data?.data, rangeFilter]);
 
   return (
     <div className="w-full px-2 sm:px-4 md:px-8 py-6">
@@ -32,13 +65,15 @@ const AllTransactions = () => {
         <TransactionTable
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
-          transactions={transactions}
+          transactions={filteredTransactions}
           isLoading={isLoading}
           totalPages={totalPages}
           statusFilter={statusFilter}
           setStatusFilter={setStatusFilter}
           typeFilter={typeFilter}
           setTypeFilter={setTypeFilter}
+          rangeFilter={rangeFilter}
+          setRangeFilter={setRangeFilter}
         />
       </div>
     </div>
