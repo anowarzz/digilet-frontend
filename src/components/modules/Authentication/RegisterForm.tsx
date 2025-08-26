@@ -69,6 +69,8 @@ export function RegisterForm({
 
   // Handle User / Agent Registration
   const onSubmit = async (data: z.infer<typeof registerSchema>) => {
+    const toastId = "register-toast";
+
     const userInfo = {
       name: data.name,
       phone: data.phone,
@@ -83,15 +85,15 @@ export function RegisterForm({
         "Registration successful. Please login with your credentials."
       );
       navigate("/login");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.log(error.data.message);
-      if (
-        error.data?.message === "user already exist with this phone number"
-      ) {
-        return toast.error("User already exists with this phone number");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.log(err.data.message);
+
+      if (err.status >= 400 && err.status < 500) {
+        return toast.error(err.data?.message || "Something went wrong.", {
+          id: toastId,
+        });
       }
-      toast.error("User creation failed");
     }
 
     console.log(userInfo);

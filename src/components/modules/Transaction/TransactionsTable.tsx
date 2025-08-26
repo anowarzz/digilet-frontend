@@ -92,7 +92,7 @@ const TransactionTable = ({
     { label: "Last 30 Days", value: "30d" },
   ];
 
-  // Only filter by type 
+  // Only filter by type
   const filteredTransactions =
     typeFilter === "ALL" || !typeFilter
       ? transactions

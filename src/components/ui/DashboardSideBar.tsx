@@ -23,28 +23,22 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+<<<<<<< HEAD
+  useSidebar,
+} from "@/components/ui/sidebar";
+import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
+import { getSidebarItems } from "@/utils/getSidebarItems";
+import { Link } from "react-router";
+=======
 } from "./sidebar";
 import { useSidebar } from "./useSidebar";
+>>>>>>> 49c2c09683ac6569f8da7f320c7f7ae36a6ccfb2
 
 export function DashboardSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const { data: userData } = useCurrentUserInfoQuery(undefined);
   const { setOpenMobile, isMobile } = useSidebar();
-  const navigate = useNavigate();
-
-  const [logOut] = useLogOutMutation();
-  const dispatch = useAppDispatch();
-
-  //handle logout
-  const handleLogOut = async () => {
-    const toastId = "log-out";
-    await logOut(undefined);
-    navigate("/");
-    toast.info("Logged out successfully", { id: toastId });
-
-    dispatch(authApi.util.resetApiState());
-  };
 
   const data = {
     navMain: getSidebarItems(userData?.data?.role),
@@ -83,17 +77,6 @@ export function DashboardSidebar({
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
-
-        {/* Bottom section for logout button*/}
-        <div className="absolute  bottom-0 left-0 w-full p-4 flex justify-center">
-          <Button
-            variant="destructive"
-            className="w-full cursor-pointer"
-            onClick={handleLogOut}
-          >
-            Logout
-          </Button>
-        </div>
       </SidebarContent>
       <SidebarRail />
       <SidebarRail />

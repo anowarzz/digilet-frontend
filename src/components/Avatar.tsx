@@ -6,7 +6,7 @@ import { Link } from "react-router";
 export default function UserAvatar({ role }: { role?: string }) {
   const profilePath = `/${role ? role.toLowerCase() : "user"}/profile`;
   return (
-    <Link to={profilePath}>
+    <Link to={profilePath} aria-label="User Profile" title="Profile">
       <Avatar>
         <AvatarImage src={userImage} alt="Avatar Image" className="dark:bg-emerald-500 "/>
         <AvatarFallback>
