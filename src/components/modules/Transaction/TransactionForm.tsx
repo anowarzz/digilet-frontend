@@ -52,15 +52,13 @@ const TransactionForm = ({
   title,
   role,
   status,
-  description,
   buttonText,
   icon,
   gradientClass,
   onSubmit,
   isLoading,
 }: TransactionFormProps) => {
-  const { data: walletData, isLoading: walletLoading } =
-    useGetWalletQuery(undefined);
+  const { data: walletData } = useGetWalletQuery(undefined);
 
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),

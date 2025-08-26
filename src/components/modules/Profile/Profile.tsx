@@ -149,7 +149,7 @@ const Profile = () => {
     } else {
       form.setValue(
         field as keyof UpdateUserFormData,
-        userData[field as keyof typeof userData]
+        userData[field as keyof UpdateUserFormData]
       );
     }
   };
