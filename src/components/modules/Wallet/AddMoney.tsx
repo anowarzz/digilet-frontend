@@ -13,7 +13,7 @@ const AddMoney = () => {
   const userRole = userData?.data?.role;
   const walletPath = `/${userRole?.toLowerCase()}/wallet`;
 
-  // Add money Request Handler
+   // Add money Request Handler
   const handleAddMoney = async (addMoneyData: {
     phone: string;
     amount: number;
@@ -46,15 +46,17 @@ const AddMoney = () => {
   };
 
   return (
-    <TransactionForm
-      type="add-money"
-      title="Add Money"
-      description="Top up your own wallet instantly"
-      buttonText="Add Money"
-      icon={addMoneyIcon}
-      gradientClass="from-emerald-500 to-teal-600"
-      onSubmit={handleAddMoney}
-    />
+    <>
+      <TransactionForm
+        type="add-money"
+        title="Add Money"
+        description="Top up your own wallet instantly"
+        buttonText="Add Money"
+        icon={addMoneyIcon}
+        gradientClass="from-emerald-500 to-teal-600"
+        onSubmit={handleAddMoney}
+      />
+    </>
   );
 };
 

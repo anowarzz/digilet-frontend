@@ -13,9 +13,10 @@ export const adminApi = baseApi.injectEndpoints({
 
     // Get all users
     allUsers: builder.query({
-      query: () => ({
+      query: (params) => ({
         url: "/admin/all-users",
         method: "GET",
+        params,
       }),
       providesTags: ["USERS"],
     }),
@@ -44,6 +45,14 @@ export const adminApi = baseApi.injectEndpoints({
         method: "PATCH",
       }),
       invalidatesTags: ["USERS"],
+    }),
+    // Get type of agents
+    allAgents: builder.query({
+      query: (params) => ({
+        url: "/admin/all-agents",
+        method: "GET",
+        params,
+      }),
     }),
     // Get all active agents
     activeAgents: builder.query({
@@ -111,6 +120,7 @@ export const adminApi = baseApi.injectEndpoints({
 export const {
   useAllUsersandAgentsQuery,
   usePendingAgentsQuery,
+  useAllAgentsQuery,
   useAllTransactionsQuery,
   useActiveAgentsQuery,
   useDeleteUserMutation,

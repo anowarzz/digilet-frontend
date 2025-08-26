@@ -9,13 +9,6 @@ export interface IUserEditableFields {
   address?: string;
 }
 
-
-
-
-
-
-
-
 export interface IAuth {
   provider: string;
   providerId: string;
@@ -36,6 +29,7 @@ export interface IUser {
   _id: string;
   name: string;
   phone: string;
+  email?: string;
   role: "USER" | "ADMIN" | "AGENT";
   status: "ACTIVE" | "BLOCKED" | "PENDING" | "SUSPENDED";
   isVerified: boolean;
