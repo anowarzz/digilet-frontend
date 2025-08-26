@@ -36,6 +36,8 @@ interface TransactionTableProps {
   setCurrentPage: (pageNumber: number) => void;
   statusFilter?: string;
   setStatusFilter?: (statusValue: string) => void;
+  typeFilter?: string;
+  setTypeFilter?: (typeValue: string) => void;
 }
 
 const TransactionTable = ({
@@ -46,14 +48,13 @@ const TransactionTable = ({
   setCurrentPage,
   statusFilter = "ALL",
   setStatusFilter,
+  typeFilter = "ALL",
+  setTypeFilter,
 }: TransactionTableProps) => {
-  // Local filter states for client-side filtering (type and date range)
-  const [typeFilter, setTypeFilter] = useState("ALL");
+  // Local filter states for client-side filtering (date range only)
   const [rangeFilter, setRangeFilter] = useState("ALL");
 
-  // Note: Status filtering is handled by the backend through the API call
-
-
+  // Note: Status and Type filtering are handled by the backend through the API call
 
   if (isLoading) {
     return (
@@ -89,6 +90,8 @@ const TransactionTable = ({
     { label: "Add Money", value: "ADD_MONEY" },
     { label: "Send Money", value: "SEND_MONEY" },
     { label: "Withdraw Money", value: "WITHDRAW_MONEY" },
+    { label: "Cash In", value: "CASH_IN" },
+    { label: "Cash Out", value: "CASH_OUT" },
   ];
 
   // Transaction status options

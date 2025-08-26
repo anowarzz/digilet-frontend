@@ -5,16 +5,18 @@ import { useEffect, useState } from "react";
 const AllTransactions = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [typeFilter, setTypeFilter] = useState("ALL");
 
-  // Reset to page 1 when status filter changes
+  // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [statusFilter]);
+  }, [statusFilter, typeFilter]);
 
   const { data, isLoading } = useAllTransactionsQuery({
     page: currentPage,
     limit: 10,
     ...(statusFilter !== "ALL" && { status: statusFilter }),
+    ...(typeFilter !== "ALL" && { transactionType: typeFilter }),
   });
 
   const totalPages = data?.meta?.totalPages || 1;
@@ -35,6 +37,8 @@ const AllTransactions = () => {
           totalPages={totalPages}
           statusFilter={statusFilter}
           setStatusFilter={setStatusFilter}
+          typeFilter={typeFilter}
+          setTypeFilter={setTypeFilter}
         />
       </div>
     </div>
