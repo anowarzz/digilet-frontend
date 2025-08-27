@@ -6,7 +6,12 @@ import { Link } from "react-router";
 export default function UserAvatar({ role }: { role?: string }) {
   const profilePath = `/${role?.toLowerCase()}/profile/me`;
   return (
-    <Link to={profilePath} aria-label="User Profile" title="Profile">
+    <Link
+      to={profilePath}
+      aria-label="User Profile"
+      title="Profile"
+      data-tour="profile-button"
+    >
       <Avatar>
         <AvatarImage
           src={userImage}

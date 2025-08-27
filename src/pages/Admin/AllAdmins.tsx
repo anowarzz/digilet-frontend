@@ -71,15 +71,15 @@ const AllAdmins = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen py-8 px-4">
+    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-rich-black-300 dark:via-rich-black-400 dark:to-rich-black-300 min-h-screen py-8 px-4">
       <div className="w-full max-w-7xl mx-auto">
-        <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
+        <Card className="shadow-xl border-0 bg-white/90 dark:bg-rich-black-400/90 backdrop-blur-sm">
           <CardHeader className="text-center space-y-3 pb-6">
-            <div className="mx-auto w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center shadow-md">
+            <div className="mx-auto w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-custom-blue-500 dark:to-custom-blue-600 rounded-full flex items-center justify-center shadow-md">
               <Shield className="w-6 h-6 text-white" />
             </div>
             <div className="space-y-1">
-              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-custom-blue-400 dark:to-custom-blue-500 bg-clip-text text-transparent">
                 All Administrators
               </CardTitle>
               <CardDescription className="text-sm text-muted-foreground">
@@ -112,17 +112,17 @@ const AllAdmins = () => {
                 ]}
               />
             ) : admins.length === 0 ? (
-              <div className="w-full min-h-[400px] bg-white/50 rounded-xl shadow-inner p-12 border border-gray-100 text-center">
-                <Shield className="mx-auto h-16 w-16 text-gray-400 mb-6" />
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+              <div className="w-full min-h-[400px] bg-white/50 dark:bg-rich-black-500/50 rounded-xl shadow-inner p-12 border border-gray-100 dark:border-rich-black-600 text-center">
+                <Shield className="mx-auto h-16 w-16 text-gray-400 dark:text-rich-black-700 mb-6" />
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
                   No Admins Found
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
                   {searchTerm
                     ? "No admins match your search criteria."
                     : "There are currently no admins registered in the system."}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 dark:text-rich-black-400">
                   {searchTerm
                     ? "Try adjusting your search terms."
                     : "Create a new admin to get started."}
@@ -130,7 +130,7 @@ const AllAdmins = () => {
               </div>
             ) : (
               <>
-                <div className="w-full bg-white/50 rounded-xl shadow-inner p-2 sm:p-4 border border-gray-100 overflow-x-auto">
+                <div className="w-full bg-white/50 dark:bg-rich-black-500/50 rounded-xl shadow-inner p-2 sm:p-4 border border-gray-100 dark:border-rich-black-600 overflow-x-auto">
                   <Table className="min-w-[500px]">
                     <TableHeader>
                       <TableRow>

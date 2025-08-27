@@ -94,7 +94,7 @@ const AgentWallet = () => {
         </div>
 
         {/* Balance Card */}
-        <div>
+        <div data-tour="balance-card">
           <BalanceCard
             phone={phone || ""}
             transactionCount={transactionCount}

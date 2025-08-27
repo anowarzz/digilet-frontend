@@ -93,7 +93,7 @@ const UserWallet = () => {
         </div>
 
         {/* Balance Card */}
-        <div>
+        <div data-tour="balance-card">
           <BalanceCard
             phone={phone}
             walletData={walletData}

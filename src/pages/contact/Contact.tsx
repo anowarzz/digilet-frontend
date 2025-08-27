@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -53,7 +54,7 @@ const Contact = ({
     },
   });
 
-  const onSubmit = async (values: ContactFormValues) => {
+  const onSubmit = async () => {
     setIsSubmitting(true);
 
     // Simulate API call
@@ -135,7 +136,7 @@ const Contact = ({
 
               {/* Additional Info */}
               <div className="bg-gradient-to-r from-princeton-orange-25/40 via-selective-yellow-25/35 to-persimmon-25/40 dark:from-princeton-orange-950/20 dark:via-selective-yellow-950/18 dark:to-persimmon-950/20 p-6 rounded-xl border border-princeton-orange-200/50 dark:border-princeton-orange-800/30">
-                <h4 className="font-semibold mb-3 text-rich-black-700 dark:text-rich-black-300">
+                <h4 className="font-semibold mb-3 text-rich-black-700 dark:text-gray-300">
                   Why Choose Us?
                 </h4>
                 <ul className="space-y-2 text-sm text-muted-foreground">

@@ -19,7 +19,6 @@ export default function SearchInput({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Optional: Add search logic here if needed
   };
 
   return (

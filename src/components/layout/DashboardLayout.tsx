@@ -10,7 +10,11 @@ import {
   useLogOutMutation,
 } from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
+import { getTourSteps, getTourStorageKey } from "@/utils/tourConfig";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 import { LogOut } from "lucide-react";
+import { useEffect } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
 import { toast } from "sonner";
 import UserAvatar from "../Avatar";
@@ -26,6 +30,30 @@ const DashboardLayout = () => {
 
   const [logOut] = useLogOutMutation();
   const dispatch = useAppDispatch();
+
+  // Tour implementation
+  useEffect(() => {
+    if (role && userData?.data) {
+      const tourKey = getTourStorageKey(role);
+      const hasSeenTour = localStorage.getItem(tourKey);
+      if (!hasSeenTour) {
+        const steps = getTourSteps(role);
+
+        if (steps.length > 0) {
+          const driverObj = driver({
+            showProgress: true,
+            steps: steps,
+          });
+
+          // Start tour after delay
+          setTimeout(() => {
+            driverObj.drive();
+            localStorage.setItem(tourKey, "true");
+          }, 1000);
+        }
+      }
+    }
+  }, [role, userData]);
 
   //handle logout
   const handleLogOut = async () => {

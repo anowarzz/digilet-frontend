@@ -52,7 +52,7 @@ const router = createBrowserRouter([
     path: "/user",
     errorElement: <NotFound />,
     children: [
-      { index: true, element: <Navigate to="/user/my-wallet" /> },
+      { index: true, element: <Navigate to="/user/wallet" /> },
       ...generateRoutes(userSidebarItems),
       { path: "profile/me", Component: MyProfile },
     ],

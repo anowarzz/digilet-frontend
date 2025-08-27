@@ -84,15 +84,15 @@ const CreateAdmin = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-8 px-4">
+    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-rich-black-300 dark:via-rich-black-400 dark:to-rich-black-300 py-8 px-4">
       <div className="w-full max-w-lg mx-auto">
-        <Card className="shadow-xl border-0 bg-white/90 mx-auto backdrop-blur-sm">
+        <Card className="shadow-xl border-0 bg-white/90 dark:bg-rich-black-400/90 mx-auto backdrop-blur-sm">
           <CardHeader className="text-center space-y-3 pb-2">
-            <div className="mx-auto w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center shadow-md">
+            <div className="mx-auto w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-custom-blue-500 dark:to-custom-blue-600 rounded-full flex items-center justify-center shadow-md">
               <User className="w-6 h-6 text-white" />
             </div>
             <div className="space-y-1">
-              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-custom-blue-400 dark:to-custom-blue-500 bg-clip-text text-transparent">
                 Create New Admin
               </CardTitle>
               <CardDescription className="text-sm text-muted-foreground">
@@ -112,14 +112,14 @@ const CreateAdmin = () => {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                        <User className="w-4 h-4 text-blue-600" />
+                      <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                        <User className="w-4 h-4 text-blue-600 dark:text-custom-blue-400" />
                         Full Name
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Enter admin full name"
-                          className="h-10 border-2 border-gray-200 focus:border-blue-500 transition-colors"
+                          className="h-10 border-2 border-gray-200 dark:border-rich-black-600 focus:border-blue-500 dark:focus:border-custom-blue-400 transition-colors bg-white dark:bg-rich-black-500 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-500"
                           {...field}
                         />
                       </FormControl>
@@ -133,15 +133,15 @@ const CreateAdmin = () => {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                        <Phone className="w-4 h-4 text-blue-600" />
+                      <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                        <Phone className="w-4 h-4 text-blue-600 dark:text-custom-blue-400" />
                         Phone Number
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="01XXXXXXXXX or +8801XXXXXXXXX"
                           type="text"
-                          className="h-10 border-2 border-gray-200 focus:border-blue-500 transition-colors"
+                          className="h-10 border-2 border-gray-200 dark:border-rich-black-600 focus:border-blue-500 dark:focus:border-custom-blue-400 transition-colors bg-white dark:bg-rich-black-500 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-500"
                           {...field}
                         />
                       </FormControl>
@@ -155,14 +155,14 @@ const CreateAdmin = () => {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                        <Lock className="w-4 h-4 text-blue-600" />
+                      <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                        <Lock className="w-4 h-4 text-blue-600 dark:text-custom-blue-400" />
                         Password
                       </FormLabel>
                       <FormControl>
                         <Password
                           placeholder="Enter secure password"
-                          className="h-10 border-2 border-gray-200 focus:border-blue-500 transition-colors"
+                          className="h-10 border-2 border-gray-200 dark:border-rich-black-600 focus:border-blue-500 dark:focus:border-custom-blue-400 transition-colors bg-white dark:bg-rich-black-500 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-500"
                           {...field}
                         />
                       </FormControl>
@@ -173,7 +173,7 @@ const CreateAdmin = () => {
 
                 <Button
                   type="submit"
-                  className="w-full h-10 mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200"
+                  className="w-full h-10 mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-custom-blue-500 dark:to-custom-blue-600 hover:from-blue-700 hover:to-indigo-700 dark:hover:from-custom-blue-600 dark:hover:to-custom-blue-700 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200"
                   disabled={isLoading}
                 >
                   {isLoading ? (

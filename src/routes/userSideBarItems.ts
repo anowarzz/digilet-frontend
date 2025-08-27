@@ -18,7 +18,7 @@ export const userSidebarItems: ISidebarItem[] = [
       },
       {
         title: "My Wallet",
-        url: "/user/my-wallet",
+        url: "/user/wallet",
         Component: UserWallet,
       },
     ],
