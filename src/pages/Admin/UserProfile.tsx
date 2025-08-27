@@ -152,15 +152,11 @@ const UserProfile = () => {
     };
 
     try {
-      console.log("sending", updatedData);
-
       const res = await updateUser({
         userId: user._id || user.id,
-        updateData: updatedData,
+        updatePayload: updatedData,
       }).unwrap();
       if (res?.success) {
-        console.log(res);
-
         toast.success("User updated successfully.", { id: toastId });
         setEdit(false);
       }
