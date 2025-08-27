@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-custom-blue/5 py-16 md:py-24">
+    <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-custom-blue/5 dark:bg-gradient-to-br dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 py-16 md:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div className="flex flex-col items-center text-center space-y-6 lg:items-start lg:text-left">
