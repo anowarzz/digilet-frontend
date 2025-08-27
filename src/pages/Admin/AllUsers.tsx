@@ -198,16 +198,16 @@ const AllUsers = () => {
                       )}
                     </TableCell>
                     <TableCell>
-                      <Button>
-                        <Link
-                          to={`/admin/profile/${user._id}`}
+                      <Link to={`/admin/user/profile/${user._id}`}>
+                        <Button
                           aria-label="View profile"
+                          size="sm"
                           title="View profile"
                           className="rounded w-16 bg-blue-500 text-white text-xs font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center"
                         >
                           Profile
-                        </Link>
-                      </Button>
+                        </Button>
+                      </Link>
                     </TableCell>
                     <TableCell>
                       <ConfirmationDialog

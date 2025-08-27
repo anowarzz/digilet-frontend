@@ -17,6 +17,7 @@ import {
 import type { IAgent } from "@/types/agent.types";
 import { Loader2, Users } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router";
 import { toast } from "sonner";
 
 const AllActiveAgents = () => {
@@ -138,12 +139,15 @@ const AllActiveAgents = () => {
                     </ConfirmationDialog>
                   </TableCell>
                   <TableCell>
-                    <Button
-                      size="sm"
-                      className="px-4 py-1 rounded bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
-                    >
-                      Profile
-                    </Button>
+                    <Link to={`/admin/agent/profile/${agent._id}`}>
+                      <Button
+                        aria-label="View profile"
+                        size="sm"
+                        className="px-4 py-1 rounded bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
+                      >
+                        Profile
+                      </Button>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}

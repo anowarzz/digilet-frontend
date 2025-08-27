@@ -1,9 +1,10 @@
 import App from "@/App";
 import AuthLayout from "@/components/layout/AuthLayout";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import Profile from "@/components/modules/Profile/Profile";
+import MyProfile from "@/components/modules/Profile/MyProfile";
 import { UserRole } from "@/constants/role";
 import About from "@/pages/About/About";
+import { default as UserProfile } from "@/pages/Admin/UserProfile";
 import Contact from "@/pages/Contact/Contact";
 import Faq from "@/pages/Faq/Faq";
 import Features from "@/pages/Features/Features";
@@ -40,7 +41,8 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/admin/analytics" /> },
       ...generateRoutes(adminSidebarItems),
-      { path: "profile/:id", Component: Profile },
+      { path: ":role/profile/:id", Component: UserProfile },
+      { path: "profile/me", Component: MyProfile },
     ],
   },
   {
@@ -50,7 +52,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/user/my-wallet" /> },
       ...generateRoutes(userSidebarItems),
-      { path: "profile/:id", Component: Profile },
+      { path: "profile/me", Component: MyProfile },
     ],
   },
   {
@@ -60,7 +62,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/agent/analytics" /> },
       ...generateRoutes(agentSidebarItems),
-      { path: "profile/:id", Component: Profile },
+      { path: "profile/me", Component: MyProfile },
     ],
   },
 

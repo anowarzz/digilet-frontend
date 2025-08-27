@@ -4,6 +4,7 @@ import withdrawMoneyIcon from "@/assets/Icons/withdraw-money.png";
 import BalanceCard from "@/components/modules/Wallet/BalanceCard";
 import { Button } from "@/components/ui/button";
 import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
+import { useUserAnalyticsQuery } from "@/redux/features/user/user.api";
 import {
   useGetWalletQuery,
   useTransactionsHistoryQuery,
@@ -26,6 +27,10 @@ const UserWallet = () => {
 
   const { data: userTransactions, isLoading: userTransactionsLoading } =
     useTransactionsHistoryQuery(undefined);
+
+  const { data: userAnalytics } = useUserAnalyticsQuery(undefined);
+  const transactionCount = userAnalytics?.data?.transactionCount;
+  const transactionVolume = userAnalytics?.data?.transactionVolume;
 
   // Process recent transactions (first 5)
   const recentTransactions =
@@ -93,6 +98,8 @@ const UserWallet = () => {
             phone={phone}
             walletData={walletData}
             isLoading={walletLoading}
+            transactionCount={transactionCount}
+            transactionVolume={transactionVolume}
             onRefresh={refetch}
           />
         </div>

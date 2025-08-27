@@ -12,7 +12,7 @@ export const userSidebarItems: ISidebarItem[] = [
     title: "Wallet Management",
     items: [
       {
-        title: "Analytics",
+        title: "Overiew",
         url: "/user/analytics",
         Component: UserAnalytics,
       },

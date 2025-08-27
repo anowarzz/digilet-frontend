@@ -3,6 +3,7 @@ import cashInIcon from "@/assets/Icons/cash-in.png";
 import cashOutIcon from "@/assets/Icons/cash-out.png";
 import BalanceCard from "@/components/modules/Wallet/BalanceCard";
 import { Button } from "@/components/ui/button";
+import { useAgentAnalyticsQuery } from "@/redux/features/agent/agent.api";
 import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 import {
   useGetWalletQuery,
@@ -27,6 +28,10 @@ const AgentWallet = () => {
 
   const phone = agentData?.data?.phone;
   const name = agentData?.data.name;
+
+  const { data: AgentAnalytics } = useAgentAnalyticsQuery(undefined);
+  const transactionCount = AgentAnalytics?.data?.transactionCount;
+  const transactionVolume = AgentAnalytics?.data?.transactionVolume;
 
   // Process recent transactions (first 5)
   const recentTransactions =
@@ -92,6 +97,8 @@ const AgentWallet = () => {
         <div>
           <BalanceCard
             phone={phone || ""}
+            transactionCount={transactionCount}
+            transactionVolume={transactionVolume}
             walletData={walletData}
             isLoading={isLoadingWallet}
             onRefresh={refetch}

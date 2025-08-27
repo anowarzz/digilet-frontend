@@ -88,7 +88,7 @@ const updateUserZodSchema = z.object({
     ),
 });
 
-const Profile = () => {
+const UserProfile = () => {
   const [edit, setEdit] = useState<boolean>(false);
 
   const { id } = useParams();
@@ -542,4 +542,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserProfile;

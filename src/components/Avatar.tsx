@@ -4,11 +4,15 @@ import { CircleUserIcon } from "lucide-react";
 import { Link } from "react-router";
 
 export default function UserAvatar({ role }: { role?: string }) {
-  const profilePath = `/${role ? role.toLowerCase() : "user"}/profile`;
+  const profilePath = `/${role?.toLowerCase()}/profile/me`;
   return (
     <Link to={profilePath} aria-label="User Profile" title="Profile">
       <Avatar>
-        <AvatarImage src={userImage} alt="Avatar Image" className="dark:bg-emerald-500 "/>
+        <AvatarImage
+          src={userImage}
+          alt="Avatar Image"
+          className="dark:bg-emerald-500 "
+        />
         <AvatarFallback>
           <CircleUserIcon
             size={32}

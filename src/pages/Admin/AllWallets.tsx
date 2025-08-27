@@ -16,6 +16,7 @@ import {
 import type { IWallet } from "@/types/wallet.types";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router";
 import { toast } from "sonner";
 
 const AllWallets = () => {
@@ -199,14 +200,20 @@ const AllWallets = () => {
                     )}
                   </TableCell>
                   <TableCell>
-                    <Button
-                      aria-label="View profile"
-                      title="View profile"
-                      size="sm"
-                      className="rounded w-16 bg-blue-500 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
+                    <Link
+                      to={`/admin/${wallet?.userInfo?.role.toLowerCase()}/profile/${
+                        wallet.userId
+                      }`}
                     >
-                      Profile
-                    </Button>
+                      <Button
+                        aria-label="View profile"
+                        title="View profile"
+                        size="sm"
+                        className="rounded w-16 bg-blue-500 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
+                      >
+                        Profile
+                      </Button>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}

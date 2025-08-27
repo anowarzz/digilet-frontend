@@ -15,6 +15,8 @@ import { useState } from "react";
 
 interface BalanceCardProps {
   className?: string;
+  transactionCount?: number;
+  transactionVolume?: number;
   walletData?: IWallet;
   isLoading?: boolean;
   phone: string;
@@ -24,6 +26,8 @@ interface BalanceCardProps {
 const BalanceCard = ({
   className = "",
   walletData,
+  transactionCount,
+  transactionVolume,
   phone,
   isLoading = false,
   onRefresh,
@@ -32,6 +36,7 @@ const BalanceCard = ({
   const [copied, setCopied] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  //  copy wallet id
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -42,6 +47,10 @@ const BalanceCard = ({
     }
   };
 
+  console.log(transactionCount);
+  console.log(transactionVolume);
+
+  // refresh balane
   const handleRefresh = async () => {
     if (onRefresh && !isRefreshing) {
       setIsRefreshing(true);
@@ -159,7 +168,9 @@ const BalanceCard = ({
                     This Month
                   </p>
                 </div>
-                <p className="text-white text-sm font-bold">৳ 12,450</p>
+                <p className="text-white text-sm font-bold">
+                  ৳ {transactionVolume}
+                </p>
               </div>
             </div>
 
@@ -173,7 +184,9 @@ const BalanceCard = ({
                     Transactions
                   </p>
                 </div>
-                <p className="text-white text-sm font-bold">247</p>
+                <p className="text-white text-sm font-bold">
+                  {transactionCount}
+                </p>
               </div>
             </div>
           </div>
