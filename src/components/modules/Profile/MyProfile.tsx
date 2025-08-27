@@ -4,30 +4,30 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useUpdateUserMutation } from "@/redux/features/admin/admin.api";
 import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
+import { useUpdateOwnProfileMutation } from "@/redux/features/user/user.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Edit2,
-  Mail,
-  MapPin,
-  Phone,
-  Save,
-  Shield,
-  User,
-  UserCheck,
-  UserCircle,
-  Wallet,
-  X,
+    Edit2,
+    Mail,
+    MapPin,
+    Phone,
+    Save,
+    Shield,
+    User,
+    UserCheck,
+    UserCircle,
+    Wallet,
+    X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -96,7 +96,8 @@ const MyProfile = () => {
 
   const user = data?.data;
 
-  const [updateUser] = useUpdateUserMutation();
+
+    const [updateOwnProfile] = useUpdateOwnProfileMutation()
 
   // update user form
   const updateUserForm = useForm<z.infer<typeof updateUserZodSchema>>({
@@ -149,21 +150,15 @@ const MyProfile = () => {
     };
 
     try {
-      console.log("sending", updatedData);
-
-      const res = await updateUser({
+      const res = await updateOwnProfile({
         userId: user._id || user.id,
-        updateData: updatedData,
+        updatePayload: updatedData,
       }).unwrap();
       if (res?.success) {
-        console.log(res);
-
         toast.success("User updated successfully.", { id: toastId });
         setEdit(false);
       }
     } catch (error: any) {
-      console.log(error);
-
       if (error.status && error.status >= 400 && error.status < 500) {
         return toast.error(error.data?.message || "Something went wrong.", {
           id: toastId,
@@ -214,13 +209,13 @@ const MyProfile = () => {
         {!isLoading && !isError && user.phone && (
           <>
             {/* Header Card */}
-            <Card className="mb-6 border-0 shadow-2xl overflow-hidden">
-              <div className="h-32 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 relative">
+            <Card className="mb-4 border-0 shadow-2xl overflow-hidden">
+              <div className="h-24 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 relative">
                 <div className="absolute inset-0 bg-black/20" />
-                <div className="absolute -bottom-12 left-8">
-                  <Avatar className="w-24 h-24 ring-4 ring-white shadow-2xl bg-emerald-500">
+                <div className="absolute -bottom-8 left-8">
+                  <Avatar className="w-20 h-20 ring-4 ring-white shadow-2xl bg-emerald-500">
                     <AvatarImage src={userData.picture} alt={userData.name} />
-                    <AvatarFallback className="text-2xl font-bold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                    <AvatarFallback className="text-xl font-bold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
                       {(userData?.name || "User")
                         ?.split(" ")
                         ?.map((name: string) => name?.[0])
@@ -229,10 +224,10 @@ const MyProfile = () => {
                   </Avatar>
                 </div>
               </div>
-              <CardContent className="pt-16 pb-6 px-8">
+              <CardContent className="pt-12 pb-4 px-8">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                   <div>
-                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-1">
                       {userData.name}
                     </h1>
                     <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
@@ -244,35 +239,55 @@ const MyProfile = () => {
                   </div>
                   <div className="text-right">
                     {userData.role === "ADMIN" ? (
-                      <div className="flex flex-col items-end gap-2">
-                        <Shield className="w-8 h-8 text-blue-600" />
+                      <div className="flex items-center gap-2">
+                        <Shield className="w-5 h-5 text-blue-600" />
                         <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                           Admin Access
                         </p>
                       </div>
                     ) : userData.role === "AGENT" ? (
-                      <div className="flex flex-col items-end gap-2">
-                        <UserCheck className="w-8 h-8 text-green-600" />
-                        <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          Agent Access
-                        </p>
+                      <div className="flex flex-col items-end gap-1">
+                        <div className="flex items-center gap-2">
+                          <UserCheck className="w-5 h-5 text-green-600" />
+                          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Agent Access
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            Balance:
+                          </span>
+                          <p className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            ${Number(userData?.wallet?.balance ?? 0).toFixed(2)}
+                          </p>
+                        </div>
                       </div>
                     ) : userData.role === "USER" ? (
-                      <div className="flex flex-col items-end gap-2">
-                        <UserCircle className="w-8 h-8 text-purple-600" />
-                        <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          User Access
-                        </p>
+                      <div className="flex flex-col items-end gap-1">
+                        <div className="flex items-center gap-2">
+                          <UserCircle className="w-5 h-5 text-purple-600" />
+                          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            User Access
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            Balance:
+                          </span>
+                          <p className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            ${Number(userData?.wallet?.balance ?? 0).toFixed(2)}
+                          </p>
+                        </div>
                       </div>
                     ) : (
-                      <>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">
-                          Balance
-                        </p>
-                        <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                          Balance:
+                        </span>
+                        <p className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                           ${Number(userData?.wallet?.balance ?? 0).toFixed(2)}
                         </p>
-                      </>
+                      </div>
                     )}
                   </div>
                 </div>

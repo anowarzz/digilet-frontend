@@ -1,15 +1,7 @@
 import { baseApi } from "@/redux/baseApi";
 import { type TUserStatus } from "./../../../types/index";
 
-// Define the update user data type
-export interface IUpdateUserData {
-  name?: string | null;
-  phone?: string | null;
-  email?: string | null;
-  userName?: string | null;
-  nidNumber?: string | null;
-  address?: string | null;
-}
+
 
 export const adminApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

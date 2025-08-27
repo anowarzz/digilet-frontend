@@ -1,4 +1,5 @@
 import { baseApi } from "@/redux/baseApi";
+import type { IUpdateUserData } from "@/types/user.types";
 
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -9,7 +10,21 @@ export const userApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    // update user
+    updateOwnProfile: builder.mutation({
+      query: ({
+        userId,
+        updatePayload,
+      }: {
+        userId: string;
+        updatePayload: IUpdateUserData;
+      }) => ({
+        url: `/user/update/${userId}`,
+        method: "PATCH",
+        data: updatePayload,
+      }),
+    }),
   }),
 });
 
-export const { useUserAnalyticsQuery } = userApi;
+export const { useUserAnalyticsQuery, useUpdateOwnProfileMutation } = userApi;

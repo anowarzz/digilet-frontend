@@ -16,8 +16,6 @@ export interface IAuth {
   providerId: string;
 }
 
-
-
 export interface IUser {
   _id: string;
   name: string;
@@ -31,4 +29,14 @@ export interface IUser {
   updatedAt: string;
   auths: IAuth[];
   wallet: IWallet;
+}
+
+// Define the update user data type
+export interface IUpdateUserData {
+  name?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  userName?: string | null;
+  nidNumber?: string | null;
+  address?: string | null;
 }
