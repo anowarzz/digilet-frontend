@@ -1,10 +1,13 @@
 import { SkeletonCard } from "@/components/Skeleton";
 import { useAgentAnalyticsQuery } from "@/redux/features/agent/agent.api";
+import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { motion } from "framer-motion";
 import { CreditCard, DollarSign, TrendingDown, TrendingUp } from "lucide-react";
 
 const AgentAnalytics = () => {
   const { data, isLoading } = useAgentAnalyticsQuery(undefined);
+
+  const { data: user } = useCurrentUserInfoQuery(undefined);
 
   const analyticsData = data?.data
     ? [
@@ -51,7 +54,7 @@ const AgentAnalytics = () => {
     <div className="w-full max-w-3xl mx-auto p-6">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          Agent Analytics
+          Welcome,  {user?.data?.name || "Agent"}
         </h1>
         <p className="text-gray-600 dark:text-gray-300">
           Your agent transaction statistics

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import type { IWallet } from "@/types/wallet.type";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { IWallet } from "@/types/wallet.types";
 import {
   Check,
   Copy,
@@ -85,7 +86,11 @@ const BalanceCard = ({
                   title="Click to copy Wallet ID"
                 >
                   <span className="font-mono">
-                    {walletData?.walletId || "Loading..."}
+                    {walletData?.walletId ? (
+                      walletData.walletId
+                    ) : (
+                      <Skeleton className="h-4 w-24 inline-block" />
+                    )}
                   </span>
                   {copied ? (
                     <Check className="w-3 h-3 text-green-400" />
@@ -130,15 +135,19 @@ const BalanceCard = ({
             </p>
             <div className="flex items-center gap-3">
               <h1 className="text-xl sm:2xl lg:text-3xxl font-bold text-white">
-                {showBalance
-                  ? isLoading
-                    ? "Loading..."
-                    : `৳ ${
-                        walletData?.balance?.toLocaleString("en-US", {
-                          minimumFractionDigits: 2,
-                        }) || "0.00"
-                      }`
-                  : "৳ ••••••••"}
+                {showBalance ? (
+                  isLoading ? (
+                    <Skeleton className="h-8 w-32 bg-white/20" />
+                  ) : (
+                    `৳ ${
+                      walletData?.balance?.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                      }) || "0.00"
+                    }`
+                  )
+                ) : (
+                  "৳ ••••••••"
+                )}
               </h1>
               {!isLoading && (
                 <Button

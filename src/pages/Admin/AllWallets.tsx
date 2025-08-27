@@ -1,5 +1,14 @@
 import SearchInput from "@/components/serachInput";
+import { TableSkeleton } from "@/components/Skeleton";
 import { Button } from "@/components/ui/button";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -14,18 +23,28 @@ import {
   useUnblockUserWalletMutation,
 } from "@/redux/features/admin/admin.api";
 import type { IWallet } from "@/types/wallet.types";
-import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { toast } from "sonner";
 
 const AllWallets = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const { data, isLoading } = useAllWalletsQuery(
-    searchTerm.trim().length >= 2 ? { searchTerm: searchTerm.trim() } : {}
-  );
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Reset to page 1 when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const apiParams = {
+    page: currentPage,
+    limit: 10,
+    ...(searchTerm.trim().length >= 2 && { searchTerm: searchTerm.trim() }),
+  };
+
+  const { data, isLoading } = useAllWalletsQuery(apiParams);
   const wallets = data?.data || [];
-  const filteredWallets = wallets;
+  const totalPages = data?.meta?.totalPages || 1;
   const [togglingId, setTogglingId] = useState<string | null>(null);
 
   // Import mutations
@@ -44,11 +63,10 @@ const AllWallets = () => {
           id: toastId,
         });
       }
-    } catch (err) {
+    } catch {
       toast.error(`Failed to block wallet.`, {
         id: toastId,
       });
-      console.log(err);
     } finally {
       setTogglingId(null);
     }
@@ -66,11 +84,10 @@ const AllWallets = () => {
           id: toastId,
         });
       }
-    } catch (err) {
+    } catch {
       toast.error(`Failed to unblock wallet.`, {
         id: toastId,
       });
-      console.log(err);
     } finally {
       setTogglingId(null);
     }
@@ -95,16 +112,17 @@ const AllWallets = () => {
       </div>
 
       {isLoading ? (
-        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
-          <Loader2 className="mx-auto h-12 w-12 animate-spin text-gray-400 mb-4" />
-          <p className="text-lg font-medium text-gray-600 dark:text-gray-400">
-            Loading wallets...
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-            Please wait
-          </p>
-        </div>
-      ) : filteredWallets.length === 0 ? (
+        <TableSkeleton
+          rows={5}
+          columns={[
+            { header: "Name", width: "min-w-[140px]" },
+            { header: "Phone", width: "min-w-[140px]" },
+            { header: "Balance", width: "min-w-[100px]" },
+            { header: "Status", width: "min-w-[100px]" },
+            { header: "Action", width: "min-w-[100px]" },
+          ]}
+        />
+      ) : wallets.length === 0 ? (
         <div className="w-full min-h-screen bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
           {/* Use Wallet icon instead of Users icon */}
           <svg
@@ -152,7 +170,7 @@ const AllWallets = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredWallets.map((wallet: IWallet) => (
+              {wallets.map((wallet: IWallet) => (
                 <TableRow key={wallet._id}>
                   <TableCell className="break-words">
                     {wallet.userInfo?.name || "-"}
@@ -219,6 +237,48 @@ const AllWallets = () => {
               ))}
             </TableBody>
           </Table>
+        </div>
+      )}
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="mt-8 flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  className={
+                    currentPage === 1
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
+                />
+              </PaginationItem>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (page) => (
+                  <PaginationItem
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    <PaginationLink isActive={currentPage === page}>
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                )
+              )}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  className={
+                    currentPage === totalPages
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       )}
     </div>

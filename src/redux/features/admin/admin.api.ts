@@ -52,7 +52,15 @@ export const adminApi = baseApi.injectEndpoints({
         url: `/admin/users/block/${userId}`,
         method: "PATCH",
       }),
-      invalidatesTags: ["USERS"],
+      invalidatesTags: ["USERS", "USER"],
+    }),
+    // unblocking user
+    unblockUser: builder.mutation({
+      query: (userId) => ({
+        url: `/admin/users/unblock/${userId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["USERS", "USER"],
     }),
     // Deleting a user
     deleteUser: builder.mutation({
@@ -63,14 +71,6 @@ export const adminApi = baseApi.injectEndpoints({
       invalidatesTags: ["USERS"],
     }),
 
-    // unblocking user
-    unblockUser: builder.mutation({
-      query: (userId) => ({
-        url: `/admin/users/unblock/${userId}`,
-        method: "PATCH",
-      }),
-      invalidatesTags: ["USERS"],
-    }),
     // Get type of agents
     allAgents: builder.query({
       query: (params) => ({
@@ -160,7 +160,7 @@ export const adminApi = baseApi.injectEndpoints({
         method: "GET",
         params,
       }),
-      providesTags: ["WALLETS"],
+      providesTags: ["WALLETS", "WALLET", "AUTH"],
     }),
 
     // Block user wallet
@@ -169,7 +169,7 @@ export const adminApi = baseApi.injectEndpoints({
         url: `/admin/wallet/block/${userId}`,
         method: "PATCH",
       }),
-      invalidatesTags: ["TRANSACTIONS", "WALLET"],
+      invalidatesTags: ["WALLETS"],
     }),
 
     // Unblock user wallet
@@ -178,7 +178,7 @@ export const adminApi = baseApi.injectEndpoints({
         url: `/admin/wallet/unblock/${userId}`,
         method: "PATCH",
       }),
-      invalidatesTags: ["TRANSACTIONS", "WALLET"],
+      invalidatesTags: ["WALLETS"],
     }),
 
     // get analytics overview

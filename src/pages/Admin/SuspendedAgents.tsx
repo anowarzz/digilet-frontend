@@ -1,6 +1,15 @@
 import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import SearchInput from "@/components/serachInput";
+import { TableSkeleton } from "@/components/Skeleton";
 import { Button } from "@/components/ui/button";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -15,25 +24,36 @@ import {
   useSuspendedAgentsQuery,
 } from "@/redux/features/admin/admin.api";
 import type { IAgent } from "@/types/agent.types";
-import { Loader2, UserX } from "lucide-react";
-import { useState } from "react";
+import { UserX } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { toast } from "sonner";
 
 const SuspendedAgents = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Reset to page 1 when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const apiParams = {
+    page: currentPage,
+    limit: 10,
+    ...(searchTerm.trim().length >= 2 && { searchTerm: searchTerm.trim() }),
+  };
 
   const {
     data: suspendedAgents,
     isLoading,
     refetch: suspendRefetch,
-  } = useSuspendedAgentsQuery(
-    searchTerm.trim().length >= 2 ? { searchTerm: searchTerm.trim() } : {}
-  );
+  } = useSuspendedAgentsQuery(apiParams);
 
   const { refetch: allAgentsRefetch } = useActiveAgentsQuery(undefined);
 
   const agents = suspendedAgents?.data || [];
+  const totalPages = suspendedAgents?.meta?.totalPages || 1;
 
   const [approveAgent] = useApproveAgentMutation();
 
@@ -44,19 +64,15 @@ const SuspendedAgents = () => {
     try {
       const res = await approveAgent(agentId).unwrap();
 
-      if (res?.data?.success) {
+      if (res.success) {
         suspendRefetch();
         allAgentsRefetch();
-        console.log(res);
         toast.success("Agent approved successfully", { id: toastId });
       }
-    } catch (err) {
-      console.log(err);
+    } catch {
       toast.error("Failed to approve agent", { id: toastId });
     }
   };
-
-  console.log(agents);
 
   return (
     <div className="w-full px-2 sm:px-4 md:px-8 py-6">
@@ -77,15 +93,17 @@ const SuspendedAgents = () => {
       </div>
 
       {isLoading ? (
-        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
-          <Loader2 className="mx-auto h-12 w-12 animate-spin text-gray-400 mb-4" />
-          <p className="text-lg font-medium text-gray-600 dark:text-gray-400">
-            Loading suspended agents...
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-            Please wait while we fetch the data
-          </p>
-        </div>
+        <TableSkeleton
+          rows={5}
+          columns={[
+            { header: "Name", width: "min-w-[120px]" },
+            { header: "Phone", width: "min-w-[120px]" },
+            { header: "Wallet Balance", width: "min-w-[140px]" },
+            { header: "Agent Status", width: "min-w-[100px]" },
+            { header: "Actions", width: "min-w-[100px]" },
+            { header: "Details", width: "min-w-[100px]" },
+          ]}
+        />
       ) : agents.length === 0 ? (
         <div className="w-full min-h-screen bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
           <UserX className="mx-auto h-16 w-16 text-gray-400 mb-6" />
@@ -157,6 +175,48 @@ const SuspendedAgents = () => {
               ))}
             </TableBody>
           </Table>
+        </div>
+      )}
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="mt-8 flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  className={
+                    currentPage === 1
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
+                />
+              </PaginationItem>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (page) => (
+                  <PaginationItem
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    <PaginationLink isActive={currentPage === page}>
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                )
+              )}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  className={
+                    currentPage === totalPages
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       )}
     </div>

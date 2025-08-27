@@ -1,4 +1,5 @@
 import SearchInput from "@/components/serachInput";
+import { TableSkeleton } from "@/components/Skeleton";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -14,7 +15,7 @@ import {
   useRejectAgentMutation,
 } from "@/redux/features/admin/admin.api";
 import type { IAgent } from "@/types/agent.types";
-import { Clock, Loader2 } from "lucide-react";
+import { Clock } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 import { toast } from "sonner";
@@ -82,15 +83,17 @@ const PendingAgents = () => {
       </div>
 
       {isLoading ? (
-        <div className="w-full min-h-screen bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
-          <Loader2 className="mx-auto h-12 w-12 animate-spin text-gray-400 mb-4" />
-          <p className="text-lg font-medium text-gray-600 dark:text-gray-400">
-            Loading pending agents...
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-            Please wait
-          </p>
-        </div>
+        <TableSkeleton
+          rows={5}
+          columns={[
+            { header: "Name", width: "min-w-[120px]" },
+            { header: "Phone", width: "min-w-[120px]" },
+            { header: "Wallet Balance", width: "min-w-[140px]" },
+            { header: "Agent Status", width: "min-w-[100px]" },
+            { header: "Actions", width: "min-w-[100px]" },
+            { header: "Details", width: "min-w-[100px]" },
+          ]}
+        />
       ) : agents.length === 0 ? (
         <div className="w-full min-h-svh bg-white dark:bg-gray-900 rounded-xl shadow-lg p-12 border border-gray-100 dark:border-gray-800 text-center">
           <Clock className="mx-auto h-16 w-16 text-gray-400 mb-6" />

@@ -1,5 +1,6 @@
 import { SkeletonCard } from "@/components/Skeleton";
 import { useAnalyticsOverviewQuery } from "@/redux/features/admin/admin.api";
+import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { motion } from "framer-motion";
 import {
   CreditCard,
@@ -13,6 +14,8 @@ import {
 const AnalyticsOverview = () => {
   const { data: analyticsData2, isLoading } =
     useAnalyticsOverviewQuery(undefined);
+
+  const { data: user } = useCurrentUserInfoQuery(undefined);
 
   const analyticsData = analyticsData2?.data
     ? [
@@ -88,7 +91,7 @@ const AnalyticsOverview = () => {
     <div className="w-full max-w-7xl mx-auto p-6">
       <div className="mb-8">
         <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          Analytics Overview
+          Welcome, {user?.data?.name || "Admin"}
         </h1>
         <p className="text-gray-600 dark:text-gray-300">
           Monitor key performance metrics of Digilet

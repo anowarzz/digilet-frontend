@@ -23,6 +23,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         data: userInfo,
       }),
+      invalidatesTags: ["AUTH", "USERS", "WALLETS"],
     }),
 
     currentUserInfo: builder.query({

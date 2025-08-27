@@ -1,10 +1,13 @@
 import { SkeletonCard } from "@/components/Skeleton";
+import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { useUserAnalyticsQuery } from "@/redux/features/user/user.api";
 import { motion } from "framer-motion";
 import { CreditCard, DollarSign, TrendingDown, TrendingUp } from "lucide-react";
 
 const UserAnalytics = () => {
   const { data, isLoading } = useUserAnalyticsQuery(undefined);
+
+  const { data: user } = useCurrentUserInfoQuery(undefined);
 
   const analyticsData = data?.data
     ? [
@@ -51,7 +54,7 @@ const UserAnalytics = () => {
     <div className="w-full max-w-3xl mx-auto p-6">
       <div className="mb-8">
         <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          My Analytics
+          Welcome, {user?.data?.name || "User"}
         </h1>
         <p className="text-gray-600 dark:text-gray-300">
           Your personal transaction statistics

@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { UserRole, UserStatus } from "@/constants/role";
 import { TransactionType } from "@/constants/transactions";
 import {
@@ -281,10 +282,7 @@ const TransactionForm = ({
                 <div className="text-right">
                   <div className="font-bold text-white text-lg sm:text-xl lg:text-2xl drop-shadow-lg">
                     {isLoading ? (
-                      <div className="flex items-center gap-2">
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                        <span className="text-base">Loading...</span>
-                      </div>
+                      <Skeleton className="h-8 w-32 bg-white/20" />
                     ) : (
                       `৳ ${
                         walletData?.balance?.toLocaleString("en-US", {
