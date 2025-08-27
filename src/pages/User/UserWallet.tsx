@@ -201,9 +201,9 @@ const UserWallet = () => {
                         className={`w-2 h-2 rounded-full ${transaction.bgColor}`}
                       ></div>
                       <div>
-                        <p className="md: font-medium text-gray-900 dark:text-white">
+                        {/* <p className="md: font-medium text-gray-900 dark:text-white">
                           {transaction.displayType} - From Dummy User
-                        </p>
+                        </p> */}
                         <p className="text-sm text-gray-500 dark:text-gray-400">
                           {transaction.timeAgo} • {transaction.status}
                         </p>
