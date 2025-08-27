@@ -57,11 +57,13 @@ const HeroSection = () => {
           </div>
 
           <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-custom-blue/20 to-myGreen/20 rounded-2xl blur-3xl opacity-30 dark:opacity-50 dark:from-custom-blue/30 dark:to-myGreen/30"></div>
             <img
               src={HeroImage}
               alt="Hero section demo image"
-              className="relative max-h-96 w-full rounded-2xl object-contain shadow-2xl transition-transform duration-300 hover:scale-105"
+              className="relative max-h-96 w-full rounded-2xl object-contain shadow-2xl transition-all duration-300 hover:scale-105 dark:brightness-110 dark:contrast-110 dark:drop-shadow-[0_0_20px_rgba(0,78,152,0.3)] hover:dark:drop-shadow-[0_0_25px_rgba(0,78,152,0.4)]"
             />
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-background/10 via-transparent to-transparent dark:from-rich-black-400/20 dark:via-transparent dark:to-rich-black-300/10"></div>
           </div>
         </div>
       </div>

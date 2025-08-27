@@ -28,8 +28,8 @@ import { ModeToggle } from "./ModeToogler";
 const navigationLinks = [
   { href: "/", label: "Home", role: "PUBLIC" },
   { href: "/about", label: "About", role: "PUBLIC" },
-  { href: "/features", label: "Features", role: "PUBLIC"  },
-  { href: "/pricing", label: "Pricing", role: "PUBLIC"  },
+  { href: "/features", label: "Features", role: "PUBLIC" },
+  { href: "/pricing", label: "Pricing", role: "PUBLIC" },
   { href: "/contact", label: "Contact", role: "PUBLIC" },
   { href: "/faq", label: "FAQ", role: "PUBLIC" },
   { href: "/user", label: "Dashboard", role: UserRole.USER },
@@ -54,7 +54,7 @@ export default function Navbar() {
   console.log(userData, "user in nav");
 
   return (
-    <header className="border-b">
+    <header className="sticky top-0 z-50 border-b bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
       <div className="container mx-auto px-4 flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex items-center gap-2">
