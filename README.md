@@ -100,6 +100,23 @@ pnpm run dev
 pnpm run build
 ```
 
+## Credentials
+
+### Admin Credentials
+
+- **Phone**: 01777777777
+- **Password**: superadmin123
+
+### Agent Credentials
+
+- **Phone**: 01345678908
+- **Password**: Agent@123
+
+### User Credentials
+
+- **Phone**: 01789789789
+- **Password**: User@123
+
 ## Live Demo
 
 Live URL: [https://digilet.vercel.app/](https://digilet.vercel.app/)
