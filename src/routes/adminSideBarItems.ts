@@ -1,12 +1,14 @@
-import AllAdmins from "@/pages/Admin/AllAdmins";
-import AllAgents from "@/pages/Admin/AllAgents";
-import AllTransactions from "@/pages/Admin/AllTransactions";
-import AllUsers from "@/pages/Admin/AllUsers";
-import AllWallets from "@/pages/Admin/AllWallets";
-import Analytics from "@/pages/Admin/Analytics";
-import CreateAdmin from "@/pages/Admin/CreateAdmin";
-import PendingAgents from "@/pages/Admin/PendingAgents";
 import type { ISidebarItem } from "@/types";
+import { lazy } from "react";
+
+const AllAdmins = lazy(() => import("@/pages/Admin/AllAdmins"));
+const AllAgents = lazy(() => import("@/pages/Admin/AllAgents"));
+const AllTransactions = lazy(() => import("@/pages/Admin/AllTransactions"));
+const AllUsers = lazy(() => import("@/pages/Admin/AllUsers"));
+const AllWallets = lazy(() => import("@/pages/Admin/AllWallets"));
+const Analytics = lazy(() => import("@/pages/Admin/Analytics"));
+const CreateAdmin = lazy(() => import("@/pages/Admin/CreateAdmin"));
+const PendingAgents = lazy(() => import("@/pages/Admin/PendingAgents"));
 
 // admin sidebar items
 export const adminSidebarItems: ISidebarItem[] = [

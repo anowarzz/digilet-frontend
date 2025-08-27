@@ -9,7 +9,7 @@ export const agentApi = baseApi.injectEndpoints({
         method: "POST",
         data: cashInPayload,
       }),
-      invalidatesTags: ["WALLET"],
+      invalidatesTags: ["WALLET", "TRANSACTIONS", "AGENT_ANALYTICS", "WALLETS"],
     }),
 
     // cashout
@@ -19,7 +19,7 @@ export const agentApi = baseApi.injectEndpoints({
         method: "POST",
         data: cashOutPayload,
       }),
-      invalidatesTags: ["WALLET"],
+      invalidatesTags: ["WALLET", "TRANSACTIONS", "AGENT_ANALYTICS", "WALLETS"],
     }),
 
     // agent analytics overview

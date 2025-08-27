@@ -1,6 +1,6 @@
-# DigiLet - Digital Wallet Frontend
+# DigiLet - Your Digital Wallet
 
-DigiLet is a modern digital wallet application built for secure financial transactions. This frontend application provides role-based access for users, agents, and administrators to manage digital finances efficiently.
+DigiLet is a modern digital wallet application built for secure financial transactions. This application provides role-based access for users, agents, and administrators to manage digital finances efficiently.
 
 ## Public Pages
 
