@@ -17,5 +17,6 @@ export const baseApi = createApi({
     "USER_ANALYTICS",
     "AGENT_ANALYTICS",
     "AUTH",
+    "ADMINS"
   ],
 });

@@ -189,11 +189,31 @@ export const adminApi = baseApi.injectEndpoints({
       }),
       providesTags: ["ADMIN_ANALYTICS"],
     }),
+    // get all admins
+    allAdmins: builder.query({
+      query: () => ({
+        url: "/admin/all-admins",
+        method: "GET",
+      }),
+      providesTags: ["ADMINS"],
+    }),
+
+    // create admin
+    createAdmin: builder.mutation({
+      query: (adminData) => ({
+        url: "/admin/create-admin",
+        method: "POST",
+        data: adminData,
+      }),
+      invalidatesTags: ["ADMINS"],
+    }),
   }),
 });
 
 export const {
   useAllUsersandAgentsQuery,
+  useAllAdminsQuery,
+  useCreateAdminMutation,
   usePendingAgentsQuery,
   useAllWalletsQuery,
   useUpdateUserMutation,
