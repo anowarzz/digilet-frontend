@@ -24,8 +24,8 @@ const LoginForm = ({
   const dispatch = useAppDispatch();
   const form = useForm({
     defaultValues: {
-      phone: "01234567890",
-      password: "superadmin123",
+      phone: "",
+      password: "",
     },
   });
 
