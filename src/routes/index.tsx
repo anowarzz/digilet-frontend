@@ -40,7 +40,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/admin/analytics" /> },
       ...generateRoutes(adminSidebarItems),
-      { path: "profile", Component: Profile },
+      { path: "profile/:id", Component: Profile },
     ],
   },
   {
@@ -50,7 +50,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/user/my-wallet" /> },
       ...generateRoutes(userSidebarItems),
-      { path: "profile", Component: Profile },
+      { path: "profile/:id", Component: Profile },
     ],
   },
   {
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/agent/analytics" /> },
       ...generateRoutes(agentSidebarItems),
-      { path: "profile", Component: Profile },
+      { path: "profile/:id", Component: Profile },
     ],
   },
 

@@ -140,7 +140,7 @@ const AllActiveAgents = () => {
                   <TableCell>
                     <Button
                       size="sm"
-                      className="px-4 py-1 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
+                      className="px-4 py-1 rounded bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
                     >
                       Profile
                     </Button>

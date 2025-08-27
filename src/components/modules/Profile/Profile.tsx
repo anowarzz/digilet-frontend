@@ -1,315 +1,542 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import userIcon from "@/assets/images/user.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  useGetUserQuery,
+  useUpdateUserMutation,
+} from "@/redux/features/admin/admin.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  IdCard,
-  Lock,
+  Edit2,
   Mail,
   MapPin,
   Phone,
+  Save,
   User,
-  UserCheck,
   Wallet,
+  X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router";
+import { toast } from "sonner";
 import { z } from "zod";
-import { EditableField } from "./EditableField";
 
-// Updated Zod schema
+// Update user zod schema
 const updateUserZodSchema = z.object({
   phone: z
-    .string({ error: "Phone Number Is Required" })
-    .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
-      message:
-        "Phone number must be  Bangladesh number. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
-    })
-    .optional(),
-
-  password: z
-    .string({ error: "Password Is Required" })
-    .min(6, "Password must be at least of 6 character")
-    .max(20, "Password can not be more than 20 characters")
-    .regex(
-      /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{6,}$/,
-      "Password must be at least 6 characters long, include one uppercase letter and one special character."
-    )
-    .optional(),
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || val === "" || /^(?:\+8801\d{9}|01\d{9})$/.test(val),
+      "Phone number must be a valid Bangladesh number. Format: +8801XXXXXXXXX or 01XXXXXXXXX"
+    ),
 
   name: z
-    .string({ error: "Name Is Required" })
-    .min(3, "Name must be at least 3 characters")
-    .max(25, "Name must be less than 25 characters")
-    .optional(),
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || val === "" || (val.length >= 3 && val.length <= 25),
+      "Name must be between 3 and 25 characters"
+    ),
 
-  email: z.email("Invalid email format").optional(),
+  email: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || val === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+      "Invalid email format"
+    ),
 
   userName: z
-    .string({ error: "Username must be string" })
-    .min(3, "Username must be at least 3 characters")
-    .max(20, "Username must be less than 20 characters")
-    .regex(
-      /^[a-zA-Z0-9_]+$/,
-      "Username can only contain letters, numbers, and underscores"
-    )
-    .optional(),
-
-  picture: z.string("Picture must be a valid URL").optional(),
+    .string()
+    .optional()
+    .refine(
+      (val) =>
+        !val ||
+        val === "" ||
+        (val.length >= 3 && val.length <= 20 && /^[a-zA-Z0-9_]+$/.test(val)),
+      "Username must be 3-20 characters and contain only letters, numbers, and underscores"
+    ),
 
   nidNumber: z
     .string()
-    .regex(/^\d+$/, "NID number must contain only digits")
-    .optional(),
+    .optional()
+    .refine(
+      (val) => !val || val === "" || /^\d+$/.test(val),
+      "NID number must contain only digits"
+    ),
 
   address: z
     .string()
-    .max(200, "Address must be less than 200 characters")
-    .optional(),
+    .optional()
+    .refine(
+      (val) => !val || val === "" || val.length <= 200,
+      "Address must be less than 200 characters"
+    ),
 });
 
-type UpdateUserFormData = z.infer<typeof updateUserZodSchema>;
-
 const Profile = () => {
-  const [editingField, setEditingField] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
+  const [edit, setEdit] = useState<boolean>(false);
 
-  const [userData, setUserData] = useState({
-    name: "John Doe",
-    userName: "john_doe",
-    email: "john.doe@example.com",
-    phone: "+8801712345678",
-    address: "123 Main Street, Dhaka, Bangladesh",
-    nidNumber: "1234567890",
-    picture: userIcon,
-    password: "Password@123",
-    walletId: "WLT123456",
-    walletBalance: 5000,
-    _id: "user123",
+  const { id } = useParams();
+
+  const { data, isLoading, isError, error } = useGetUserQuery(id, {
+    skip: !id || id.trim() === "",
   });
 
-  // Single form to handle all fields
-  const form = useForm<UpdateUserFormData>({
+  const user = data?.data;
+
+  const [updateUser] = useUpdateUserMutation();
+
+  // update user form
+  const updateUserForm = useForm<z.infer<typeof updateUserZodSchema>>({
     resolver: zodResolver(updateUserZodSchema),
     defaultValues: {
-      name: userData.name,
-      userName: userData.userName,
-      email: userData.email,
-      phone: userData.phone,
-      address: userData.address,
-      nidNumber: userData.nidNumber,
-      picture: userData.picture,
-      password: userData.password,
+      name: "",
+      phone: "",
+      email: "",
+      userName: "",
+      nidNumber: "",
+      address: "",
     },
   });
 
-  // Handler for saving field data
-  const handleSave = async (field: string, data: UpdateUserFormData) => {
-    try {
-      console.log("i go click");
-
-      // Prepare payload for backend - send only the field being updated
-      const updatePayload = {
-        [field]: data[field as keyof UpdateUserFormData],
-      };
-
-      console.log("Sending update to backend:", {
-        userId: userData._id || "",
-        payload: updatePayload,
+  useEffect(() => {
+    if (user) {
+      updateUserForm.reset({
+        name: user?.name || "",
+        phone: user?.phone || "",
+        email: user?.email || "",
+        userName: user?.userName || "",
+        nidNumber: user?.nidNumber || "",
+        address: user?.address || "",
       });
+    }
+  }, [user, updateUserForm]);
 
-      // const updatedUser = await updateUser(userId, updatePayload);
+  // Update user
+  const handleUpdateUser = async (
+    data: z.infer<typeof updateUserZodSchema>
+  ) => {
+    const toastId = toast.loading("Updating...");
 
-      // For password, don't update the display value
-      if (field === "password") {
-        console.log("Password updated successfully");
-        setEditingField(null);
-        form.reset({ password: "" });
-      } else {
-        // const updatedUser = await updateUser(userId, updatePayload);
+    // Check if user data is available
+    if (!user || (!user._id && !user.id)) {
+      toast.error("User data not available. Please refresh the page.", {
+        id: toastId,
+      });
+      return;
+    }
 
-        // Temporary: Update local state until real API is implemented
-        setUserData((prev) => ({
-          ...prev,
-          [field]: data[field as keyof UpdateUserFormData],
-        }));
+    // Ensure all data is properly defined
+    const updatedData = {
+      name: data?.name || "",
+      phone: data?.phone || "",
+      email: data?.email || "",
+      userName: data?.userName || "",
+      nidNumber: data?.nidNumber || "",
+      address: data?.address || "",
+    };
 
-        setEditingField(null);
+    try {
+      console.log("sending", updatedData);
+
+      const res = await updateUser({
+        userId: user._id || user.id,
+        updateData: updatedData,
+      }).unwrap();
+      if (res?.success) {
+        console.log(res);
+
+        toast.success("User updated successfully.", { id: toastId });
+        setEdit(false);
       }
-    } catch (error) {
-      console.error("Failed to update user:", error);
-      // Handle error - show toast notification
+    } catch (error: any) {
+      console.log(error);
+
+      if (error.status && error.status >= 400 && error.status < 500) {
+        return toast.error(error.data?.message || "Something went wrong.", {
+          id: toastId,
+        });
+      }
+      return toast.error("Update failed. Please try again.", { id: toastId });
     }
   };
 
-  const handleEdit = (field: string) => {
-    setEditingField(field);
-    if (field === "password") {
-      form.setValue("password", "");
-    } else {
-      form.setValue(
-        field as keyof UpdateUserFormData,
-        userData[field as keyof UpdateUserFormData]
-      );
-    }
-  };
-
-  const handleCancel = (field: string) => {
-    form.reset();
-    setEditingField(null);
-    if (field === "password") {
-      setShowPassword(false);
-    }
+  const userData = user || {
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    picture: userIcon,
+    walletId: "",
+    balance: 0,
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900/20 p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
-        {/* Header Card */}
-        <Card className="mb-6 border-0 shadow-2xl overflow-hidden">
-          <div className="h-32 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 relative">
-            <div className="absolute inset-0 bg-black/20" />
-            <div className="absolute -bottom-12 left-8">
-              <Avatar className="w-24 h-24 ring-4 ring-white shadow-2xl bg-emerald-500">
-                <AvatarImage src={userData.picture} alt={userData.name} />
-                <AvatarFallback className="text-2xl font-bold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-                  {userData?.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+        )}
+
+        {/* Error State */}
+        {isError && (
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="text-red-500 text-6xl mb-4">⚠️</div>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                Failed to Load User Data
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400">
+                {error instanceof Error
+                  ? error.message
+                  : "Invalid user ID or user not found"}
+              </p>
             </div>
           </div>
-          <CardContent className="pt-16 pb-6 px-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  {userData.name}
-                </h1>
-                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                  <Wallet className="w-4 h-4" />
-                  <span className="text-sm font-mono">{userData.walletId}</span>
+        )}
+
+        {/* Invalid ID State */}
+        {(!id || id.trim() === "") && (
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="text-yellow-500 text-6xl mb-4">🔍</div>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                User ID Required
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400">
+                Please provide a valid user ID to view the profile.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Main Content */}
+        {!isLoading && !isError && id && id.trim() !== "" && (
+          <>
+            {/* Header Card */}
+            <Card className="mb-6 border-0 shadow-2xl overflow-hidden">
+              <div className="h-32 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 relative">
+                <div className="absolute inset-0 bg-black/20" />
+                <div className="absolute -bottom-12 left-8">
+                  <Avatar className="w-24 h-24 ring-4 ring-white shadow-2xl bg-emerald-500">
+                    <AvatarImage src={userData.picture} alt={userData.name} />
+                    <AvatarFallback className="text-2xl font-bold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                      {(userData?.name || "User")
+                        ?.split(" ")
+                        ?.map((name: string) => name?.[0])
+                        ?.join("") || "U"}
+                    </AvatarFallback>
+                  </Avatar>
                 </div>
               </div>
-              <div className="text-right">
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">
-                  Balance
-                </p>
-                <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  ${userData.walletBalance}
+              <CardContent className="pt-16 pb-6 px-8">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                  <div>
+                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                      {userData.name}
+                    </h1>
+                    <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                      <Wallet className="w-4 h-4" />
+                      <span className="text-sm font-mono">
+                        {userData?.wallet?.walletId}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">
+                      Balance
+                    </p>
+                    <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                      ${Number(userData?.wallet?.balance ?? 0).toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Profile Information Card */}
+            <Card className="border-0 shadow-2xl backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 mb-6">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                    Profile Information
+                  </h2>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setEdit(!edit)}
+                    className="h-8 px-3"
+                  >
+                    {edit ? (
+                      <X className="w-4 h-4 mr-2" />
+                    ) : (
+                      <Edit2 className="w-4 h-4 mr-2" />
+                    )}
+                    {edit ? "Cancel" : "Edit"}
+                  </Button>
+                </div>
+
+                <Form {...updateUserForm}>
+                  <form
+                    onSubmit={updateUserForm.handleSubmit(handleUpdateUser)}
+                    className="space-y-4"
+                  >
+                    {/* Name Field */}
+                    <div className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 hover:shadow-lg transition-all duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-300" />
+                      <div className="relative flex items-center gap-3 p-3">
+                        <div className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+                          <User className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                        </div>
+                        <div className="flex-1">
+                          <FormField
+                            control={updateUserForm.control}
+                            name="name"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-xs text-gray-500 dark:text-gray-400 mb-1 font-medium uppercase tracking-wider">
+                                  Full Name
+                                </FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    disabled={!edit}
+                                    className={`border-0 bg-transparent text-sm font-semibold text-gray-900 dark:text-gray-100 h-8 ${
+                                      edit
+                                        ? "bg-white dark:bg-gray-800 border shadow-sm"
+                                        : ""
+                                    }`}
+                                  />
+                                </FormControl>
+                                <FormMessage className="text-xs mt-1" />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Email Field */}
+                    <div className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 hover:shadow-lg transition-all duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-300" />
+                      <div className="relative flex items-center gap-3 p-3">
+                        <div className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+                          <Mail className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                        </div>
+                        <div className="flex-1">
+                          <FormField
+                            control={updateUserForm.control}
+                            name="email"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-xs text-gray-500 dark:text-gray-400 mb-1 font-medium uppercase tracking-wider">
+                                  Email Address
+                                </FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    disabled={!edit}
+                                    className={`border-0 bg-transparent text-sm font-semibold text-gray-900 dark:text-gray-100 h-8 ${
+                                      edit
+                                        ? "bg-white dark:bg-gray-800 border shadow-sm"
+                                        : ""
+                                    }`}
+                                  />
+                                </FormControl>
+                                <FormMessage className="text-xs mt-1" />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Phone Field */}
+                    <div className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 hover:shadow-lg transition-all duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-300" />
+                      <div className="relative flex items-center gap-3 p-3">
+                        <div className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+                          <Phone className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                        </div>
+                        <div className="flex-1">
+                          <FormField
+                            control={updateUserForm.control}
+                            name="phone"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-xs text-gray-500 dark:text-gray-400 mb-1 font-medium uppercase tracking-wider">
+                                  Phone Number
+                                </FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    disabled={!edit}
+                                    className={`border-0 bg-transparent text-sm font-semibold text-gray-900 dark:text-gray-100 h-8 ${
+                                      edit
+                                        ? "bg-white dark:bg-gray-800 border shadow-sm"
+                                        : ""
+                                    }`}
+                                  />
+                                </FormControl>
+                                <FormMessage className="text-xs mt-1" />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Username Field */}
+                    <div className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 hover:shadow-lg transition-all duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-300" />
+                      <div className="relative flex items-center gap-3 p-3">
+                        <div className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+                          <User className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                        </div>
+                        <div className="flex-1">
+                          <FormField
+                            control={updateUserForm.control}
+                            name="userName"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-xs text-gray-500 dark:text-gray-400 mb-1 font-medium uppercase tracking-wider">
+                                  Username
+                                </FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    disabled={!edit}
+                                    className={`border-0 bg-transparent text-sm font-semibold text-gray-900 dark:text-gray-100 h-8 ${
+                                      edit
+                                        ? "bg-white dark:bg-gray-800 border shadow-sm"
+                                        : ""
+                                    }`}
+                                  />
+                                </FormControl>
+                                <FormMessage className="text-xs mt-1" />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* NID Number Field */}
+                    <div className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 hover:shadow-lg transition-all duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-300" />
+                      <div className="relative flex items-center gap-3 p-3">
+                        <div className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+                          <User className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                        </div>
+                        <div className="flex-1">
+                          <FormField
+                            control={updateUserForm.control}
+                            name="nidNumber"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-xs text-gray-500 dark:text-gray-400 mb-1 font-medium uppercase tracking-wider">
+                                  NID Number
+                                </FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    disabled={!edit}
+                                    className={`border-0 bg-transparent text-sm font-semibold text-gray-900 dark:text-gray-100 h-8 ${
+                                      edit
+                                        ? "bg-white dark:bg-gray-800 border shadow-sm"
+                                        : ""
+                                    }`}
+                                  />
+                                </FormControl>
+                                <FormMessage className="text-xs mt-1" />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Address Field */}
+                    <div className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 hover:shadow-lg transition-all duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-300" />
+                      <div className="relative flex items-center gap-3 p-3">
+                        <div className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+                          <MapPin className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                        </div>
+                        <div className="flex-1">
+                          <FormField
+                            control={updateUserForm.control}
+                            name="address"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-xs text-gray-500 dark:text-gray-400 mb-1 font-medium uppercase tracking-wider">
+                                  Address
+                                </FormLabel>
+                                <FormControl>
+                                  <Textarea
+                                    {...field}
+                                    disabled={!edit}
+                                    className={`border-0 bg-transparent text-sm font-semibold text-gray-900 dark:text-gray-100 min-h-[50px] resize-none ${
+                                      edit
+                                        ? "bg-white dark:bg-gray-800 border shadow-sm"
+                                        : ""
+                                    }`}
+                                  />
+                                </FormControl>
+                                <FormMessage className="text-xs mt-1" />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Save Button */}
+                    {edit && (
+                      <div className="flex justify-end pt-4">
+                        <Button
+                          type="submit"
+                          className="bg-green-500 hover:bg-green-600"
+                        >
+                          <Save className="w-4 h-4 mr-2" />
+                          Save Changes
+                        </Button>
+                      </div>
+                    )}
+                  </form>
+                </Form>
+              </CardContent>
+            </Card>
+
+            {/* Security Notice */}
+            <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-blue-200/50 dark:border-blue-800/50">
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-lg">🔒</span>
+                <p className="text-sm text-blue-700 dark:text-blue-300 font-medium">
+                  Your personal information is encrypted and secure
                 </p>
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Profile Details Card */}
-        <Card className="border-0 shadow-2xl backdrop-blur-sm bg-white/90 dark:bg-gray-900/90">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                Profile Information
-              </h2>
-              <div className="px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-medium">
-                Verified
-              </div>
-            </div>
-            <div className="space-y-3">
-              <EditableField
-                icon={User}
-                label="Full Name"
-                field="name"
-                value={userData.name}
-                isEditing={editingField === "name"}
-                form={form}
-                onEdit={handleEdit}
-                onSave={handleSave}
-                onCancel={handleCancel}
-              />
-              <EditableField
-                icon={UserCheck}
-                label="Username"
-                field="userName"
-                value={userData.userName}
-                isEditing={editingField === "userName"}
-                form={form}
-                onEdit={handleEdit}
-                onSave={handleSave}
-                onCancel={handleCancel}
-              />
-              <EditableField
-                icon={Mail}
-                label="Email Address"
-                field="email"
-                value={userData.email}
-                isEditing={editingField === "email"}
-                form={form}
-                onEdit={handleEdit}
-                onSave={handleSave}
-                onCancel={handleCancel}
-              />
-              <EditableField
-                icon={Phone}
-                label="Phone Number"
-                field="phone"
-                value={userData.phone}
-                isEditing={editingField === "phone"}
-                form={form}
-                onEdit={handleEdit}
-                onSave={handleSave}
-                onCancel={handleCancel}
-              />
-              <EditableField
-                icon={MapPin}
-                label="Address"
-                field="address"
-                value={userData.address}
-                isEditing={editingField === "address"}
-                isTextarea={true}
-                form={form}
-                onEdit={handleEdit}
-                onSave={handleSave}
-                onCancel={handleCancel}
-              />
-              <EditableField
-                icon={IdCard}
-                label="NID Number"
-                field="nidNumber"
-                value={userData.nidNumber}
-                isEditing={editingField === "nidNumber"}
-                form={form}
-                onEdit={handleEdit}
-                onSave={handleSave}
-                onCancel={handleCancel}
-              />
-              <EditableField
-                icon={Lock}
-                label="Password"
-                field="password"
-                value={userData.password}
-                isEditing={editingField === "password"}
-                isPassword={true}
-                showPassword={showPassword}
-                form={form}
-                onEdit={handleEdit}
-                onSave={handleSave}
-                onCancel={handleCancel}
-                onTogglePassword={() => setShowPassword(!showPassword)}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Security Notice */}
-        <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-blue-200/50 dark:border-blue-800/50">
-          <div className="flex items-center justify-center gap-2">
-            <span className="text-lg">🔒</span>
-            <p className="text-sm text-blue-700 dark:text-blue-300 font-medium">
-              Your personal information is encrypted and secure
-            </p>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

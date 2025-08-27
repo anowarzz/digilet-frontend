@@ -1,6 +1,16 @@
 import { baseApi } from "@/redux/baseApi";
 import { type TUserStatus } from "./../../../types/index";
 
+// Define the update user data type
+export interface IUpdateUserData {
+  name?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  userName?: string | null;
+  nidNumber?: string | null;
+  address?: string | null;
+}
+
 export const adminApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Get all users and agents
@@ -19,6 +29,29 @@ export const adminApi = baseApi.injectEndpoints({
         params,
       }),
       providesTags: ["USERS"],
+    }),
+    // get single user details
+    getUser: builder.query({
+      query: (userId) => ({
+        url: `/admin/users/${userId}`,
+        method: "GET",
+      }),
+      providesTags: ["USERS"],
+    }),
+    // update user details
+    updateUser: builder.mutation({
+      query: ({
+        userId,
+        updateData,
+      }: {
+        userId: string;
+        updateData: IUpdateUserData;
+      }) => ({
+        url: `/admin/users/update/${userId}`,
+        method: "PATCH",
+        data: updateData,
+      }),
+      invalidatesTags: ["USER", "USERS"],
     }),
 
     // blocking user
@@ -169,10 +202,12 @@ export const {
   useAllUsersandAgentsQuery,
   usePendingAgentsQuery,
   useAllWalletsQuery,
+  useUpdateUserMutation,
   useRejectAgentMutation,
   useAnalyticsOverviewQuery,
   useAllAgentsQuery,
   useAllTransactionsQuery,
+  useGetUserQuery,
   useActiveAgentsQuery,
   useDeleteUserMutation,
   useSuspendedAgentsQuery,
