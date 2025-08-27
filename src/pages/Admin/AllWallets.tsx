@@ -22,7 +22,7 @@ import {
   useBlockUserWalletMutation,
   useUnblockUserWalletMutation,
 } from "@/redux/features/admin/admin.api";
-import type { IWallet } from "@/types/wallet.types";
+import type { IWallet } from "@/types/wallet.type";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { toast } from "sonner";

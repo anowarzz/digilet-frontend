@@ -35,7 +35,7 @@ export function TableSkeleton({ rows = 5, columns }: TableSkeletonProps) {
         <TableBody>
           {Array.from({ length: rows }).map((_, rowIndex) => (
             <TableRow key={rowIndex}>
-              {columns.map((column, colIndex) => (
+              {columns.map((_column, colIndex) => (
                 <TableCell key={colIndex}>
                   <Skeleton className="h-4 w-full" />
                 </TableCell>

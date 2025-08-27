@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { IWallet } from "@/types/wallet.types";
+import type { IWallet } from "@/types/wallet.type";
 import {
   Check,
   Copy,

@@ -46,7 +46,7 @@ const AgentAnalytics = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.4, ease: "easeOut" },
+      transition: { duration: 0.4 },
     },
   };
 
@@ -54,7 +54,7 @@ const AgentAnalytics = () => {
     <div className="w-full max-w-3xl mx-auto p-6">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          Welcome,  {user?.data?.name || "Agent"}
+          Welcome, {user?.data?.name || "Agent"}
         </h1>
         <p className="text-gray-600 dark:text-gray-300">
           Your agent transaction statistics
