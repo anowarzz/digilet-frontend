@@ -22,6 +22,7 @@ const LoginForm = ({
 }: React.HTMLAttributes<HTMLDivElement>) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
   const form = useForm({
     defaultValues: {
       phone: "",
@@ -44,11 +45,16 @@ const LoginForm = ({
           duration: 2000,
           position: "bottom-center",
         });
-        navigate("/");
+
+        // Navigate to role-based dashboard
+        const role = res.data.user.role?.toLowerCase();
+        const validRoles = ["user", "agent", "admin"];
+        const dashboardPath = validRoles.includes(role) ? `/${role}` : "/";
+        navigate(dashboardPath);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.error("Login failed:", err);
+      // Login failed
       if (err.status >= 400 && err.status < 500) {
         return toast.error(err.data?.message || "Something went wrong.", {
           id: toastId,
@@ -60,7 +66,6 @@ const LoginForm = ({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-   
       <div className="grid gap-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
