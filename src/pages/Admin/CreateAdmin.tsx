@@ -86,7 +86,7 @@ const CreateAdmin = () => {
   return (
     <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-8 px-4">
       <div className="w-full max-w-lg mx-auto">
-        <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
+        <Card className="shadow-xl border-0 bg-white/90 mx-auto backdrop-blur-sm">
           <CardHeader className="text-center space-y-3 pb-2">
             <div className="mx-auto w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center shadow-md">
               <User className="w-6 h-6 text-white" />

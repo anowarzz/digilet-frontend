@@ -1,3 +1,4 @@
+import AllAdmins from "@/pages/Admin/AllAdmins";
 import AllAgents from "@/pages/Admin/AllAgents";
 import AllTransactions from "@/pages/Admin/AllTransactions";
 import AllUsers from "@/pages/Admin/AllUsers";
@@ -66,6 +67,11 @@ export const adminSidebarItems: ISidebarItem[] = [
         title: "Create Admin",
         url: "/admin/create-admin",
         Component: CreateAdmin,
+      },
+      {
+        title: "All Admins",
+        url: "/admin/all-admins",
+        Component: AllAdmins,
       },
     ],
   },
