@@ -1,4 +1,3 @@
-import notFoundImage from "@/assets/images/not-found.png";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 
@@ -23,7 +22,7 @@ const NotFound = () => {
             {/* Illustration */}
             <div className="mb-4">
               <img
-                src={notFoundImage}
+                src="https://res.cloudinary.com/dkndlqam0/image/upload/v1756313979/not-found_vkqi2s.png"
                 alt="404 - Page not found illustration"
                 className="w-32 sm:w-40 mx-auto rounded-xl shadow"
               />

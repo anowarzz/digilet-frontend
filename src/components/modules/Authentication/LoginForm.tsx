@@ -49,7 +49,9 @@ const LoginForm = ({
         // Navigate to role-based dashboard
         const role = res.data?.user?.role?.toLowerCase();
         const validRoles = ["user", "agent", "admin"];
-        const dashboardPath = validRoles.includes(role) ? `/${role}` : "/";
+        const dashboardPath = validRoles.includes(role)
+          ? `/${role.toLowerCase()}`
+          : "/";
         navigate(dashboardPath);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
