@@ -1,23 +1,14 @@
-import registerImage from "@/assets/images/register.svg";
 import { RegisterForm } from "@/components/modules/Authentication/RegisterForm";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Register() {
   return (
-    <div className="grid min-h-svh lg:grid-cols-2">
-      <div className="relative hidden lg:block">
-        <img
-          src={registerImage}
-          alt="Image"
-          className="absolute inset-0 h-full w-full object-contain dark:brightness-[0.8]"
-        />
-      </div>
-      <div className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs">
-            <RegisterForm />
-          </div>
-        </div>
-      </div>
+    <div className="min-h-svh flex items-center justify-center px-4 py-8 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      <Card className="w-full max-w-md lg:max-w-lg border-0 shadow-lg bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
+        <CardContent className="pb-8">
+          <RegisterForm />
+        </CardContent>
+      </Card>
     </div>
   );
 }

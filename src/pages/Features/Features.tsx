@@ -23,17 +23,16 @@ const Features = () => {
       description:
         "Send money instantly to any Digilet user with just a phone number or username. Fast, secure, and fee-efficient.",
       icon: <img src={sendMoneyIcon} alt="Send Money" className="w-6 h-6" />,
-      color: "from-princeton-orange-500 to-persimmon-500",
-      bgColor: "bg-princeton-orange-50 dark:bg-princeton-orange-950/20",
+      color: "from-custom-blue-400 to-custom-blue-500",
+      bgColor: "bg-custom-blue-50 dark:bg-custom-blue-950/20",
     },
     {
       title: "Add Money to Wallet",
       description:
         "Top up your wallet instantly through multiple payment methods including bank transfers and mobile banking.",
       icon: <img src={addMoneyIcon} alt="Add Money" className="w-6 h-6" />,
-      color: "from-custom-blue-500 to-princeton-orange-500",
-      bgColor:
-        "bg-gradient-to-br from-custom-blue-50 to-princeton-orange-50 dark:from-custom-blue-950/20 dark:to-princeton-orange-950/20",
+      color: "from-custom-blue-500 to-custom-blue-700",
+      bgColor: "bg-custom-blue-50 dark:bg-custom-blue-950/20",
     },
     {
       title: "Cash Withdrawal",
@@ -42,24 +41,24 @@ const Features = () => {
       icon: (
         <img src={withdrawMoneyIcon} alt="Withdraw Money" className="w-6 h-6" />
       ),
-      color: "from-persimmon-500 to-sinopia-500",
-      bgColor: "bg-persimmon-50 dark:bg-persimmon-950/20",
+      color: "from-custom-blue-600 to-custom-blue-700",
+      bgColor: "bg-custom-blue-50 dark:bg-custom-blue-950/20",
     },
     {
       title: "Transaction History",
       description:
         "Track all your transactions with detailed history, including send money, add money, and withdrawal records.",
       icon: <Bell className="size-6" />,
-      color: "from-selective-yellow-500 to-orange-web-500",
-      bgColor: "bg-selective-yellow-50 dark:bg-selective-yellow-950/20",
+      color: "from-custom-blue-500 to-custom-blue-600",
+      bgColor: "bg-custom-blue-50 dark:bg-custom-blue-950/20",
     },
     {
       title: "Secure & Reliable",
       description:
         "Bank-level security with encrypted transactions, secure authentication, and fraud protection for all your digital transactions.",
       icon: <Shield className="size-6" />,
-      color: "from-engineering-orange-500 to-penn-red-500",
-      bgColor: "bg-engineering-orange-50 dark:bg-engineering-orange-950/20",
+      color: "from-custom-blue-600 to-custom-blue-800",
+      bgColor: "bg-custom-blue-50 dark:bg-custom-blue-950/20",
     },
   ];
 
@@ -69,10 +68,10 @@ const Features = () => {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-custom-blue-500 to-princeton-orange-500 mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-custom-blue-500 to-custom-blue-600 mb-6">
             <Banknote className="size-8 text-white" />
           </div>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground dark:bg-gradient-to-r dark:from-custom-blue-600 dark:via-princeton-orange-600 dark:to-persimmon-600 dark:bg-clip-text dark:text-transparent">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground dark:bg-gradient-to-r dark:from-custom-blue-400 dark:via-custom-blue-500 dark:to-custom-blue-600 dark:bg-clip-text dark:text-transparent">
             Powerful Digital Wallet Features
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -112,7 +111,7 @@ const Features = () => {
                 </div>
 
                 {/* Hover effect line */}
-                <div className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-custom-blue-500 to-princeton-orange-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                <div className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-custom-blue-500 to-custom-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               </div>
             </div>
           ))}
@@ -121,7 +120,7 @@ const Features = () => {
         {/* CTA Section */}
         <div className="mt-16 text-center">
           <Link to="/register">
-            <Button className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-custom-blue-500 to-princeton-orange-500 text-white font-medium hover:shadow-lg hover:shadow-custom-blue-500/25 transition-all duration-300 hover:scale-105">
+            <Button className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-custom-blue-500 to-custom-blue-600 text-white font-medium hover:shadow-lg hover:shadow-custom-blue-500/25 transition-all duration-300 hover:scale-105">
               <span>Start Your Digital Wallet Journey</span>
               <ArrowRightLeft className="size-4" />
             </Button>
