@@ -1,6 +1,7 @@
 import { SkeletonCard } from "@/components/Skeleton";
 import { useAnalyticsOverviewQuery } from "@/redux/features/admin/admin.api";
 import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
+import { formatAmount } from "@/utils/formateAmount";
 import { motion } from "framer-motion";
 import {
   CreditCard,
@@ -52,7 +53,7 @@ const AnalyticsOverview = () => {
         {
           id: 4,
           title: "Transaction Volume",
-          value: analyticsData2.data.transactionVolume,
+          value: formatAmount(analyticsData2.data.transactionVolume),
           trend: "up",
           icon: DollarSign,
           color: "bg-amber-500",

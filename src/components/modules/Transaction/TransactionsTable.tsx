@@ -54,6 +54,9 @@ const TransactionTable = ({
   rangeFilter = "ALL",
   setRangeFilter,
 }: TransactionTableProps) => {
+  // Ensure transactions is always an array to prevent runtime errors
+  const safeTransactions = Array.isArray(transactions) ? transactions : [];
+
   if (isLoading) {
     return (
       <Table>
@@ -202,8 +205,8 @@ const TransactionTable = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {transactions.length > 0 ? (
-              transactions.map((transaction) => (
+            {safeTransactions.length > 0 ? (
+              safeTransactions.map((transaction) => (
                 <TableRow key={transaction._id}>
                   <TableCell className="font-medium text-sm">
                     {transaction.transactionId}

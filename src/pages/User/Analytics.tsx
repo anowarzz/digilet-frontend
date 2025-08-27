@@ -1,6 +1,7 @@
 import { SkeletonCard } from "@/components/Skeleton";
 import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { useUserAnalyticsQuery } from "@/redux/features/user/user.api";
+import { formatAmount } from "@/utils/formateAmount";
 import { motion } from "framer-motion";
 import { CreditCard, DollarSign, TrendingDown, TrendingUp } from "lucide-react";
 
@@ -24,7 +25,7 @@ const UserAnalytics = () => {
         {
           id: 2,
           title: "Transaction Volume",
-          value: Number(data.data.transactionVolume).toFixed(2),
+          value: formatAmount(Number(data.data.transactionVolume)),
           trend: "up",
           icon: DollarSign,
           color: "bg-amber-500",

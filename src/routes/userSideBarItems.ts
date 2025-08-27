@@ -1,10 +1,14 @@
 import type { ISidebarItem } from "@/types";
-import { lazy } from 'react';
+import { lazy } from "react";
 
-const UserTransactions = lazy(() => import("@/components/modules/Transaction/UserAgentTransactions"));
+const UserTransactions = lazy(
+  () => import("@/components/modules/Transaction/UserAgentTransactions")
+);
 const AddMoney = lazy(() => import("@/components/modules/Wallet/AddMoney"));
 const SendMoney = lazy(() => import("@/components/modules/Wallet/SendMoney"));
-const WithdrawMoney = lazy(() => import("@/components/modules/Wallet/WithdrawMoney"));
+const WithdrawMoney = lazy(
+  () => import("@/components/modules/Wallet/WithdrawMoney")
+);
 const UserAnalytics = lazy(() => import("@/pages/User/Analytics"));
 const UserWallet = lazy(() => import("@/pages/User/UserWallet"));
 

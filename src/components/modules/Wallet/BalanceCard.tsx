@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { IWallet } from "@/types/wallet.type";
+import { formatAmount } from "@/utils/formateAmount";
 import {
   Check,
   Copy,
@@ -43,13 +44,10 @@ const BalanceCard = ({
       await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy: ", err);
+    } catch {
+      // Failed to copy
     }
   };
-
-  console.log(transactionCount);
-  console.log(transactionVolume);
 
   // refresh balane
   const handleRefresh = async () => {
@@ -178,7 +176,7 @@ const BalanceCard = ({
                   </p>
                 </div>
                 <p className="text-white text-sm font-bold">
-                  ৳ {transactionVolume}
+                  {formatAmount(transactionVolume || 0)}
                 </p>
               </div>
             </div>
