@@ -9,6 +9,7 @@ export const userApi = baseApi.injectEndpoints({
         url: "/user/me/analytics",
         method: "GET",
       }),
+      providesTags: ["USER_ANALYTICS"],
     }),
     // update user
     updateOwnProfile: builder.mutation({
@@ -23,6 +24,7 @@ export const userApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: updatePayload,
       }),
+      invalidatesTags: ["USER"],
     }),
   }),
 });

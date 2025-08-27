@@ -38,9 +38,9 @@ export const walletApi = baseApi.injectEndpoints({
       query: (params) => ({
         url: "/transaction/me/history",
         method: "GET",
-        params
+        params,
       }),
-      providesTags: ["WALLET"],
+      providesTags: ["TRANSACTIONS"],
     }),
   }),
 });

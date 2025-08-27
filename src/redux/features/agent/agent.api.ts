@@ -28,6 +28,7 @@ export const agentApi = baseApi.injectEndpoints({
         url: "/agent/me/analytics",
         method: "GET",
       }),
+      providesTags: ["AGENT_ANALYTICS"],
     }),
   }),
 });

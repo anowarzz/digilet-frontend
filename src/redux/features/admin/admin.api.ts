@@ -1,7 +1,6 @@
 import { baseApi } from "@/redux/baseApi";
+import type { IUpdateUserData } from "@/types/user.types";
 import { type TUserStatus } from "./../../../types/index";
-
-
 
 export const adminApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -11,6 +10,7 @@ export const adminApi = baseApi.injectEndpoints({
         url: "/admin/all/users-and-agents",
         method: "GET",
       }),
+      providesTags: ["USERS", "AGENTS"],
     }),
 
     // Get all users
@@ -34,14 +34,14 @@ export const adminApi = baseApi.injectEndpoints({
     updateUser: builder.mutation({
       query: ({
         userId,
-        updateData,
+        updatePayload,
       }: {
         userId: string;
-        updateData: IUpdateUserData;
+        updatePayload: IUpdateUserData;
       }) => ({
         url: `/admin/users/update/${userId}`,
         method: "PATCH",
-        data: updateData,
+        data: updatePayload,
       }),
       invalidatesTags: ["USER", "USERS"],
     }),
@@ -78,6 +78,7 @@ export const adminApi = baseApi.injectEndpoints({
         method: "GET",
         params,
       }),
+      providesTags: ["AGENTS"],
     }),
     // Get all active agents
     activeAgents: builder.query({
@@ -159,7 +160,7 @@ export const adminApi = baseApi.injectEndpoints({
         method: "GET",
         params,
       }),
-      providesTags: ["TRANSACTIONS"],
+      providesTags: ["WALLETS"],
     }),
 
     // Block user wallet
@@ -186,6 +187,7 @@ export const adminApi = baseApi.injectEndpoints({
         url: "/admin/analytics/overview",
         method: "GET",
       }),
+      providesTags: ["ADMIN_ANALYTICS"],
     }),
   }),
 });
