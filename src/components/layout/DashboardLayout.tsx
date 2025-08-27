@@ -63,6 +63,7 @@ const DashboardLayout = () => {
               size="sm"
               aria-label="Log Out"
               title="Log Out"
+              className="mr-4"
             >
               Logout
               <LogOut />

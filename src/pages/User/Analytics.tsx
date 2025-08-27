@@ -1,11 +1,11 @@
 import { SkeletonCard } from "@/components/Skeleton";
-import { useAgentAnalyticsQuery } from "@/redux/features/agent/agent.api";
 import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
+import { useUserAnalyticsQuery } from "@/redux/features/user/user.api";
 import { motion } from "framer-motion";
 import { CreditCard, DollarSign, TrendingDown, TrendingUp } from "lucide-react";
 
-const AgentAnalytics = () => {
-  const { data, isLoading } = useAgentAnalyticsQuery(undefined);
+const UserAnalytics = () => {
+  const { data, isLoading } = useUserAnalyticsQuery(undefined);
 
   const { data: user } = useCurrentUserInfoQuery(undefined);
 
@@ -53,11 +53,11 @@ const AgentAnalytics = () => {
   return (
     <div className="w-full max-w-3xl mx-auto p-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          Welcome,  {user?.data?.name || "Agent"}
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          Welcome, {user?.data?.name || "User"}
         </h1>
         <p className="text-gray-600 dark:text-gray-300">
-          Your agent transaction statistics
+          Your personal transaction statistics
         </p>
       </div>
       {isLoading ? (
@@ -126,13 +126,12 @@ const AgentAnalytics = () => {
               );
             })}
           </motion.div>
-          <div className="mt-8 bg-gradient-to-r from-amber-50 to-purple-50 dark:from-purple-900 dark:to-amber-900 rounded-xl p-6 border border-amber-100 dark:border-purple-700 flex flex-col items-center">
+          <div className="mt-8 bg-gradient-to-r from-purple-50 to-amber-50 dark:from-purple-900 dark:to-amber-900 rounded-xl p-6 border border-purple-100 dark:border-purple-700 flex flex-col items-center">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-              Performance Summary
+              Summary
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-              Keep up the great work! Your transaction activity helps users
-              every day.
+              Your digital wallet is secure and your transactions are growing!
             </p>
           </div>
         </>
@@ -141,4 +140,4 @@ const AgentAnalytics = () => {
   );
 };
 
-export default AgentAnalytics;
+export default UserAnalytics;

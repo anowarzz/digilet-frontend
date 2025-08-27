@@ -5,3 +5,9 @@ export const TransactionType = {
   CASH_IN: "cash-in",
   CASH_OUT: "cash-out",
 };
+
+export const TransactionStatus = {
+  PENDING: "PENDING",
+  COMPLETED: "COMPLETED",
+  FAILED: "FAILED",
+};
