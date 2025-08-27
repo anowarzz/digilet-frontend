@@ -47,7 +47,7 @@ const LoginForm = ({
         });
 
         // Navigate to role-based dashboard
-        const role = res.data.user.role?.toLowerCase();
+        const role = res.data?.user?.role?.toLowerCase();
         const validRoles = ["user", "agent", "admin"];
         const dashboardPath = validRoles.includes(role) ? `/${role}` : "/";
         navigate(dashboardPath);
