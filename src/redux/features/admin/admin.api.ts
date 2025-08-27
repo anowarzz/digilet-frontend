@@ -136,6 +136,25 @@ export const adminApi = baseApi.injectEndpoints({
       }),
       providesTags: ["TRANSACTIONS"],
     }),
+
+    // Block user wallet
+    blockUserWallet: builder.mutation({
+      query: (userId: string) => ({
+        url: `/admin/wallet/block/${userId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["TRANSACTIONS", "WALLET"],
+    }),
+
+    // Unblock user wallet
+    unblockUserWallet: builder.mutation({
+      query: (userId: string) => ({
+        url: `/admin/wallet/unblock/${userId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["TRANSACTIONS", "WALLET"],
+    }),
+
     // get analytics overview
     analyticsOverview: builder.query({
       query: () => ({
@@ -162,4 +181,6 @@ export const {
   useAllUsersQuery,
   useBlockUserMutation,
   useUnblockUserMutation,
+  useBlockUserWalletMutation,
+  useUnblockUserWalletMutation,
 } = adminApi;

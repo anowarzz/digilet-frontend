@@ -8,9 +8,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAllWalletsQuery } from "@/redux/features/admin/admin.api";
+import {
+  useAllWalletsQuery,
+  useBlockUserWalletMutation,
+  useUnblockUserWalletMutation,
+} from "@/redux/features/admin/admin.api";
+import type { IWallet } from "@/types/wallet.types";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const AllWallets = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,16 +24,55 @@ const AllWallets = () => {
     searchTerm.trim().length >= 2 ? { searchTerm: searchTerm.trim() } : {}
   );
   const wallets = data?.data || [];
-  console.log(wallets);
-
   const filteredWallets = wallets;
-
   const [togglingId, setTogglingId] = useState<string | null>(null);
 
-  const handleToggleBlock = async (wallet: any) => {
-    setTogglingId(wallet._id);
+  // Import mutations
+  const [blockUserWallet] = useBlockUserWalletMutation();
+  const [unblockUserWallet] = useUnblockUserWalletMutation();
 
-    setTimeout(() => setTogglingId(null), 500); // Simulate API
+  // Block a wallet
+  const handleBlockWallet = async (wallet: IWallet) => {
+    const toastId = toast.loading(`Blocking wallet...`);
+
+    setTogglingId(wallet._id);
+    try {
+      const res = await blockUserWallet(wallet.userId).unwrap();
+      if (res.success) {
+        toast.success(`Wallet blocked successfully.`, {
+          id: toastId,
+        });
+      }
+    } catch (err) {
+      toast.error(`Failed to block wallet.`, {
+        id: toastId,
+      });
+      console.log(err);
+    } finally {
+      setTogglingId(null);
+    }
+  };
+
+  // Unblock a wallet
+  const handleUnblockWallet = async (wallet: IWallet) => {
+    const toastId = toast.loading(`Unblocking wallet...`);
+
+    setTogglingId(wallet._id);
+    try {
+      const res = await unblockUserWallet(wallet.userId).unwrap();
+      if (res.success) {
+        toast.success(`Wallet unblocked successfully.`, {
+          id: toastId,
+        });
+      }
+    } catch (err) {
+      toast.error(`Failed to unblock wallet.`, {
+        id: toastId,
+      });
+      console.log(err);
+    } finally {
+      setTogglingId(null);
+    }
   };
 
   return (
@@ -106,7 +151,7 @@ const AllWallets = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredWallets.map((wallet: any) => (
+              {filteredWallets.map((wallet: IWallet) => (
                 <TableRow key={wallet._id}>
                   <TableCell className="break-words">
                     {wallet.userInfo?.name || "-"}
@@ -129,24 +174,29 @@ const AllWallets = () => {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <Button
-                      aria-label={
-                        wallet.isBlocked ? "Unblock wallet" : "Block wallet"
-                      }
-                      title={
-                        wallet.isBlocked ? "Unblock wallet" : "Block wallet"
-                      }
-                      size="sm"
-                      className={`rounded w-16 text-xs font-semibold ${
-                        wallet.isBlocked
-                          ? "bg-green-100 text-green-600 hover:bg-green-300"
-                          : "bg-red-100 text-red-600 hover:bg-black"
-                      }`}
-                      disabled={togglingId === wallet._id}
-                      onClick={() => handleToggleBlock(wallet)}
-                    >
-                      {wallet.isBlocked ? "Unblock" : "Block"}
-                    </Button>
+                    {wallet.isBlocked ? (
+                      <Button
+                        aria-label="Unblock wallet"
+                        title="Unblock wallet"
+                        size="sm"
+                        className="rounded w-16 text-xs font-semibold bg-green-100 text-green-600 hover:bg-green-300"
+                        disabled={togglingId === wallet._id}
+                        onClick={() => handleUnblockWallet(wallet)}
+                      >
+                        Unblock
+                      </Button>
+                    ) : (
+                      <Button
+                        aria-label="Block wallet"
+                        title="Block wallet"
+                        size="sm"
+                        className="rounded w-16 text-xs font-semibold bg-red-100 text-red-600 hover:bg-black"
+                        disabled={togglingId === wallet._id}
+                        onClick={() => handleBlockWallet(wallet)}
+                      >
+                        Block
+                      </Button>
+                    )}
                   </TableCell>
                   <TableCell>
                     <Button

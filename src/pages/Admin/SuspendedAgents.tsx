@@ -41,7 +41,7 @@ const SuspendedAgents = () => {
     const toastId = toast.loading("Approving agent...");
 
     try {
-      const res = await approveAgent(agentId);
+      const res = await approveAgent(agentId).unwrap();
 
       if (res?.data?.success) {
         suspendRefetch();

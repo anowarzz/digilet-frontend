@@ -1,3 +1,5 @@
+import type { IWallet } from "./wallet.type";
+
 export interface IUserEditableFields {
   phone: string;
   password: string;
@@ -14,16 +16,7 @@ export interface IAuth {
   providerId: string;
 }
 
-export interface IWallet {
-  walletId: string;
-  userId: string;
-  balance: number;
-  currency: string;
-  isBlocked: boolean;
-  isDeleted: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+
 
 export interface IUser {
   _id: string;

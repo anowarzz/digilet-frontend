@@ -39,7 +39,7 @@ const AllUsers = () => {
     const toastId = toast.loading("Deleting user...");
 
     try {
-      const res = await deleteUser(userId);
+      const res = await deleteUser(userId).unwrap();
 
       if (res?.data?.success) {
         console.log(res);
@@ -56,7 +56,7 @@ const AllUsers = () => {
     const toastId = toast.loading("Blocking user...");
 
     try {
-      const res = await blockUser(userId);
+      const res = await blockUser(userId).unwrap();
 
       if (res?.data?.success) {
         console.log(res);
@@ -74,7 +74,7 @@ const AllUsers = () => {
   const handleUnblockUser = async (userId: string) => {
     const toastId = toast.loading("Unblocking user...");
     try {
-      const res = await unblockUser(userId);
+      const res = await unblockUser(userId).unwrap();
       if (res?.data?.success) {
         console.log(res);
         toast.success("User unblocked successfully", { id: toastId });

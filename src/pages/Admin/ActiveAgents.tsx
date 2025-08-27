@@ -41,7 +41,7 @@ const AllActiveAgents = () => {
     const toastId = toast.loading("Suspending agent...");
 
     try {
-      const res = await suspendAgent(agentId);
+      const res = await suspendAgent(agentId).unwrap();
 
       if (res?.data?.success) {
         refetch();

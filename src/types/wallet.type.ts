@@ -1,3 +1,4 @@
+import { IUser } from "./user.types";
 export interface IWallet {
   _id: string;
   userId: string;
@@ -8,4 +9,5 @@ export interface IWallet {
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
+  userInfo?: IUser;
 }

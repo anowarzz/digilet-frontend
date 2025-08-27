@@ -30,13 +30,13 @@ const PendingAgents = () => {
   );
   const agents = pendingAgents?.data || [];
   const [approveAgent] = useApproveAgentMutation();
-  const [rejectAgent] = useRejectAgentMutation() ;
+  const [rejectAgent] = useRejectAgentMutation();
 
   // approve agent request
   const handleApproveAgent = async (agentId: string) => {
     const toastId = toast.loading("Approving agent...");
     try {
-      const res = await approveAgent(agentId);
+      const res = await approveAgent(agentId).unwrap();
       if (res?.data?.success) {
         refetch();
         toast.success("Agent approved successfully", { id: toastId });
@@ -51,7 +51,7 @@ const PendingAgents = () => {
   const handleRejectAgent = async (agentId: string) => {
     const toastId = toast.loading("Rejecting agent...");
     try {
-      const res = await rejectAgent(agentId);
+      const res = await rejectAgent(agentId).unwrap();
       if (res?.data?.success) {
         refetch();
         toast.success("Agent rejected successfully", { id: toastId });
