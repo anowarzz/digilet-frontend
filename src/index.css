@@ -1,9 +1,16 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
+
+
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-Raleway: "Raleway", sans-serif;
+  --font-Rubik: "Rubik", sans-serif;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -96,50 +103,6 @@
   --color-engineering-orange-800: #ff8787;
   --color-engineering-orange-900: #ffc3c3;
 
-  --color-sinopia: #dc2f02;
-  --color-sinopia-100: #2c0900;
-  --color-sinopia-200: #591201;
-  --color-sinopia-300: #851c01;
-  --color-sinopia-400: #b22502;
-  --color-sinopia-500: #dc2f02;
-  --color-sinopia-600: #fd4a1d;
-  --color-sinopia-700: #fd7755;
-  --color-sinopia-800: #fea48e;
-  --color-sinopia-900: #fed2c6;
-
-  --color-persimmon: #e85d04;
-  --color-persimmon-100: #2e1201;
-  --color-persimmon-200: #5c2401;
-  --color-persimmon-300: #8b3602;
-  --color-persimmon-400: #b94903;
-  --color-persimmon-500: #e85d04;
-  --color-persimmon-600: #fc7826;
-  --color-persimmon-700: #fd9a5c;
-  --color-persimmon-800: #fdbb92;
-  --color-persimmon-900: #feddc9;
-
-  --color-princeton-orange: #f48c06;
-  --color-princeton-orange-100: #311c01;
-  --color-princeton-orange-200: #613802;
-  --color-princeton-orange-300: #925404;
-  --color-princeton-orange-400: #c37105;
-  --color-princeton-orange-500: #f48c06;
-  --color-princeton-orange-600: #faa434;
-  --color-princeton-orange-700: #fbbb67;
-  --color-princeton-orange-800: #fcd29a;
-  --color-princeton-orange-900: #fee8cc;
-
-  --color-orange-web: #faa307;
-  --color-orange-web-100: #322101;
-  --color-orange-web-200: #644202;
-  --color-orange-web-300: #966303;
-  --color-orange-web-400: #c88304;
-  --color-orange-web-500: #faa307;
-  --color-orange-web-600: #fbb637;
-  --color-orange-web-700: #fcc969;
-  --color-orange-web-800: #fddb9b;
-  --color-orange-web-900: #feedcd;
-
   --color-selective-yellow: #ffba08;
   --color-selective-yellow-100: #352600;
   --color-selective-yellow-200: #6a4c00;
@@ -230,8 +193,11 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    font-family: "Rubik", sans-serif;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
 }
 
