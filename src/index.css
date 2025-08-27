@@ -52,16 +52,16 @@
   --color-rich-black-800: #5068ee;
   --color-rich-black-900: #a8b4f6;
 
-  --color-chocolate-cosmos: #370617;
-  --color-chocolate-cosmos-100: #0b0105;
-  --color-chocolate-cosmos-200: #160209;
-  --color-chocolate-cosmos-300: #21040e;
-  --color-chocolate-cosmos-400: #2c0513;
-  --color-chocolate-cosmos-500: #370617;
-  --color-chocolate-cosmos-600: #880f39;
-  --color-chocolate-cosmos-700: #d9185b;
-  --color-chocolate-cosmos-800: #ed5d90;
-  --color-chocolate-cosmos-900: #f6aec7;
+  --color-custom-blue: #004e98;
+  --color-custom-blue-100: #000d1a;
+  --color-custom-blue-200: #001a33;
+  --color-custom-blue-300: #00264d;
+  --color-custom-blue-400: #003366;
+  --color-custom-blue-500: #004e98;
+  --color-custom-blue-600: #1a66b3;
+  --color-custom-blue-700: #3380cc;
+  --color-custom-blue-800: #66a3e6;
+  --color-custom-blue-900: #b3d1f2;
 
   --color-rosewood: #6a040f;
   --color-rosewood-100: #160103;
@@ -153,7 +153,7 @@
 }
 
 :root {
-  --primary: var(--color-princeton-orange-500); /* #f48c06 */
+  --primary: #6f1d1b;
   --secondary: var(--color-rich-black-500); /* #03071e */
   --secondary-foreground: white;
 
@@ -164,7 +164,6 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -192,7 +191,7 @@
 }
 
 .dark {
-    --primary: var(--color-princeton-orange-500); /* #f48c06 */
+  --primary: #6f1d1b;
   --secondary: var(--color-rich-black-500); /* #03071e */
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -246,4 +245,5 @@ input[type="number"]::-webkit-inner-spin-button {
 /* Hide number input spinners for Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }

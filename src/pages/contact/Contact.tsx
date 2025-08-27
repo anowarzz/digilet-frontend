@@ -80,7 +80,7 @@ const Contact = ({
         <div className="mx-auto max-w-6xl">
           {/* Header */}
           <div className="text-center mb-16">
-            <h1 className="mb-4 text-4xl font-bold tracking-tight lg:text-5xl bg-gradient-to-r from-princeton-orange-400/90 via-selective-yellow-400/85 to-persimmon-400/90 dark:from-princeton-orange-300/85 dark:via-selective-yellow-300/80 dark:to-persimmon-300/85 bg-clip-text text-transparent">
+            <h1 className="mb-4 text-2xl md:text-3xl font-bold tracking-tight lg:text-4xl text-custom-blue">
               {title}
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
