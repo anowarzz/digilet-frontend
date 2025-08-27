@@ -1,8 +1,10 @@
+import AllAdmins from "@/pages/Admin/AllAdmins";
 import AllAgents from "@/pages/Admin/AllAgents";
 import AllTransactions from "@/pages/Admin/AllTransactions";
 import AllUsers from "@/pages/Admin/AllUsers";
 import AllWallets from "@/pages/Admin/AllWallets";
 import Analytics from "@/pages/Admin/Analytics";
+import CreateAdmin from "@/pages/Admin/CreateAdmin";
 import PendingAgents from "@/pages/Admin/PendingAgents";
 import type { ISidebarItem } from "@/types";
 
@@ -51,15 +53,25 @@ export const adminSidebarItems: ISidebarItem[] = [
         url: "/admin/all-transactions",
         Component: AllTransactions,
       },
-    ],
-  },
-  {
-    title: "Wallet Management",
-    items: [
       {
         title: "All Wallets",
         url: "/admin/all-wallets",
         Component: AllWallets,
+      },
+    ],
+  },
+  {
+    title: "Admin",
+    items: [
+      {
+        title: "Create Admin",
+        url: "/admin/create-admin",
+        Component: CreateAdmin,
+      },
+      {
+        title: "All Admins",
+        url: "/admin/all-admins",
+        Component: AllAdmins,
       },
     ],
   },

@@ -1,3 +1,4 @@
+import SearchInput from "@/components/serachInput";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -9,11 +10,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { UserRole, UserStatus } from "@/constants/role";
 import { TransactionType } from "@/constants/transactions";
+import {
+  useAllAgentsQuery,
+  useAllUsersQuery,
+} from "@/redux/features/admin/admin.api";
 import { useGetWalletQuery } from "@/redux/features/wallet/wallet.api";
+import type { IUser } from "@/types/user.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader, ShieldCheck, WalletIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
@@ -68,6 +76,82 @@ const TransactionForm = ({
     },
   });
 
+  const [searchValue, setSearchValue] = useState("");
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  // Determine which API to use based on transaction type
+  const shouldSearchAgents =
+    type === TransactionType.ADD_MONEY ||
+    type === TransactionType.WITHDRAW_MONEY;
+
+  const shouldSearchUsers =
+    type === TransactionType.CASH_IN ||
+    type === TransactionType.CASH_OUT ||
+    type === TransactionType.SEND_MONEY;
+
+  // Query for users when needed
+  const { data: users } = useAllUsersQuery(
+    { searchTerm: searchValue },
+    { skip: searchValue.length < 2 || !shouldSearchUsers }
+  );
+
+  // Query for agents when needed
+  const { data: agents } = useAllAgentsQuery(
+    { searchTerm: searchValue },
+    { skip: searchValue.length < 2 || !shouldSearchAgents }
+  );
+
+  // Click outside to close search results
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setShowSearchResults(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // search value
+  const handleSearchChange = (value: string) => {
+    setSearchValue(value);
+    setShowSearchResults(value.length >= 2);
+  };
+
+  // Handle user selection from search results
+  const handleUserSelect = (user: IUser) => {
+    form.setValue("phone", user.phone);
+    setSearchValue(`${user.name} (${user.phone})`);
+    setShowSearchResults(false);
+  };
+
+  // Clear search
+  const clearSearch = () => {
+    setSearchValue("");
+    setShowSearchResults(false);
+    form.setValue("phone", "");
+  };
+
+  // Get results from backend (already filtered by search term)
+  const getSearchResults = () => {
+    if (shouldSearchAgents) {
+      return agents?.data || [];
+    } else if (shouldSearchUsers) {
+      return users?.data || [];
+    }
+    return [];
+  };
+
+  const searchResults = getSearchResults();
+
+  // submit Transaction
   const handleFormSubmit = (values: z.infer<typeof transactionSchema>) => {
     onSubmit({
       phone: values.phone,
@@ -113,6 +197,67 @@ const TransactionForm = ({
                   </p>
                 ) : null)}
             </div>
+
+            <div className="relative" ref={searchRef}>
+              <SearchInput
+                value={searchValue}
+                onChange={handleSearchChange}
+                placeholder={
+                  shouldSearchAgents
+                    ? "Search agents by name, phone, or email..."
+                    : "Search users by name, phone, or email..."
+                }
+                onClear={clearSearch}
+              />
+
+              {/* Search Results Dropdown */}
+              {showSearchResults && searchResults.length > 0 && (
+                <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  {searchResults.slice(0, 5).map((user: IUser) => (
+                    <div
+                      key={user._id}
+                      onClick={() => handleUserSelect(user)}
+                      className="p-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-900 dark:text-white">
+                            {user.name}
+                          </p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {user.phone}
+                          </p>
+                          {user.email && (
+                            <p className="text-xs text-gray-500 dark:text-gray-500">
+                              {user.email}
+                            </p>
+                          )}
+                        </div>
+                        <div className="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                          {user.role}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {searchResults.length > 5 && (
+                    <div className="p-2 text-center text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700">
+                      Showing first 5 results. Type more to narrow down.
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {showSearchResults &&
+                searchValue.length >= 2 &&
+                searchResults.length === 0 && (
+                  <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
+                    <p className="text-gray-500 dark:text-gray-400 text-sm text-center">
+                      No {shouldSearchAgents ? "agents" : "users"} found
+                      matching "{searchValue}"
+                    </p>
+                  </div>
+                )}
+            </div>
           </div>
         </div>
 
@@ -137,10 +282,7 @@ const TransactionForm = ({
                 <div className="text-right">
                   <div className="font-bold text-white text-lg sm:text-xl lg:text-2xl drop-shadow-lg">
                     {isLoading ? (
-                      <div className="flex items-center gap-2">
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                        <span className="text-base">Loading...</span>
-                      </div>
+                      <Skeleton className="h-8 w-32 bg-white/20" />
                     ) : (
                       `৳ ${
                         walletData?.balance?.toLocaleString("en-US", {

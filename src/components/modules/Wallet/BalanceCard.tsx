@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { IWallet } from "@/types/wallet.type";
 import {
   Check,
@@ -15,6 +16,8 @@ import { useState } from "react";
 
 interface BalanceCardProps {
   className?: string;
+  transactionCount?: number;
+  transactionVolume?: number;
   walletData?: IWallet;
   isLoading?: boolean;
   phone: string;
@@ -24,6 +27,8 @@ interface BalanceCardProps {
 const BalanceCard = ({
   className = "",
   walletData,
+  transactionCount,
+  transactionVolume,
   phone,
   isLoading = false,
   onRefresh,
@@ -32,6 +37,7 @@ const BalanceCard = ({
   const [copied, setCopied] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  //  copy wallet id
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -42,6 +48,10 @@ const BalanceCard = ({
     }
   };
 
+  console.log(transactionCount);
+  console.log(transactionVolume);
+
+  // refresh balane
   const handleRefresh = async () => {
     if (onRefresh && !isRefreshing) {
       setIsRefreshing(true);
@@ -76,7 +86,11 @@ const BalanceCard = ({
                   title="Click to copy Wallet ID"
                 >
                   <span className="font-mono">
-                    {walletData?.walletId || "Loading..."}
+                    {walletData?.walletId ? (
+                      walletData.walletId
+                    ) : (
+                      <Skeleton className="h-4 w-24 inline-block" />
+                    )}
                   </span>
                   {copied ? (
                     <Check className="w-3 h-3 text-green-400" />
@@ -121,21 +135,25 @@ const BalanceCard = ({
             </p>
             <div className="flex items-center gap-3">
               <h1 className="text-xl sm:2xl lg:text-3xxl font-bold text-white">
-                {showBalance
-                  ? isLoading
-                    ? "Loading..."
-                    : `৳ ${
-                        walletData?.balance?.toLocaleString("en-US", {
-                          minimumFractionDigits: 2,
-                        }) || "0.00"
-                      }`
-                  : "৳ ••••••••"}
+                {showBalance ? (
+                  isLoading ? (
+                    <Skeleton className="h-8 w-32 bg-white/20" />
+                  ) : (
+                    `৳ ${
+                      walletData?.balance?.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                      }) || "0.00"
+                    }`
+                  )
+                ) : (
+                  "৳ ••••••••"
+                )}
               </h1>
               {!isLoading && (
                 <Button
                   onClick={handleRefresh}
                   disabled={isRefreshing}
-                  className="p-1.5 hover:bg-white/10 rounded-lg transition-colors group disabled:opacity-50 cursor-pointer"
+                  className="p-1.5 bg-transparent hover:bg-white/10 rounded-lg transition-colors group disabled:opacity-50 cursor-pointer"
                 >
                   <RefreshCw
                     className={`w-4 h-4 text-purple-300 group-hover:text-white transition-colors duration-300 ${
@@ -159,7 +177,9 @@ const BalanceCard = ({
                     This Month
                   </p>
                 </div>
-                <p className="text-white text-sm font-bold">৳ 12,450</p>
+                <p className="text-white text-sm font-bold">
+                  ৳ {transactionVolume}
+                </p>
               </div>
             </div>
 
@@ -173,7 +193,9 @@ const BalanceCard = ({
                     Transactions
                   </p>
                 </div>
-                <p className="text-white text-sm font-bold">247</p>
+                <p className="text-white text-sm font-bold">
+                  {transactionCount}
+                </p>
               </div>
             </div>
           </div>

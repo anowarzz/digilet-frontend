@@ -3,6 +3,7 @@ import cashInIcon from "@/assets/Icons/cash-in.png";
 import cashOutIcon from "@/assets/Icons/cash-out.png";
 import BalanceCard from "@/components/modules/Wallet/BalanceCard";
 import { Button } from "@/components/ui/button";
+import { useAgentAnalyticsQuery } from "@/redux/features/agent/agent.api";
 import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 import {
   useGetWalletQuery,
@@ -26,6 +27,11 @@ const AgentWallet = () => {
     useTransactionsHistoryQuery(undefined);
 
   const phone = agentData?.data?.phone;
+  const name = agentData?.data.name;
+
+  const { data: AgentAnalytics } = useAgentAnalyticsQuery(undefined);
+  const transactionCount = AgentAnalytics?.data?.transactionCount;
+  const transactionVolume = AgentAnalytics?.data?.transactionVolume;
 
   // Process recent transactions (first 5)
   const recentTransactions =
@@ -67,8 +73,8 @@ const AgentWallet = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-muted-foreground dark:text-white">
-              My Wallet
+            <h1 className="sm:text-lg lg:xl font-bold text-muted-foreground dark:text-white">
+              Welcome {name ? `, ${name}` : ""}
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground dark:text-gray-400 mt-1">
               Manage your digital wallet with ease
@@ -91,6 +97,8 @@ const AgentWallet = () => {
         <div>
           <BalanceCard
             phone={phone || ""}
+            transactionCount={transactionCount}
+            transactionVolume={transactionVolume}
             walletData={walletData}
             isLoading={isLoadingWallet}
             onRefresh={refetch}

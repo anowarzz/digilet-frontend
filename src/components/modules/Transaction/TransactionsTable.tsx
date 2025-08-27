@@ -1,54 +1,62 @@
 import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TransactionStatus } from "@/constants/transactions";
 import type { ITransaction } from "@/types/transaction.type";
-import { useState } from "react";
+import { formatAmount } from "@/utils/formateAmount";
+import { formatDate } from "@/utils/formateDate";
 
 interface TransactionTableProps {
   transactions: ITransaction[];
   isLoading?: boolean;
+  totalPages: number;
+  currentPage: number;
+  setCurrentPage: (pageNumber: number) => void;
+  statusFilter?: string;
+  setStatusFilter?: (statusValue: string) => void;
+  typeFilter?: string;
+  setTypeFilter?: (typeValue: string) => void;
+  rangeFilter?: string;
+  setRangeFilter?: (rangeValue: string) => void;
 }
 
 const TransactionTable = ({
   transactions,
   isLoading = false,
+  totalPages,
+  currentPage,
+  setCurrentPage,
+  statusFilter = "ALL",
+  setStatusFilter,
+  typeFilter = "ALL",
+  setTypeFilter,
+  rangeFilter = "ALL",
+  setRangeFilter,
 }: TransactionTableProps) => {
-  // Filter state (must be at top level)
-  const [typeFilter, setTypeFilter] = useState("ALL");
-  const [rangeFilter, setRangeFilter] = useState("ALL");
-
-  console.log(typeFilter);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const formatAmount = (amount: number) => {
-    return `৳${amount.toFixed(2)}`;
-  };
-
   if (isLoading) {
     return (
       <Table>
-        <TableCaption>Loading transactions...</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Transaction ID</TableHead>
@@ -59,13 +67,23 @@ const TransactionTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {[...Array(3)].map((_, index) => (
+          {[...Array(5)].map((_, index) => (
             <TableRow key={index}>
-              <TableCell>Loading...</TableCell>
-              <TableCell>Loading...</TableCell>
-              <TableCell>Loading...</TableCell>
-              <TableCell>Loading...</TableCell>
-              <TableCell className="text-right">Loading...</TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-32" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-24" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-20" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-28" />
+              </TableCell>
+              <TableCell className="text-right">
+                <Skeleton className="h-4 w-16 ml-auto" />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -73,14 +91,22 @@ const TransactionTable = ({
     );
   }
 
-  // ...existing code...
-
   // Transaction type options
   const transactionTypeOptions = [
     { label: "All Transactions", value: "ALL" },
     { label: "Add Money", value: "ADD_MONEY" },
     { label: "Send Money", value: "SEND_MONEY" },
     { label: "Withdraw Money", value: "WITHDRAW_MONEY" },
+    { label: "Cash In", value: "CASH_IN" },
+    { label: "Cash Out", value: "CASH_OUT" },
+  ];
+
+  // Transaction status options
+  const transactionStatusOptions = [
+    { label: "All Statuses", value: "ALL" },
+    { label: "Pending", value: TransactionStatus.PENDING },
+    { label: "Completed", value: TransactionStatus.COMPLETED },
+    { label: "Failed", value: TransactionStatus.FAILED },
   ];
 
   // Date range options
@@ -92,22 +118,28 @@ const TransactionTable = ({
     { label: "Last 30 Days", value: "30d" },
   ];
 
-  // Only filter by type
-  const filteredTransactions =
-    typeFilter === "ALL" || !typeFilter
-      ? transactions
-      : transactions.filter(
-          (transaction) => transaction.transactionType === typeFilter
-        );
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((currentPage as number) + 1);
+  };
 
   return (
     <div>
-      {/* Centered filter header with label */}
+      {/* Responsive filter header */}
       <div className="flex flex-col items-center justify-center mb-6">
-        <div className="flex items-center gap-6">
-          <div className="flex flex-col gap-1 items-center">
+        {/* Filter options - Responsive layout */}
+        <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
+          <div className="flex flex-col gap-1 items-center min-w-[140px]">
             <span className="text-sm font-medium">Transaction Type</span>
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <Select
+              value={typeFilter}
+              onValueChange={setTypeFilter || (() => {})}
+            >
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="All Transactions" />
               </SelectTrigger>
@@ -120,9 +152,30 @@ const TransactionTable = ({
               </SelectContent>
             </Select>
           </div>
-          <div className="flex flex-col gap-1 items-center">
+          <div className="flex flex-col gap-1 items-center min-w-[140px]">
+            <span className="text-sm font-medium">Transaction Status</span>
+            <Select
+              value={statusFilter}
+              onValueChange={setStatusFilter || (() => {})}
+            >
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="All Statuses" />
+              </SelectTrigger>
+              <SelectContent>
+                {transactionStatusOptions.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex flex-col gap-1 items-center min-w-[140px]">
             <span className="text-sm font-medium">Date Range</span>
-            <Select value={rangeFilter} onValueChange={setRangeFilter}>
+            <Select
+              value={rangeFilter}
+              onValueChange={setRangeFilter || (() => {})}
+            >
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Select date range" />
               </SelectTrigger>
@@ -137,47 +190,79 @@ const TransactionTable = ({
           </div>
         </div>
       </div>
-      <Table>
-        <TableCaption>
-          {filteredTransactions?.length > 0
-            ? `Your recent transactions (${filteredTransactions.length} total)`
-            : "No transactions found"}
-        </TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Transaction ID</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredTransactions.length > 0 ? (
-            filteredTransactions.map((transaction) => (
-              <TableRow key={transaction._id}>
-                <TableCell className="font-medium text-sm">
-                  {transaction.transactionId}
-                </TableCell>
-                <TableCell>
-                  {transaction.transactionType.replace(/_/g, " ")}
-                </TableCell>
-                <TableCell>{transaction.status}</TableCell>
-                <TableCell>{formatDate(transaction.createdAt)}</TableCell>
-                <TableCell className="text-right">
-                  {formatAmount(transaction.amount)}
+      <div className="px-4">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Transaction ID</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead className="text-right">Amount</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {transactions.length > 0 ? (
+              transactions.map((transaction) => (
+                <TableRow key={transaction._id}>
+                  <TableCell className="font-medium text-sm">
+                    {transaction.transactionId}
+                  </TableCell>
+                  <TableCell>
+                    {transaction.transactionType.replace(/_/g, " ")}
+                  </TableCell>
+                  <TableCell>{transaction.status}</TableCell>
+                  <TableCell>{formatDate(transaction.createdAt)}</TableCell>
+                  <TableCell className="text-right">
+                    {formatAmount(transaction.amount)}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-4">
+                  No transactions found
                 </TableCell>
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={5} className="text-center py-4">
-                No transactions found
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="mt-8">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={handlePreviousPage}
+                className={
+                  currentPage === 1
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+              />
+            </PaginationItem>
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+              (page) => (
+                <PaginationItem key={page} onClick={() => setCurrentPage(page)}>
+                  <PaginationLink isActive={currentPage === page}>
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              )
+            )}
+            <PaginationItem>
+              <PaginationNext
+                onClick={handleNextPage}
+                className={
+                  currentPage === totalPages
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </div>
   );
 };

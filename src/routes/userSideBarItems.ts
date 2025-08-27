@@ -1,7 +1,8 @@
+import UserTransactions from "@/components/modules/Transaction/UserAgentTransactions";
 import AddMoney from "@/components/modules/Wallet/AddMoney";
 import SendMoney from "@/components/modules/Wallet/SendMoney";
-import UserTransactions from "@/components/modules/Wallet/UserAgentTransactions";
 import WithdrawMoney from "@/components/modules/Wallet/WithdrawMoney";
+import UserAnalytics from "@/pages/User/Analytics";
 import UserWallet from "@/pages/User/UserWallet";
 import type { ISidebarItem } from "@/types";
 
@@ -10,6 +11,11 @@ export const userSidebarItems: ISidebarItem[] = [
   {
     title: "Wallet Management",
     items: [
+      {
+        title: "Overiew",
+        url: "/user/analytics",
+        Component: UserAnalytics,
+      },
       {
         title: "My Wallet",
         url: "/user/my-wallet",

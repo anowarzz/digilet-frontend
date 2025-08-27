@@ -1,6 +1,6 @@
+import UserAgentTransactions from "@/components/modules/Transaction/UserAgentTransactions";
 import AddMoney from "@/components/modules/Wallet/AddMoney";
 import SendMoney from "@/components/modules/Wallet/SendMoney";
-import UserAgentTransactions from "@/components/modules/Wallet/UserAgentTransactions";
 import WithdrawMoney from "@/components/modules/Wallet/WithdrawMoney";
 import AgentWallet from "@/pages/Agent/AgentWallet";
 import Analytics from "@/pages/Agent/Analytics";

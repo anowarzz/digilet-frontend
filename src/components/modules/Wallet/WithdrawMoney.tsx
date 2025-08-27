@@ -1,5 +1,6 @@
 import withdrawMoneyIcon from "@/assets/Icons/withdraw-money.png";
 import TransactionForm from "@/components/modules/Transaction/TransactionForm";
+import { useCurrentUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { useWithdrawMoneyMutation } from "@/redux/features/wallet/wallet.api";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -7,6 +8,10 @@ import { toast } from "sonner";
 const WithdrawMoney = () => {
   const navigate = useNavigate();
   const [withdrawMoney] = useWithdrawMoneyMutation();
+
+  const { data: userData } = useCurrentUserInfoQuery(undefined);
+  const userRole = userData?.data?.role;
+  const walletPath = `/${userRole?.toLowerCase()}/wallet`;
 
   // Money withdraw request Handler
   const handleWithdrawMoney = async (withdrawMoneyData: {
@@ -20,19 +25,17 @@ const WithdrawMoney = () => {
       amount: withdrawMoneyData.amount,
     };
 
-    console.log("Withdraw Money:", withdrawMoneyPayload);
 
     try {
       const res = await withdrawMoney(withdrawMoneyPayload).unwrap();
       console.log("Withdraw Money Response:", res);
 
       if (res.success) {
-        navigate("/user/my-wallet");
+        navigate(walletPath);
         toast.success("Money Withdrawn Successfully!", { id: toastId });
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log(error.statusCode);
       if (error.status >= 400 && error.status < 500) {
         return toast.error(error.data.message, { id: toastId });
       }
