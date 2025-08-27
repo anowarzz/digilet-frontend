@@ -103,11 +103,11 @@ const HeroCards = () => {
   ];
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-custom-blue/5 dark:bg-gradient-to-br dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 py-16 md:py-24">
+    <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-custom-blue/5 dark:bg-gradient-to-br dark:from-rich-black-300 dark:via-rich-black-400 dark:to-rich-black-300 py-16 md:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-4 md:gap-6 lg:grid-cols-2 lg:gap-12">
           <div className="flex flex-col space-y-6">
-            <h2 className="text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl md:text-4xl text-custom-blue">
+            <h2 className="text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl md:text-4xl text-primary">
               Why Choose Digilet?
             </h2>
             <p className="text-muted-foreground text-lg leading-relaxed">
@@ -170,7 +170,7 @@ const HeroCards = () => {
                 {features.map((feature, index) => (
                   <div
                     key={index}
-                    className="group relative overflow-hidden rounded-xl border border-border/50 bg-card p-4 transition-all duration-300 hover:shadow-lg hover:shadow-custom-blue-500/10 hover:border-custom-blue-200 dark:hover:border-custom-blue-800"
+                    className="group relative overflow-hidden rounded-xl border border-border/50 bg-card dark:bg-rich-black-500/50 p-4 transition-all duration-300 hover:shadow-lg hover:shadow-custom-blue-500/10 hover:border-custom-blue-200 dark:hover:border-custom-blue-800"
                   >
                     <div className="flex items-start space-x-3">
                       <div
@@ -207,7 +207,7 @@ const HeroCards = () => {
                 {transactions.map((transaction, index) => (
                   <Card
                     key={index}
-                    className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 flex flex-col items-center text-center"
+                    className="bg-white dark:bg-rich-black-500 border border-gray-200 dark:border-rich-black-600 shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 flex flex-col items-center text-center"
                   >
                     <img
                       src={transaction.icon}

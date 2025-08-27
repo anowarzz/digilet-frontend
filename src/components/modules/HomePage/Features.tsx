@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from "framer-motion";
 import { DollarSign, Shield, Users, Zap } from "lucide-react";
 
 const Features = () => {
@@ -52,23 +52,29 @@ const Features = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {features.map((feature, index) => (
-            <Card
+            <motion.div
               key={index}
-              className="text-center hover:shadow-lg transition-shadow duration-300"
+              className="transaction text-center hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.6,
+                delay: index * 0.1,
+                ease: "easeOut",
+              }}
+              viewport={{ once: true, amount: 0.3 }}
             >
-              <CardContent className="p-6">
-                <div className="flex justify-center mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm">
-                  {feature.description}
-                </p>
-                <Badge variant="secondary" className="text-xs">
-                  {feature.stats}
-                </Badge>
-              </CardContent>
-            </Card>
+              <div className="flex justify-center mb-4">{feature.icon}</div>
+              <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+                {feature.title}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm">
+                {feature.description}
+              </p>
+              <Badge variant="secondary" className="text-xs">
+                {feature.stats}
+              </Badge>
+            </motion.div>
           ))}
         </div>
       </div>

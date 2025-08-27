@@ -7,7 +7,7 @@ const HomeBgSection = () => {
     <div
       className="relative rounded-2xl overflow-hidden bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${HeroBg})`,
+        backgroundImage: `linear-gradient(135deg, rgba(111, 29, 27, 0.6), rgba(0, 78, 152, 0.4)), url(${HeroBg})`,
         minHeight: "400px",
       }}
     >
