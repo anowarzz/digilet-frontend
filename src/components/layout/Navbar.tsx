@@ -28,7 +28,8 @@ import { ModeToggle } from "./ModeToogler";
 const navigationLinks = [
   { href: "/", label: "Home", role: "PUBLIC" },
   { href: "/about", label: "About", role: "PUBLIC" },
-  { href: "/features", label: "Features", role: "PUBLIC" },
+  { href: "/features", label: "Features", role: "PUBLIC"  },
+  { href: "/pricing", label: "Pricing", role: "PUBLIC"  },
   { href: "/contact", label: "Contact", role: "PUBLIC" },
   { href: "/faq", label: "FAQ", role: "PUBLIC" },
   { href: "/user", label: "Dashboard", role: UserRole.USER },

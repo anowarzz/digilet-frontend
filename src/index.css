@@ -3,8 +3,6 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 
-
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -69,6 +67,9 @@
   --color-custom-blue-700: #3380cc;
   --color-custom-blue-800: #66a3e6;
   --color-custom-blue-900: #b3d1f2;
+
+  /* --color-myGreen: #08cb00; */
+  --color-myGreen: #0A400C;
 
   --color-rosewood: #6a040f;
   --color-rosewood-100: #160103;

@@ -11,6 +11,7 @@ import Features from "@/pages/Features/Features";
 import Home from "@/pages/Home/Home";
 import Login from "@/pages/Login/Login";
 import NotFound from "@/pages/NotFound";
+import Pricing from "@/pages/Pricing/Pricing";
 import Register from "@/pages/Register/Register";
 import Unauthorized from "@/pages/UnAuthorized";
 import type { TRole } from "@/types";
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
       { index: true, Component: Home },
       { path: "about", Component: About },
       { path: "features", Component: Features },
+      { path: "pricing", Component: Pricing },
       { path: "contact", Component: Contact },
       { path: "faq", Component: Faq },
     ],

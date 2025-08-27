@@ -1,6 +1,7 @@
 import HeroImage from "@/assets/images/digilet-hero.svg";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -18,9 +19,14 @@ const HeroSection = () => {
               <ArrowUpRight className="ml-2 size-4" />
             </Badge>
 
-            <h1 className="text-pretty text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl md:text-4xl lg:text-5xl text-custom-blue">
+            <motion.h1
+              className="text-pretty text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl md:text-4xl lg:text-5xl text-myGreen dark:text-custom-blue"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
               Empowering Your Digital Transactions
-            </h1>
+            </motion.h1>
 
             <p className="text-muted-foreground text-lg leading-relaxed max-w-xl lg:text-xl">
               With Digilet, experience seamless transactions and powerful

@@ -4,30 +4,30 @@ import { Link } from "react-router";
 
 const defaultSections = [
   {
-    title: "Wallet Features",
+    title: "Product",
     links: [
-      { name: "Send Money", href: "/" },
-      { name: "Add Money", href: "/" },
-      { name: "Withdraw Money", href: "/" },
-      { name: "Transaction History", href: "/" },
+      { name: "Features", href: "/features" },
+      { name: "Pricing", href: "/pricing" },
+      { name: "How it Works", href: "/about" },
+      { name: "Security", href: "#" },
     ],
   },
   {
-    title: "User",
+    title: "Company",
     links: [
-      { name: "Profile", href: "/" },
-      { name: "Settings", href: "/" },
-      { name: "Notifications", href: "/" },
-      { name: "Support", href: "/" },
+      { name: "About Us", href: "/about" },
+      { name: "Contact", href: "/contact" },
+      { name: "Careers", href: "#" },
+      { name: "Blog", href: "#" },
     ],
   },
   {
-    title: "About",
+    title: "Support",
     links: [
-      { name: "About Us", href: "/" },
-      { name: "Careers", href: "/" },
-      { name: "Blog", href: "/" },
-      { name: "Privacy Policy", href: "/" },
+      { name: "FAQ", href: "/faq" },
+      { name: "Contact Support", href: "/contact" },
+      { name: "Help Center", href: "#" },
+      { name: "Status", href: "#" },
     ],
   },
 ];
@@ -40,8 +40,9 @@ const defaultSocialLinks = [
 ];
 
 const defaultLegalLinks = [
-  { name: "Terms and Conditions", href: "#" },
   { name: "Privacy Policy", href: "#" },
+  { name: "Terms of Service", href: "#" },
+  { name: "Cookie Policy", href: "#" },
 ];
 
 const Footer = () => {
@@ -98,12 +99,14 @@ const Footer = () => {
             ))}
           </div>
         </div>
-        <div className="text-muted-foreground mt-8 flex flex-col justify-between items-center gap-4 border-t py-8 text-xs font-medium md:flex-row md:items-center md:text-left">
+        <div className="text-muted-foreground mt-8 flex flex-col justify-between items-center gap-4 border-t border-gray-200 dark:border-gray-700 py-8 text-sm font-medium md:flex-row md:items-center md:text-left">
           <p className="order-2 lg:order-1">{copyright}</p>
-          <ul className="order-1 flex flex-col gap-2 md:order-2 md:flex-row">
+          <ul className="order-1 flex flex-col gap-4 md:order-2 md:flex-row md:gap-6">
             {legalLinks.map((link, idx) => (
-              <li key={idx} className="hover:text-primary">
-                <Link to={link.href}> {link.name}</Link>
+              <li key={idx} className="hover:text-primary transition-colors">
+                <Link to={link.href} className="hover:underline">
+                  {link.name}
+                </Link>
               </li>
             ))}
           </ul>
