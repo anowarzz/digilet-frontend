@@ -5,7 +5,7 @@ import MyProfile from "@/components/modules/Profile/MyProfile";
 import { UserRole } from "@/constants/role";
 import About from "@/pages/About/About";
 import { default as UserProfile } from "@/pages/Admin/UserProfile";
-import Contact from "@/pages/Contact/Contact";
+import Contact from "@/pages/contact/Contact";
 import Faq from "@/pages/Faq/Faq";
 import Features from "@/pages/Features/Features";
 import Home from "@/pages/Home/Home";

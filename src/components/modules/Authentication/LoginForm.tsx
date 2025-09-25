@@ -12,9 +12,35 @@ import Password from "@/components/ui/Password";
 import { cn } from "@/lib/utils";
 import { authApi, useLoginMutation } from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
+import { Shield, UserCheck, Users } from "lucide-react";
 import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
+
+// Demo credentials for quick login from environment variables
+const DEMO_CREDENTIALS = {
+  admin: {
+    phone: import.meta.env.VITE_DEMO_ADMIN_PHONE as string,
+    password: import.meta.env.VITE_DEMO_ADMIN_PASSWORD as string,
+    role: "Admin",
+    icon: Shield,
+    description: "Full system access",
+  },
+  agent: {
+    phone: import.meta.env.VITE_DEMO_AGENT_PHONE as string,
+    password: "Pa$$w0rd!",
+    role: "Agent",
+    icon: UserCheck,
+    description: "Cash-in/out services",
+  },
+  user: {
+    phone: import.meta.env.VITE_DEMO_USER_PHONE as string,
+    password: import.meta.env.VITE_DEMO_USER_PASSWORD as string,
+    role: "User",
+    icon: Users,
+    description: "Wallet transactions",
+  },
+} as const;
 
 const LoginForm = ({
   className,
@@ -31,6 +57,21 @@ const LoginForm = ({
   });
 
   const [login, { isLoading }] = useLoginMutation();
+
+  // Quick login function
+  const handleQuickLogin = async (role: keyof typeof DEMO_CREDENTIALS) => {
+    const credentials = DEMO_CREDENTIALS[role];
+
+    // Autofill the form
+    form.setValue("phone", credentials.phone);
+    form.setValue("password", credentials.password);
+
+    // Submit the form with the credentials
+    await onSubmit({
+      phone: credentials.phone,
+      password: credentials.password,
+    });
+  };
 
   // Handle Login
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -142,6 +183,43 @@ const LoginForm = ({
             </Button>
           </form>
         </Form>
+
+        {/* Quick Login Section */}
+        <div className="space-y-4">
+          <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+            <span className="relative z-10 bg-background px-2 text-muted-foreground">
+              Quick Demo Login
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {Object.entries(DEMO_CREDENTIALS).map(([key, credential]) => {
+              const Icon = credential.icon;
+              return (
+                <Button
+                  key={key}
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    handleQuickLogin(key as keyof typeof DEMO_CREDENTIALS)
+                  }
+                  disabled={isLoading}
+                  className="flex flex-col h-auto p-3 space-y-1 hover:bg-accent/50 transition-colors"
+                >
+                  <Icon className="size-5 text-primary" />
+                  <span className="font-medium text-xs">{credential.role}</span>
+                  <span className="text-xs text-muted-foreground leading-tight">
+                    {credential.description}
+                  </span>
+                </Button>
+              );
+            })}
+          </div>
+
+          <p className="text-xs text-center text-muted-foreground leading-relaxed px-2">
+            Please keep enable third party cookies for optimal performance
+          </p>
+        </div>
 
         <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
           <span className="relative z-10 bg-background px-2 text-muted-foreground">
