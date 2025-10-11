@@ -72,7 +72,7 @@ const TransactionForm = ({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
       phone: "",
-      amount: "", // Start with empty string
+      amount: "", 
     },
   });
 
@@ -80,7 +80,7 @@ const TransactionForm = ({
   const [showSearchResults, setShowSearchResults] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  // Determine which API to use based on transaction type
+  // determine which API to use based on transaction type
   const shouldSearchAgents =
     type === TransactionType.ADD_MONEY ||
     type === TransactionType.WITHDRAW_MONEY;
@@ -90,13 +90,13 @@ const TransactionForm = ({
     type === TransactionType.CASH_OUT ||
     type === TransactionType.SEND_MONEY;
 
-  // Query for users when needed
+ 
   const { data: users } = useAllUsersQuery(
     { searchTerm: searchValue },
     { skip: searchValue.length < 2 || !shouldSearchUsers }
   );
 
-  // Query for agents when needed
+
   const { data: agents } = useAllAgentsQuery(
     { searchTerm: searchValue },
     { skip: searchValue.length < 2 || !shouldSearchAgents }
@@ -139,7 +139,7 @@ const TransactionForm = ({
     form.setValue("phone", "");
   };
 
-  // Get results from backend (already filtered by search term)
+  // Get results 
   const getSearchResults = () => {
     if (shouldSearchAgents) {
       return agents?.data || [];

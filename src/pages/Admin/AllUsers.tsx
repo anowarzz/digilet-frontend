@@ -46,7 +46,6 @@ const AllUsers = () => {
     ...(searchTerm.trim().length >= 2 && { searchTerm: searchTerm.trim() }),
   };
 
-  // Use search term in query - only search if at least 2 characters
   const { data: allUsers, isLoading } = useAllUsersQuery(apiParams);
   const users = allUsers?.data || [];
   const totalPages = allUsers?.meta?.totalPages || 1;

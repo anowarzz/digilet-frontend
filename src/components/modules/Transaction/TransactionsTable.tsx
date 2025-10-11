@@ -54,7 +54,7 @@ const TransactionTable = ({
   rangeFilter = "ALL",
   setRangeFilter,
 }: TransactionTableProps) => {
-  // Ensure transactions is always an array to prevent runtime errors
+
   const safeTransactions = Array.isArray(transactions) ? transactions : [];
 
   if (isLoading) {
