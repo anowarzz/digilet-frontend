@@ -32,6 +32,7 @@ const navigationLinks = [
   { href: "/pricing", label: "Pricing", role: "PUBLIC" },
   { href: "/contact", label: "Contact", role: "PUBLIC" },
   { href: "/faq", label: "FAQ", role: "PUBLIC" },
+  { href: "/blogs", label: "Blogs", role: "PUBLIC" },
   { href: "/user", label: "Dashboard", role: UserRole.USER },
   { href: "/admin", label: "Dashboard", role: UserRole.ADMIN },
   { href: "/agent", label: "Dashboard", role: UserRole.AGENT },

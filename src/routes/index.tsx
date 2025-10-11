@@ -5,6 +5,7 @@ import MyProfile from "@/components/modules/Profile/MyProfile";
 import { UserRole } from "@/constants/role";
 import About from "@/pages/About/About";
 import { default as UserProfile } from "@/pages/Admin/UserProfile";
+import Blogs from "@/pages/Blogs/Blogs";
 import Contact from "@/pages/contact/Contact";
 import Faq from "@/pages/Faq/Faq";
 import Features from "@/pages/Features/Features";
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
       { path: "pricing", Component: Pricing },
       { path: "contact", Component: Contact },
       { path: "faq", Component: Faq },
+      { path: "blogs", Component: Blogs },
     ],
   },
   {
